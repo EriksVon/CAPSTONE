@@ -4,7 +4,7 @@ import Nav from "react-bootstrap/Nav";
 
 function Footer() {
   return (
-    <Navbar expand="lg" fixed="bottom" fluid className="bg-white">
+    <Navbar expand="lg" fixed="bottom" className="bg-white">
       <Container>
         <Navbar.Brand href="#home">
           <img
