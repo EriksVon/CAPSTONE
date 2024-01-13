@@ -92,7 +92,7 @@ function Login() {
                 <GoogleLoginButton
                   onClick={() => {
                     window.location.assign(
-                      "http://localhost:3001/profile/oauth-google"
+                      `${process.env.REACT_APP_BACKEND_ENDPOINT}/profile/oauth-google`
                     );
                   }}
                 />
