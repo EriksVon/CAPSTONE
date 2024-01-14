@@ -8,6 +8,7 @@ import { GoogleLoginButton } from "react-social-login-buttons";
 function Register() {
   const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
+
   const [body, setBody] = useState({
     name: "",
     surname: "",
@@ -31,10 +32,10 @@ function Register() {
     if (response.ok) {
       let data = await response.json();
       console.log(data);
-      /*       localStorage.setItem("token", data.password);
-      localStorage.setItem("userId", data._id); */
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data._id);
       setValidated(true);
-      navigate("/main");
+      navigate("/");
     } else {
       setBody({ ...body, password: "" });
     }
@@ -52,7 +53,7 @@ function Register() {
             <Modal.Dialog>
               <Modal.Header>
                 <Modal.Title>Create a new account</Modal.Title>
-                <Link to="/">Back to sign in</Link>
+                <Link to="/login">Back to sign in</Link>
               </Modal.Header>
               <div className="mx-3">
                 <Modal.Body>
@@ -138,7 +139,7 @@ function Register() {
                   <GoogleLoginButton
                     onClick={() => {
                       window.location.assign(
-                        "http://localhost:/profile/oauth-google"
+                        `${process.env.REACT_APP_ENDPOINT_URL}/profile/oauth-google`
                       );
                     }}
                   />

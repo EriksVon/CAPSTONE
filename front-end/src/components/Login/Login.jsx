@@ -14,20 +14,24 @@ function Login() {
     email: "",
     password: "",
   });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let response = await fetch(`${process.env.REACT_APP_ENDPOINT_URL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+    let response = await fetch(
+      `${process.env.REACT_APP_ENDPOINT_URL}/profile/session`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
     if (response.ok) {
       let data = await response.json();
       localStorage.setItem("token", data.token);
-      localStorage.setItem("userId", data.payload.id);
-      navigate("/main");
+      localStorage.setItem("userId", data.userId);
+      navigate("/");
     } else {
       document.getElementById("error").innerHTML = "Wrong Credentaials!";
       setBody({ ...body, password: "" });
@@ -92,7 +96,7 @@ function Login() {
                 <GoogleLoginButton
                   onClick={() => {
                     window.location.assign(
-                      `${process.env.REACT_APP_BACKEND_ENDPOINT}/profile/oauth-google`
+                      `${process.env.REACT_APP_ENDPOINT_URL}/profile/oauth-google`
                     );
                   }}
                 />

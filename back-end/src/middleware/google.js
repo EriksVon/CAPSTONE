@@ -10,7 +10,6 @@ passport.use(
       callbackURL: process.env.GOOGLE_URL,
     },
     async function (_, __, profile, cb) {
-      console.log(profile);
       let user = await User.findOne({ googleId: profile.id });
       if (!user) {
         user = await User.create({
@@ -18,7 +17,10 @@ passport.use(
           name: profile.name.givenName,
           surname: profile.name.familyName,
           email: profile.emails[0].value,
+          image: profile.picture,
         });
+        cb(null, user);
+      } else {
         cb(null, user);
       }
     }

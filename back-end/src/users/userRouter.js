@@ -20,6 +20,26 @@ userRouter
     }
   })
 
+  .post("/session", async (req, res, next) => {
+    try {
+      const { email, password } = await req.body;
+      const user = await User.findOne({ email: email });
+      if (!user) {
+        return res.status(404).send({ message: "error" });
+      }
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+      if (!isPasswordCorrect) {
+        return res.status(401).send({ message: "unauthorized" });
+      }
+
+      const payload = { id: user._id };
+      const token = jwt.sign(payload, process.env.JWT_SECRET);
+      res.status(200).json({ userId: user._id, token: token });
+    } catch (error) {
+      next(error);
+    }
+  })
+
   /* WORKING */
   .get(
     "/oauth-google",
@@ -32,14 +52,14 @@ userRouter
   /* WORKING */
   .get(
     "/oauth-callback",
-    passport.authenticate("google", { failureRedirect: "/", session: false }),
+    passport.authenticate("google", {
+      failureRedirect: "/",
+      session: false,
+    }),
     async (req, res) => {
       const payload = { id: req.user._id };
       const token = jwt.sign(payload, process.env.JWT_SECRET);
-      res.redirect(
-        `http://localhost:3000/main`
-        /* `http://localhost:3000?token=${token}&userId=${req.user._id}` */
-      );
+      res.redirect(`http://localhost:3000?token=${token}&userId=${payload.id}`);
     }
   )
 
@@ -52,6 +72,7 @@ userRouter
       next(err);
     }
   })
+
   /* WORKING */
   .get("/:id", authControl, async (req, res, next) => {
     try {
@@ -69,7 +90,12 @@ userRouter
         ...req.body,
         password,
       });
-      res.status(201).json(newUser);
+      const {
+        password: _,
+        __v,
+        ...newUserWithoutPassword
+      } = newUser.toObject();
+      res.status(201).json(newUserWithoutPassword);
     } catch (error) {
       next(error);
     }
@@ -86,6 +112,25 @@ userRouter
     }
   })
 
+  .delete("/session", async (req, res, next) => {
+    try {
+      req.logout((err) => {
+        if (err) {
+          return next(err);
+        }
+        req.session.destroy((err) => {
+          if (err) {
+            return next(err);
+          }
+          res.sendStatus(204);
+        });
+      });
+    } catch (error) {
+      next(error);
+    }
+  })
+
+  /* WORKING */
   .delete("/:id", authControl, async (req, res, next) => {
     try {
       const deletedUser = await User.findByIdAndDelete(req.params.id);
@@ -97,10 +142,5 @@ userRouter
       next(error);
     }
   });
-
-//OAUTH GOOGLE
-
-// Logout
-//  .delete("/session", async (req, res) => {})
 
 export default userRouter;
