@@ -64,9 +64,11 @@ userRouter
         ? "http://localhost:3000"
         : process.env.FE_PROD_URL;
       res.redirect(`${redirectBaseUrl}?token=${token}&userId=${payload.id}`);
-      /*       res.redirect(
-        `${process.env.FE_PROD_URL}?token=${token}&userId=${payload.id}` || 
-        `${process.env.FE_DEV_URL}?token=${token}&userId=${payload.id}` 
+      /*   
+      const redirectUrl = process.env.NODE_ENV === 'production'
+        ? process.env.FE_PROD_URL
+        : process.env.FE_DEV_URL;
+        res.redirect(`${redirectUrl}?token=${token}&userId=${payload.id}`);
       ); */
     }
   )

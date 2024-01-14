@@ -1,25 +1,21 @@
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import { ReactComponent as Ullalla } from "../styles/images/planMe2.svg";
 
 function MyNav() {
   return (
-    <Navbar expand="lg" sticky="top" className="bg-white">
+    <Navbar expand="lg" sticky="top" className="bg-white p-0">
       <Container>
         <Navbar.Brand href="/">
-          <img
-            alt="planMe"
-            src="src/logo.png"
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-          />
-          PlanMe
+          <img href="../styles/images/planMe.svg" alt="" />
+          {/*           <FbLogo /> */}
+          <Ullalla width="120px" />
         </Navbar.Brand>
-        <Nav.Link href="#action1" disabled>
-          Home
+        <Nav.Link href="/wip" className="ms-auto me-3">
+          About Us
         </Nav.Link>
-        <Nav.Link href="#action2">Link</Nav.Link>
+        <Nav.Link href="/wip">How it works</Nav.Link>
       </Container>
     </Navbar>
   );

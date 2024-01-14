@@ -3,7 +3,8 @@ import { Container, Row, Modal, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Link, useNavigate } from "react-router-dom";
-import { GoogleLoginButton } from "react-social-login-buttons";
+import { ReactComponent as ImgLogin } from "../../styles/images/img-home.svg";
+import { ReactComponent as GoogleLogo } from "../../styles/images/google.svg";
 
 function Register() {
   const [validated, setValidated] = useState(false);
@@ -35,124 +36,137 @@ function Register() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data._id);
       setValidated(true);
-      navigate("/");
+      navigate("/create-or-join");
     } else {
       setBody({ ...body, password: "" });
     }
   };
 
   return (
-    <Container>
-      <Row>
-        <Col md={7} className="mx-auto my-5 rounded p-4 bg-white">
-          <Form
-            noValidate
-            validated={validated}
-            onSubmit={(event) => handleSubmit(event)}
-          >
-            <Modal.Dialog>
-              <Modal.Header>
-                <Modal.Title>Create a new account</Modal.Title>
-                <Link to="/login">Back to sign in</Link>
-              </Modal.Header>
-              <div className="mx-3">
-                <Modal.Body>
-                  <Form.Group className="mb-1" controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control
-                      value={body.email}
-                      required
-                      onInput={(e) =>
-                        setBody({ ...body, email: e.target.value })
-                      }
-                      type="email"
-                      placeholder="Enter email"
-                    />
-                  </Form.Group>
+    <Container style={{ marginBottom: "75px" }}>
+      <Row className="mt-3 d-flex align-items-center justify-content-center imgWrapper">
+        <Col xl={6} className="d-md-inline m-0 p-0 imgSm">
+          <ImgLogin />
+        </Col>
 
-                  <Form.Group className="mb-1" controlId="formBasicName">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                      value={body.name}
-                      required
-                      onInput={(e) =>
-                        setBody({ ...body, name: e.target.value })
-                      }
-                      type="name"
-                      placeholder="Enter your name"
-                    />
-                  </Form.Group>
+        <Col xs={10} xl={6}>
+          <Modal.Dialog>
+            <Link to="/login" className="text-end">
+              Back to sign in
+            </Link>
+            <Modal.Header className="d-flex flex-column">
+              <Modal.Title className="fs-1 fw-bolder mb-3">
+                Create a new account
+              </Modal.Title>
+            </Modal.Header>
 
-                  <Form.Group className="mb-1" controlId="formBasicSurname">
-                    <Form.Label>Surname</Form.Label>
-                    <Form.Control
-                      value={body.surname}
-                      required
-                      onInput={(e) =>
-                        setBody({ ...body, surname: e.target.value })
-                      }
-                      type="surname"
-                      placeholder="Enter your surname"
-                    />
-                  </Form.Group>
+            <Modal.Body className="d-flex flex-column gap-3 mb-3">
+              <Form
+                noValidate
+                validated={validated}
+                onSubmit={(event) => handleSubmit(event)}
+              >
+                <Form.Group className="mb-1" controlId="formBasicEmail">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control
+                    value={body.email}
+                    required
+                    onInput={(e) => setBody({ ...body, email: e.target.value })}
+                    type="email"
+                    placeholder="Enter email"
+                  />
+                </Form.Group>
 
-                  {/*                   <Form.Group className="mb-1" controlId="formBasicUserId">
+                <Form.Group className="mb-1" controlId="formBasicName">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    value={body.name}
+                    required
+                    onInput={(e) => setBody({ ...body, name: e.target.value })}
+                    type="name"
+                    placeholder="Enter your name"
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-1" controlId="formBasicSurname">
+                  <Form.Label>Surname</Form.Label>
+                  <Form.Control
+                    value={body.surname}
+                    required
+                    onInput={(e) =>
+                      setBody({ ...body, surname: e.target.value })
+                    }
+                    type="surname"
+                    placeholder="Enter your surname"
+                  />
+                </Form.Group>
+
+                {/*<Form.Group className="mb-1" controlId="formBasicUserId">
                     <Form.Label>User Name</Form.Label>
-                    <Form.Control
-                      value={body.username}
-                      type="username"
-                      onInput={(e) =>
-                        setBody({ ...body, username: e.target.value })
-                      }
-                      placeholder="Enter you username"
-                    />
+                    <Form.Control value={body.username} type="username"
+                      onInput={(e) => setBody({ ...body, username: e.target.value }) }
+                      placeholder="Enter you username" />
                   </Form.Group> */}
 
-                  <Form.Group className="mb-1" controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="Password"
-                      value={body.password}
-                      required
-                      onInput={(e) =>
-                        setBody({ ...body, password: e.target.value })
-                      }
-                    />
-                  </Form.Group>
-
-                  <Form.Group className="mb-1" controlId="formBasicPhone">
-                    <Form.Label>Phone number</Form.Label>
-                    <Form.Control
-                      type="number"
-                      placeholder="Phone number"
-                      value={body.phoneNumber}
-                      onInput={(e) =>
-                        setBody({ ...body, phoneNumber: e.target.value })
-                      }
-                    />
-                  </Form.Group>
-
-                  <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Remember me" />
-                  </Form.Group>
-                  <GoogleLoginButton
-                    onClick={() => {
-                      window.location.assign(
-                        `${process.env.REACT_APP_ENDPOINT_URL}/profile/oauth-google`
-                      );
-                    }}
+                <Form.Group className="mb-1" controlId="formBasicPassword">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    value={body.password}
+                    required
+                    onInput={(e) =>
+                      setBody({ ...body, password: e.target.value })
+                    }
                   />
-                </Modal.Body>
-              </div>
+                </Form.Group>
 
-              <Modal.Footer>
-                <Button variant="primary" type="submit">
-                  Submit
-                </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Form>
+                <Form.Group className="mb-1" controlId="formBasicPhone">
+                  <Form.Label>Phone number</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Phone number"
+                    value={body.phoneNumber}
+                    onInput={(e) =>
+                      setBody({ ...body, phoneNumber: e.target.value })
+                    }
+                  />
+                </Form.Group>
+                <div className="text-center mt-3">
+                  <button
+                    type="submit"
+                    className="coralBgButton fs-5"
+                    style={{ width: "100%" }}
+                  >
+                    Submit
+                  </button>
+                </div>
+              </Form>
+            </Modal.Body>
+
+            <Modal.Body className="d-flex flex-column gap-3">
+              <Modal.Title className="fs-6 fw-bold text-center">
+                Or:
+              </Modal.Title>
+              {/* LOGIN CON GOOGLE */}
+              {/*               <button
+                className="pinkBgButton d-flex align-items-center justify-content-between"
+                onClick={() => {
+                  window.location.assign(
+                    `${process.env.REACT_APP_ENDPOINT_URL}/profile/oauth-google`
+                  );
+                }}
+              >
+                <GoogleLogo />
+                <span>Continue with Google</span>
+                <span></span>
+              </button> */}
+              <p>
+                Effettuando l'accesso o creando un account accetti i Termini, le
+                Condizioni e l'informativa sulla privacy
+              </p>
+            </Modal.Body>
+          </Modal.Dialog>
         </Col>
       </Row>
     </Container>

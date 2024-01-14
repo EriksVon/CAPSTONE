@@ -1,0 +1,70 @@
+body {
+  height: 100vh;
+}
+
+.coralBgButton {
+  background-color: #f75959;
+  color: white;
+  border: 0;
+  border-radius: 50px;
+  padding: 0.5rem;
+  font-weight: 700;
+  &:hover {
+    background-color: #fab496;
+  }
+  &:focus {
+    background-color: #fa8959;
+  }
+}
+
+.pinkBgButton {
+  background-color: #ffe0d3;
+  color: black;
+  border: 0;
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+  &:hover {
+    background-color: #fa9f78;
+    color: white;
+  }
+  &:focus {
+    background-color: #fa8959;
+  }
+}
+
+.whiteBgButton {
+  background-color: white;
+  border-radius: 50px;
+  border: solid;
+  border-color: #f75959;
+  padding: 0.5rem;
+  font-weight: 700;
+  &:hover {
+    background-color: #fa9f78;
+    border-color: #fa9f78;
+    color: white;
+  }
+}
+
+.pinkBg {
+  background-color: #f75959;
+  color: white;
+}
+
+.form-control {
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+}
+
+@media (max-width: 1200px) {
+  .imgWrapper {
+    position: relative;
+  }
+  .imgSm {
+    opacity: 0.2;
+    top: 10%;
+    text-align: center;
+    position: absolute;
+  }
+}

@@ -1,52 +1,36 @@
-import { useState } from "react";
 import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { ReactComponent as ImgJoin } from "../../styles/images/img-accesso.svg";
 
 const DashAccess = () => {
-  const [show, setShow] = useState(false);
-
-  const handleShow = () => {
-    setShow(!show);
-  };
-
   return (
     <Container>
-      <Row className="d-flex flex-column">
+      <Row>
         <Col
-          md={6}
-          className="mx-auto mt-5 rounded p-4 bg-white d-flex gap-3 justify-content-center"
+          xs={10}
+          className="mx-auto my-5 d-flex flex-column align-items-center justify-items-center"
         >
-          <Link to="/create">
-            <Button>Create a new dashboard</Button>
-          </Link>
-          <Button onClick={handleShow}>Join a dashboard</Button>
+          <ImgJoin />
+          <h1 className="fw-bolder my-4">Let's start!</h1>
+          <div className="d-flex align-items-center justify-items-center gap-2">
+            <button className="pinkBgButton p-4 fs-5 rounded-3">
+              <Link
+                style={{ textDecoration: "none", color: "#f75959" }}
+                to="/wip"
+              >
+                Create a new dashboard
+              </Link>
+            </button>
+            <button className="pinkBgButton p-4 fs-5 rounded-3">
+              <Link
+                style={{ textDecoration: "none", color: "#f75959" }}
+                to="/join-dashboard"
+              >
+                Join an existing dashboard
+              </Link>
+            </button>
+          </div>
         </Col>
-        {show && (
-          <Col
-            md={6}
-            className="mx-auto rounded p-4"
-            style={{ backgroundColor: "lightgray" }}
-          >
-            <Modal.Dialog>
-              <Modal.Header>
-                <Modal.Title className="my-2">Join a dashboard: </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <p>
-                  E-mail: <input type="text" />
-                </p>
-
-                <p>
-                  Enter the dashboard Token to join:{" "}
-                  <input type="text" placeholder="TXRE34SE" />
-                </p>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="primary">Join</Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Col>
-        )}
       </Row>
     </Container>
   );
