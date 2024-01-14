@@ -61,7 +61,7 @@ userRouter
       const token = jwt.sign(payload, process.env.JWT_SECRET);
       const isLocalhost = req.get("host").includes("localhost");
       res.redirect(
-        `${process.env.FE_DEV_URL}?token=${token}&userId=${payload.id}`
+        `${process.env.FE_PROD_URL}?token=${token}&userId=${payload.id}`
       );
       /*   
       const redirectBaseUrl = isLocalhost
