@@ -1,4 +1,4 @@
-import { Button, Col, Container, Modal, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { ReactComponent as ImgJoin } from "../../styles/images/img-accesso.svg";
 

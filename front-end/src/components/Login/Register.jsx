@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Container, Row, Modal, Col } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as ImgLogin } from "../../styles/images/img-home.svg";
-import { ReactComponent as GoogleLogo } from "../../styles/images/google.svg";
 
 function Register() {
   const [validated, setValidated] = useState(false);
