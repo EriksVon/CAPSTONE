@@ -9,6 +9,15 @@ const DashboardSchema = new Schema({
     type: String,
     required: true,
   },
+  theme: {
+    type: String,
+  },
+  activities: {
+    type: String,
+  },
+  avatar: {
+    type: String,
+  },
 });
 
 export const Dashboard = mongoose.model("dashboards", DashboardSchema);

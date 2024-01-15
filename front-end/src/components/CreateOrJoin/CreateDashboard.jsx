@@ -8,6 +8,20 @@ import { useState } from "react";
 
 function CreateDashboard() {
   const [radioValue, setRadioValue] = useState("");
+  const [emailList, setEmailList] = useState([""]);
+  const [selectedActivities, setSelectedActivities] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const activities = [
+    "Money",
+    "Shopping",
+    "Calendar",
+    "Notes",
+    "Photos",
+    "Recipes",
+    "Contacts",
+    "Music",
+  ];
 
   const themeOptions = [
     { id: "yellow", label: <Yellow /> },
@@ -16,8 +30,6 @@ function CreateDashboard() {
     { id: "green", label: <Green /> },
     { id: "orange", label: <Orange /> },
   ];
-
-  const [emailList, setEmailList] = useState([""]);
 
   const addEmailField = () => {
     setEmailList([...emailList, ""]);
@@ -37,19 +49,6 @@ function CreateDashboard() {
     setEmailList(updatedEmailList);
   };
 
-  const [selectedActivities, setSelectedActivities] = useState([]);
-
-  const activities = [
-    "Money",
-    "Shopping",
-    "Calendar",
-    "Notes",
-    "Photos",
-    "Recipes",
-    "Contacts",
-    "Music",
-  ];
-
   const handleActivities = (activity) => {
     if (selectedActivities.includes(activity)) {
       setSelectedActivities(
@@ -58,6 +57,40 @@ function CreateDashboard() {
     } else {
       setSelectedActivities([...selectedActivities, activity]);
     }
+  };
+
+  /*   const uploadImg = () => {
+    fetch(`${process.env.REACT_APP_ENDPOINT_URL}/dashboard/${id}/avatar`, {
+      method: "PATCH",
+      body: avatar,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(() => {
+      getExperiences();
+    });
+  };
+
+  const handleFile = (ev) => {
+    setFd((prev) => {
+      prev.delete("photo");
+      prev.append("photo", ev.target.files[0]);
+      return prev;
+    });
+    console.log(fd);
+  }; */
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const dashboard = {
+      emails: emailList,
+      title: document.getElementById("formHorizontalDashboardName").value,
+      theme: radioValue,
+      activities: selectedActivities,
+      avatar: selectedFile,
+    };
+    /*  uploadImg(); */
+    console.log(dashboard);
   };
 
   return (
@@ -166,12 +199,16 @@ function CreateDashboard() {
                 <Form.Label>Choose an image</Form.Label>
               </Col>
               <Col xs={9}>
-                <Form.Control type="file" />
+                {/*                 <Form.Group as={Col} controlId="photo" className="AggExp-img">
+                  <label className="custom-file-upload">
+                    <input type="file" onChange={handleFile} />
+                  </label>
+                </Form.Group> */}
               </Col>
             </Row>
           </Container>
         </Form.Group>
-        <button type="submit" className="pinkBgButton">
+        <button type="submit" className="pinkBgButton" onClick={handleSubmit}>
           Submit
         </button>
       </Form>
@@ -179,3 +216,44 @@ function CreateDashboard() {
   );
 }
 export default CreateDashboard;
+
+// FRONTEND:
+/* const [file, setFile] = useState(null)
+const sendPicture = async () => {
+  console.log(file.name)
+  // qui eseguo la fetch..
+
+const formdAta = new FormData()
+formdata.append("avatar", file, "nomefile.jpeg")
+const response = await fetch("http://localhost:3000/api/multipart", {
+  method: "PATCH",
+  body: formdata
+})
+const {url} = await response.json()
+console.log(url)
+}
+
+<input
+  type="file"
+  multiple= {false}
+  onChange={(e) => setFile(e.target.files[0])}/>
+  <button onClick={() => !!file&& sendPicture()}>
+  click here to upload your prof pic
+  </button> 
+  
+  */
+
+// SALVARE IL FILE IN LOCALE:
+
+/* const storage = multer.diskStorage({
+  destination: "./src/uploads",
+  filename: function (req, file, callback) {
+    if (["image/jpeg", "image/png"].includes(file.mimetype)) {
+      callback(null, `${Date.now()}_${file.originalname}`);
+    } else {
+      const error = new Error("Please upload png or jpg");
+      error.statusCode = 400;
+      callback(error);
+    }
+  },
+}); */
