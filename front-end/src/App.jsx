@@ -4,25 +4,27 @@ import Login from "./components/Login/Login";
 import Register from "./components/Login/Register";
 import WorkInProgress from "./components/WorkInProgress";
 import JoinDashboard from "./components/CreateOrJoin/JoinDashboard";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DashAccess from "./components/CreateOrJoin/DashAccess";
 import Main from "./components/Dashboard/Main";
 import CreateDashboard from "./components/CreateOrJoin/CreateDashboard";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <MyNav />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/create-or-join" element={<DashAccess />} />
-          <Route path="/" element={<Main />} />
-          <Route path="/wip" element={<WorkInProgress />} />
-          <Route path="/join-dashboard" element={<JoinDashboard />} />
-          <Route path="/create" element={<CreateDashboard />} />
-        </Routes>
+        <div className="main">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/create-or-join" element={<DashAccess />} />
+            <Route path="/" element={<Main />} />
+            <Route path="/wip" element={<WorkInProgress />} />
+            <Route path="/join-dashboard" element={<JoinDashboard />} />
+            <Route path="/create" element={<CreateDashboard />} />
+          </Routes>
+        </div>
         <Footer />
       </BrowserRouter>
     </>

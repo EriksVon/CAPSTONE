@@ -14,7 +14,7 @@ function Footer() {
     <Navbar
       expand="lg"
       fixed="bottom"
-      className="pinkBg py-3 d-none d-sm-block"
+      className="pinkBg py-3 d-none d-sm-block footer"
     >
       <Container>
         <Nav.Item>

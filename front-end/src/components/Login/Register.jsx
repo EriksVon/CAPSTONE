@@ -3,6 +3,7 @@ import { Container, Row, Modal, Col } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as ImgLogin } from "../../styles/images/img-home.svg";
+import { ReactComponent as GoogleLogo } from "../../styles/images/google.svg";
 
 function Register() {
   const [validated, setValidated] = useState(false);
@@ -18,6 +19,7 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     let response = await fetch(
       `${process.env.REACT_APP_ENDPOINT_URL}/profile`,
       {
@@ -28,6 +30,7 @@ function Register() {
         body: JSON.stringify(body),
       }
     );
+
     if (response.ok) {
       let data = await response.json();
       console.log(data);
@@ -36,20 +39,22 @@ function Register() {
       setValidated(true);
       navigate("/create-or-join");
     } else {
+      const errorData = await response.json();
+      alert(errorData.message);
       setBody({ ...body, password: "" });
     }
   };
 
   return (
-    <Container style={{ marginBottom: "75px" }}>
-      <Row className="mt-3 d-flex align-items-center justify-content-center imgWrapper">
-        <Col xl={6} className="d-md-inline m-0 p-0 imgSm">
+    <Container>
+      <Row className="mt-3 d-flex align-items-center justify-content-center my-1">
+        <Col xl={6} className="d-none d-xl-inline m-0 p-0">
           <ImgLogin />
         </Col>
 
         <Col xs={10} xl={6}>
           <Modal.Dialog>
-            <Link to="/login" className="text-end">
+            <Link to="/login" className="text-end text-decoration-none">
               Back to sign in
             </Link>
             <Modal.Header className="d-flex flex-column">
@@ -143,11 +148,11 @@ function Register() {
             </Modal.Body>
 
             <Modal.Body className="d-flex flex-column gap-3">
+              {/* LOGIN CON GOOGLE */}
               <Modal.Title className="fs-6 fw-bold text-center">
                 Or:
               </Modal.Title>
-              {/* LOGIN CON GOOGLE */}
-              {/*               <button
+              <button
                 className="pinkBgButton d-flex align-items-center justify-content-between"
                 onClick={() => {
                   window.location.assign(
@@ -158,11 +163,11 @@ function Register() {
                 <GoogleLogo />
                 <span>Continue with Google</span>
                 <span></span>
-              </button> */}
-              <p>
+              </button>
+              <small>
                 Effettuando l'accesso o creando un account accetti i Termini, le
                 Condizioni e l'informativa sulla privacy
-              </p>
+              </small>
             </Modal.Body>
           </Modal.Dialog>
         </Col>

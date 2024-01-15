@@ -59,7 +59,6 @@ userRouter
     async (req, res) => {
       const payload = { id: req.user._id };
       const token = jwt.sign(payload, process.env.JWT_SECRET);
-      const isLocalhost = req.get("host").includes("localhost");
       res.redirect(
         `${process.env.FE_PROD_URL}?token=${token}&userId=${payload.id}`
       );
@@ -99,6 +98,10 @@ userRouter
   /* WORKING */
   .post("/", async (req, res, next) => {
     try {
+      const existingUser = await User.findOne({ email: req.body.email });
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
       const password = await bcrypt.hash(req.body.password, 10);
       const newUser = await User.create({
         ...req.body,

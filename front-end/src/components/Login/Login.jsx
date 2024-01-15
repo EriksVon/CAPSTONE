@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import Container from "react-bootstrap/esm/Container";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as ImgLogin } from "../../styles/images/img-home.svg";
-import { ReactComponent as GoogleLogo } from "../../styles/images/google.svg";
+/* import { ReactComponent as GoogleLogo } from "../../styles/images/google.svg"; */
 
 function Login() {
   const navigate = useNavigate();
@@ -40,9 +40,9 @@ function Login() {
   };
 
   return (
-    <Container style={{ marginBottom: "75px" }}>
-      <Row className="mt-5 d-flex align-items-center justify-content-center text-center imgWrapper">
-        <Col xl={6} className="d-md-inline m-0 p-0 imgSm">
+    <Container>
+      <Row className="d-flex justify-content-center text-center my-1">
+        <Col xl={6} className="d-none d-xl-inline">
           <ImgLogin />
         </Col>
 
@@ -100,7 +100,7 @@ function Login() {
             </Form>
 
             <Modal.Body className="d-flex flex-column gap-3">
-              <Modal.Title className="fs-6 fw-bold">
+              {/*              <Modal.Title className="fs-6 fw-bold">
                 Or choose between one of this options:
               </Modal.Title>
               <button
@@ -114,10 +114,11 @@ function Login() {
                 <GoogleLogo />
                 <span>Continue with Google</span>
                 <span></span>
-              </button>
+              </button> */}
 
               <strong>New on this platform?</strong>
               <Link
+                as={Link}
                 className="whiteBgButton fs-5"
                 style={{ textDecoration: "none", color: "#f75959" }}
                 to="/register"
