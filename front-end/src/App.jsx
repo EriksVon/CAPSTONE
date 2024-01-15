@@ -18,11 +18,11 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/create-or-join" element={<DashAccess />} />
-            <Route path="/" element={<Main />} />
             <Route path="/wip" element={<WorkInProgress />} />
+            <Route path="/create-or-join" element={<DashAccess />} />
             <Route path="/join-dashboard" element={<JoinDashboard />} />
             <Route path="/create" element={<CreateDashboard />} />
+            <Route path="/" element={<Main />} />
           </Routes>
         </div>
         <Footer />

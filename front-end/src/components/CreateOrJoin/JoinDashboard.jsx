@@ -28,7 +28,7 @@ function JoinDashboard() {
           className="mx-auto my-3 d-flex flex-column align-items-center justify-items-center"
         >
           <ImgDash />
-          <h1 className="fw-bolder my-4">Join a dashboard!</h1>
+          <h1 className="fw-bolder my-4 text-center">Join a dashboard!</h1>
         </Col>
         <Col xs={7} className="mx-auto">
           <Modal.Dialog>

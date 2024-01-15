@@ -51,7 +51,7 @@ function MyNav() {
   };
 
   return (
-    <Navbar expand="lg" sticky="top" className="bg-white p-0">
+    <Navbar expand="lg" sticky="top" className="bg-white">
       <Container className="d-flex gap-2">
         <Link to={isUserLoggedIn ? "/" : "/login"}>
           <Navbar.Brand>
@@ -65,10 +65,10 @@ function MyNav() {
         {isUserLoggedIn ? (
           <Dropdown>
             <Dropdown.Toggle
-              id="dropdown-basic"
+              id="dropdown-button-drop-start"
               className="pinkBgButton text-decoration-none"
             >
-              Profile
+              Me
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>

@@ -41,12 +41,12 @@ function Login() {
 
   return (
     <Container>
-      <Row className="d-flex justify-content-center text-center my-1">
-        <Col xl={6} className="d-none d-xl-inline">
+      <Row className="mt-3 d-flex align-items-center justify-content-center my-1 text-center">
+        <Col xl={8} className="d-none d-xl-inline m-0 p-0">
           <ImgLogin />
         </Col>
 
-        <Col xs={10} xl={6}>
+        <Col xs={12} xl={4}>
           <Modal.Dialog>
             <Modal.Header className="d-flex flex-column">
               <strong>Ti diamo il benvenuto su PlanMe</strong>

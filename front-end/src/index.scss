@@ -17,6 +17,9 @@ body {
   justify-content: center;
   flex: 1;
   margin-bottom: 70px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .footer {
@@ -61,11 +64,29 @@ body {
   border-color: #f75959;
   padding: 0.5rem;
   font-weight: 700;
+  text-decoration: none;
+  color: #f75959;
   &:hover {
     background-color: #fa9f78;
     border-color: #fa9f78;
     color: white;
   }
+  /*   &:focus {
+    background-color: #fa9f78;
+    border-color: #fa9f78;
+    color: white;
+  }
+  &:active {
+    background-color: #fa9f78;
+    border-color: #fa9f78;
+    color: white;
+  } */
+}
+
+.whiteBgButton.active {
+  background-color: #fa9f78;
+  border-color: #fa9f78;
+  color: white;
 }
 
 .pinkBg {
