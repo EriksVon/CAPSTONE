@@ -65,7 +65,7 @@ function MyNav() {
         {isUserLoggedIn ? (
           <Dropdown>
             <Dropdown.Toggle
-              id="dropdown-button-drop-start"
+              id="dropdown-button-drop-end"
               className="pinkBgButton text-decoration-none"
             >
               Me
