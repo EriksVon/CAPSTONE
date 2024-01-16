@@ -1,4 +1,12 @@
 export const genericError = (err, req, res, next) => {
-  console.log(err);
-  res.status(err.statusCode || 500).send(err.message);
+  console.error(err);
+
+  const statusCode = err.statusCode || 500;
+  const errorMessage = err.message || "Internal Server Error";
+
+  res.status(statusCode).json({
+    status: "error",
+    statusCode,
+    message: errorMessage,
+  });
 };

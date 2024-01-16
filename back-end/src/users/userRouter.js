@@ -10,7 +10,7 @@ const userRouter = express.Router();
 userRouter
 
   /* WORKING */
-  .get("/", authControl, async (req, res, next) => {
+  .get("/", async (req, res, next) => {
     try {
       const users = await User.find();
       res.json(users);
@@ -22,7 +22,7 @@ userRouter
 
   .post("/session", async (req, res, next) => {
     try {
-      const { email, password } = await req.body;
+      const { email, password } = req.body;
       const user = await User.findOne({ email: email });
       if (!user) {
         return res.status(404).send({ message: "error" });
@@ -79,7 +79,9 @@ userRouter
   /* WORKING */
   .get("/me", authControl, async (req, res, next) => {
     try {
-      const user = await User.findOne({ email: req.user.email });
+      const user = await User.findOne({ email: req.user.email }).populate(
+        "dashboards"
+      );
       res.status(200).json(user);
     } catch (err) {
       next(err);
@@ -89,7 +91,12 @@ userRouter
   /* WORKING */
   .get("/:id", authControl, async (req, res, next) => {
     try {
-      res.status(200).json(req.user);
+      const { id } = req.params;
+      const user = await User.findById(id).populate({
+        path: "dashboards",
+        populate: "title",
+      });
+      res.status(200).json(user);
     } catch (error) {
       next(error);
     }
@@ -107,12 +114,16 @@ userRouter
         ...req.body,
         password,
       });
+      const payload = { id: newUser._id };
+      const token = jwt.sign(payload, process.env.JWT_SECRET);
+
       const {
         password: _,
         __v,
         ...newUserWithoutPassword
       } = newUser.toObject();
-      res.status(201).json(newUserWithoutPassword);
+
+      res.status(201).json({ ...newUserWithoutPassword, token });
     } catch (error) {
       next(error);
     }
@@ -129,25 +140,21 @@ userRouter
     }
   })
 
+  /* WORKING */
   .delete("/session", async (req, res, next) => {
     try {
       req.logout((err) => {
         if (err) {
           return next(err);
         }
-        req.session.destroy((err) => {
-          if (err) {
-            return next(err);
-          }
-          res.sendStatus(204);
-        });
+        res.sendStatus(204);
       });
     } catch (error) {
       next(error);
     }
   })
 
-  /* WORKING */
+  /* FUNZIONA SOLO SE LO SPOSTO SOPRA A DELETE/SESSION */
   .delete("/:id", authControl, async (req, res, next) => {
     try {
       const deletedUser = await User.findByIdAndDelete(req.params.id);

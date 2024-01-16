@@ -16,7 +16,7 @@ const DashAccess = () => {
             <button className="pinkBgButton p-4 fs-5 rounded-3">
               <Link
                 style={{ textDecoration: "none", color: "#f75959" }}
-                to="/wip"
+                to="/create"
               >
                 Create a new dashboard
               </Link>

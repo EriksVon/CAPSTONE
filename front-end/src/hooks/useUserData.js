@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 const useUserData = (userId, token) => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -17,7 +16,6 @@ const useUserData = (userId, token) => {
             },
           }
         );
-
         if (response.ok) {
           const user = await response.json();
           setUserData(user);
@@ -28,8 +26,6 @@ const useUserData = (userId, token) => {
       } catch (error) {
         console.error("Error during fetch:", error);
         navigate("/login");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -38,7 +34,7 @@ const useUserData = (userId, token) => {
     }
   }, [userId, token, navigate]);
 
-  return { userData, loading };
+  return { userData };
 };
 
 export default useUserData;

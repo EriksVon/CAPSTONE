@@ -1,10 +1,20 @@
 import mongoose, { Schema } from "mongoose";
 
 const DashboardSchema = new Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: "users",
+  partecipants: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "users",
+    },
+  ],
+  dashboardToken: {
+    type: String,
   },
+  emails: [
+    {
+      type: String,
+    },
+  ],
   title: {
     type: String,
     required: true,
@@ -12,9 +22,11 @@ const DashboardSchema = new Schema({
   theme: {
     type: String,
   },
-  activities: {
-    type: String,
-  },
+  activities: [
+    {
+      type: String,
+    },
+  ],
   avatar: {
     type: String,
   },

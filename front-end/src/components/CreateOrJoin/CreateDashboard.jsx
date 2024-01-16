@@ -5,12 +5,22 @@ import { ReactComponent as Blue } from "../../styles/images/blue.svg";
 import { ReactComponent as Green } from "../../styles/images/green.svg";
 import { ReactComponent as Orange } from "../../styles/images/orange.svg";
 import { useState } from "react";
+import useJwt from "../../hooks/useJwt";
+import { useNavigate } from "react-router-dom";
+import useUserData from "../../hooks/useUserData";
 
 function CreateDashboard() {
+  const { userId, token } = useJwt();
+  const { userData } = useUserData(userId, token);
+
+  const navigate = useNavigate();
+
   const [radioValue, setRadioValue] = useState("");
+
   const [emailList, setEmailList] = useState([""]);
   const [selectedActivities, setSelectedActivities] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [dashboardTitle, setDashboardTitle] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   const activities = [
     "Money",
@@ -30,6 +40,16 @@ function CreateDashboard() {
     { id: "green", label: <Green /> },
     { id: "orange", label: <Orange /> },
   ];
+
+  const dashboard = {
+    emails: emailList,
+    title: dashboardTitle,
+    theme: radioValue,
+    activities: selectedActivities,
+    avatar: avatar,
+    partecipants: [userId],
+    dashboardToken: Math.random().toString(36).substr(2, 9),
+  };
 
   const addEmailField = () => {
     setEmailList([...emailList, ""]);
@@ -59,38 +79,39 @@ function CreateDashboard() {
     }
   };
 
-  /*   const uploadImg = () => {
-    fetch(`${process.env.REACT_APP_ENDPOINT_URL}/dashboard/${id}/avatar`, {
-      method: "PATCH",
-      body: avatar,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(() => {
-      getExperiences();
-    });
-  };
-
-  const handleFile = (ev) => {
-    setFd((prev) => {
-      prev.delete("photo");
-      prev.append("photo", ev.target.files[0]);
-      return prev;
-    });
-    console.log(fd);
-  }; */
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const dashboard = {
-      emails: emailList,
-      title: document.getElementById("formHorizontalDashboardName").value,
-      theme: radioValue,
-      activities: selectedActivities,
-      avatar: selectedFile,
-    };
-    /*  uploadImg(); */
-    console.log(dashboard);
+    try {
+      if (userData.dashboards.length <= 1) {
+        const response = await fetch(
+          `${process.env.REACT_APP_ENDPOINT_URL}/dashboard`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(dashboard),
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Dashboard creata con successo:", data);
+          navigate("/");
+        } else {
+          console.error(
+            "Errore durante la creazione della dashboard:",
+            response.status,
+            response.statusText
+          );
+        }
+      } else {
+        alert("Hai già una dashboard");
+      }
+    } catch (error) {
+      console.error("Errore durante la creazione della dashboard:", error);
+    }
   };
 
   return (
@@ -139,7 +160,11 @@ function CreateDashboard() {
             Choose a title
           </Form.Label>
           <Col xs={9}>
-            <Form.Control type="text" placeholder="Es: Cip & Ciop" />
+            <Form.Control
+              type="text"
+              placeholder="Es: Cip & Ciop"
+              onChange={(e) => setDashboardTitle(e.target.value)}
+            />
           </Col>
         </Form.Group>
 
@@ -192,6 +217,7 @@ function CreateDashboard() {
             </Col>
           </Row>
         </Form.Group>
+
         <Form.Group controlId="formImg">
           <Container>
             <Row className="d-flex align-items-center">
@@ -199,15 +225,18 @@ function CreateDashboard() {
                 <Form.Label>Choose an image</Form.Label>
               </Col>
               <Col xs={9}>
-                {/*                 <Form.Group as={Col} controlId="photo" className="AggExp-img">
-                  <label className="custom-file-upload">
-                    <input type="file" onChange={handleFile} />
-                  </label>
-                </Form.Group> */}
+                <Form.Group as={Col} controlId="avatar">
+                  <Form.Control
+                    type="file"
+                    multiple={false}
+                    onChange={(e) => setAvatar(e.target.files[0])}
+                  />
+                </Form.Group>
               </Col>
             </Row>
           </Container>
         </Form.Group>
+
         <button type="submit" className="pinkBgButton" onClick={handleSubmit}>
           Submit
         </button>
@@ -216,44 +245,3 @@ function CreateDashboard() {
   );
 }
 export default CreateDashboard;
-
-// FRONTEND:
-/* const [file, setFile] = useState(null)
-const sendPicture = async () => {
-  console.log(file.name)
-  // qui eseguo la fetch..
-
-const formdAta = new FormData()
-formdata.append("avatar", file, "nomefile.jpeg")
-const response = await fetch("http://localhost:3000/api/multipart", {
-  method: "PATCH",
-  body: formdata
-})
-const {url} = await response.json()
-console.log(url)
-}
-
-<input
-  type="file"
-  multiple= {false}
-  onChange={(e) => setFile(e.target.files[0])}/>
-  <button onClick={() => !!file&& sendPicture()}>
-  click here to upload your prof pic
-  </button> 
-  
-  */
-
-// SALVARE IL FILE IN LOCALE:
-
-/* const storage = multer.diskStorage({
-  destination: "./src/uploads",
-  filename: function (req, file, callback) {
-    if (["image/jpeg", "image/png"].includes(file.mimetype)) {
-      callback(null, `${Date.now()}_${file.originalname}`);
-    } else {
-      const error = new Error("Please upload png or jpg");
-      error.statusCode = 400;
-      callback(error);
-    }
-  },
-}); */

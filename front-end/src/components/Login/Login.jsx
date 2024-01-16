@@ -40,16 +40,20 @@ function Login() {
   };
 
   return (
-    <Container>
-      <Row className="mt-3 d-flex align-items-center justify-content-center my-1 text-center">
-        <Col xl={8} className="d-none d-xl-inline m-0 p-0">
+    <Container className="text-center">
+      <Row>
+        <Col
+          xl={8}
+          className="d-none d-xl-inline m-0 p-0"
+          style={{ minWidth: "600px" }}
+        >
           <ImgLogin />
         </Col>
 
-        <Col xs={12} xl={4}>
+        <Col xs={10} xl={3} className="p-0 m-0">
           <Modal.Dialog>
             <Modal.Header className="d-flex flex-column">
-              <strong>Ti diamo il benvenuto su PlanMe</strong>
+              <strong>Welcome on PlanMe</strong>
               <Modal.Title className="fs-1 fw-bolder my-3">Login</Modal.Title>
             </Modal.Header>
 

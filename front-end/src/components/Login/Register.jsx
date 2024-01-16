@@ -13,7 +13,6 @@ function Register() {
     name: "",
     surname: "",
     email: "",
-    /*  username: "", */
     password: "",
   });
 
@@ -47,7 +46,7 @@ function Register() {
 
   return (
     <Container>
-      <Row className="mt-3 d-flex align-items-center justify-content-center my-1">
+      <Row className="d-flex align-items-center justify-content-center">
         <Col xl={6} className="d-none d-xl-inline m-0 p-0">
           <ImgLogin />
         </Col>
