@@ -98,7 +98,7 @@ function CreateDashboard() {
         if (response.ok) {
           const data = await response.json();
           console.log("Dashboard creata con successo:", data);
-          navigate("/");
+          navigate("/wip");
         } else {
           console.error(
             "Errore durante la creazione della dashboard:",
