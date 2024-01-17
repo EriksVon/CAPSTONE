@@ -14,10 +14,44 @@ function JoinDashboard() {
     dashboardToken: "",
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setShowError(true);
-    navigate("/wip");
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_ENDPOINT_URL}/dashboard/join-dashboard`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData);
+        setShowError(false);
+        navigate("/");
+      } else {
+        if (response.status === 404) {
+          alert("Dashboard not found");
+          body.dashboardToken = "";
+        } else if (response.status === 401) {
+          alert("Wrong credentials");
+          body.dashboardToken = "";
+          body.email = "";
+        } else if (response.status === 400) {
+          alert("Dashboard already joined");
+          navigate("/");
+        } else {
+          alert("Error occurred while joining the dashboard");
+        }
+      }
+    } catch (error) {
+      setShowError(true);
+    }
   };
 
   return (
@@ -49,11 +83,11 @@ function JoinDashboard() {
                     type="password"
                     placeholder="Enter token"
                     value={body.dashboardToken}
-                    /* required */
+                    required
                     onInput={(e) =>
                       setBody({
                         ...body,
-                        password: e.target.value,
+                        dashboardToken: e.target.value,
                       })
                     }
                   />

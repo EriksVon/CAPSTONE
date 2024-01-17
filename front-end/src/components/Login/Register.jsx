@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Container, Row, Modal, Col } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import { ReactComponent as ImgLogin } from "../../styles/images/img-home.svg";
 import { ReactComponent as GoogleLogo } from "../../styles/images/google.svg";
 
@@ -41,6 +41,7 @@ function Register() {
       const errorData = await response.json();
       alert(errorData.message);
       setBody({ ...body, password: "" });
+      redirect("/login");
     }
   };
 

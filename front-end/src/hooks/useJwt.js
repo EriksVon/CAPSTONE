@@ -15,6 +15,7 @@ export default function useJwt() {
     userId: localStorage.getItem("userId"),
     token: localStorage.getItem("token"),
   };
+
   useEffect(() => {
     if (!userData.userId || !userData.token) {
       navigate("/login");
