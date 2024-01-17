@@ -1,8 +1,10 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { ReactComponent as ImgJoin } from "../../styles/images/img-accesso.svg";
+import useJwt from "../../hooks/useJwt";
 
 const DashAccess = () => {
+  useJwt();
   return (
     <Container>
       <Row>

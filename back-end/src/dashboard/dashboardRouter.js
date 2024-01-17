@@ -1,8 +1,7 @@
 import express from "express";
 import { Dashboard } from "./dashboardModel.js";
-import { upload } from "../middleware/multer.js";
-import { User } from "../users/usersModel.js";
 import authControl from "../middleware/authControl.js";
+import { User } from "../users/usersModel.js";
 
 const dashboardRouter = express.Router();
 
@@ -17,39 +16,20 @@ dashboardRouter
       next(error);
     }
   })
-  /* WORKING */
-  .get("/:id", async (req, res, next) => {
-    try {
-      const { id } = req.params;
-      const dashboard = await Dashboard.findById(id);
-      res.json(dashboard);
-    } catch (error) {
-      next(error);
-    }
-  })
 
-  .get("/:userId", async (req, res, next) => {
+  .get("/:id/:dashboardId", authControl, async (req, res, next) => {
     try {
-      const { userId } = req.params;
-      const dashboard = await Dashboard.findOne({
-        partecipants: { $in: [userId] },
+      const dashboards = await Dashboard.find({
+        user: req.user._id,
       });
-      console.log("Dashboard data:", dashboard);
-      if (!dashboard) {
-        return res
-          .status(404)
-          .json({ message: "Dashboard not found for the user" });
-      }
-      res.json(dashboard);
+      res.json(dashboards);
     } catch (error) {
-      res.status(500).send(error);
-      res.status(500).json({ error: error.message });
       next(error);
     }
   })
 
   /* WORKING */
-  .post("/", authControl, async (req, res, next) => {
+  .post("/create-dashboard", authControl, async (req, res, next) => {
     try {
       const { emails, title, theme, activities, partecipants, dashboardToken } =
         req.body;
@@ -65,13 +45,10 @@ dashboardRouter
         dashboardToken,
       });
 
-      const userId = req.user._id;
-      const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { $push: { dashboards: newDashboard._id } },
-        { new: true }
-      );
-
+      const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+        $push: { dashboards: newDashboard },
+      });
+      res.send(updatedUser);
       res.status(201).json(newDashboard);
     } catch (error) {
       next(error);
@@ -113,18 +90,6 @@ dashboardRouter
       });
     } catch (error) {
       res.status(500).send(error);
-      next(error);
-    }
-  })
-
-  .patch("/:id/avatar", upload.single("avatar"), async (req, res, next) => {
-    try {
-      const { id } = req.params;
-      const updatedDashboard = await Dashboard.findByIdAndUpdate(id, {
-        avatar: req.file.path,
-      });
-      res.send(updatedDashboard);
-    } catch (error) {
       next(error);
     }
   });

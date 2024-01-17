@@ -48,8 +48,6 @@ passport.deserializeUser(async function (id, done) {
 });
 
 server.use("/profile", userRouter);
-server.use("/dashboard", dashboardRouter);
-
 server.use(genericError);
 
 mongoose

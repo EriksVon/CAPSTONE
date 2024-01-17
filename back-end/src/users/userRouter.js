@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import authControl from "../middleware/authControl.js";
 import passport from "passport";
+import dashboardRouter from "../dashboard/dashboardRouter.js";
 
 const userRouter = express.Router();
 
@@ -60,7 +61,7 @@ userRouter
       const payload = { id: req.user._id };
       const token = jwt.sign(payload, process.env.JWT_SECRET);
       res.redirect(
-        `${process.env.FE_DEV_URL}?token=${token}&userId=${payload.id}`
+        `${process.env.FE_DEV_URL}/create-or-join?token=${token}&userId=${payload.id}`
       );
       /*   
       const redirectBaseUrl = isLocalhost
@@ -82,6 +83,7 @@ userRouter
       const user = await User.findOne({ email: req.user.email }).populate(
         "dashboards"
       );
+
       res.status(200).json(user);
     } catch (err) {
       next(err);
@@ -92,10 +94,7 @@ userRouter
   .get("/:id", authControl, async (req, res, next) => {
     try {
       const { id } = req.params;
-      const user = await User.findById(id).populate({
-        path: "dashboards",
-        populate: "title",
-      });
+      const user = await User.findById(id).populate("dashboards");
       res.status(200).json(user);
     } catch (error) {
       next(error);
@@ -158,13 +157,15 @@ userRouter
   .delete("/:id", authControl, async (req, res, next) => {
     try {
       const deletedUser = await User.findByIdAndDelete(req.params.id);
+      res.status(204).send({ message: "User deleted" });
       if (!deletedUser) {
         return res.status(404).send();
       }
-      res.status(204).send({ message: "User deleted" });
     } catch (error) {
       next(error);
     }
   });
 
 export default userRouter;
+
+userRouter.use("/", dashboardRouter);

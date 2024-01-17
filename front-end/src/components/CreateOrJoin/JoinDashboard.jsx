@@ -19,7 +19,7 @@ function JoinDashboard() {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_ENDPOINT_URL}/dashboard/join-dashboard`,
+        `${process.env.REACT_APP_ENDPOINT_URL}/profile/join-dashboard`,
         {
           method: "POST",
           headers: {
@@ -30,8 +30,7 @@ function JoinDashboard() {
       );
 
       if (response.ok) {
-        const responseData = await response.json();
-        console.log(responseData);
+        await response.json();
         setShowError(false);
         navigate("/");
       } else {
@@ -41,7 +40,6 @@ function JoinDashboard() {
         } else if (response.status === 401) {
           alert("Wrong credentials");
           body.dashboardToken = "";
-          body.email = "";
         } else if (response.status === 400) {
           alert("Dashboard already joined");
           navigate("/");
