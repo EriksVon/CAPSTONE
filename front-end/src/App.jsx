@@ -14,7 +14,7 @@ function App() {
     <>
       <BrowserRouter>
         <MyNav />
-        <div className="main">
+        <div className="main-wrapper">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

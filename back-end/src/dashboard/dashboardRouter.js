@@ -2,6 +2,11 @@ import express from "express";
 import { Dashboard } from "./dashboardModel.js";
 import authControl from "../middleware/authControl.js";
 import { User } from "../users/usersModel.js";
+import brevo from "@getbrevo/brevo";
+let apiInstance = new brevo.TransactionalEmailsApi();
+
+let apiKey = apiInstance.authentications["apiKey"];
+apiKey.apiKey = process.env.BREVO_API_KEY;
 
 const dashboardRouter = express.Router();
 
@@ -47,8 +52,32 @@ dashboardRouter
       const updatedUser = await User.findByIdAndUpdate(req.user._id, {
         $push: { dashboards: newDashboard },
       });
+
+      let sendSmtpEmail = new brevo.SendSmtpEmail();
+
+      sendSmtpEmail.subject = "Join {{params.subject}}!";
+      sendSmtpEmail.htmlContent =
+        "<html><body><h1>Welcome in planMe!</h1> <h3>This is the token you need to access you dashboard: {{params.token}}</h3></body></html>";
+      sendSmtpEmail.sender = { name: "PlanMe", email: "planMe@plan.me" };
+
+      const emailRecipients = emails.map((email) => ({ email }));
+      sendSmtpEmail.to = emailRecipients;
+
+      sendSmtpEmail.replyTo = {
+        name: "John",
+        email: "erica.ropelato@gmail.com",
+      };
+      sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
+      sendSmtpEmail.params = {
+        parameter: "PlanMe",
+        subject: "PlanMe",
+        token: dashboardToken,
+      };
+
+      const emailData = await apiInstance.sendTransacEmail(sendSmtpEmail);
       res.status(201).json({
         updatedUser,
+        emailData,
         newDashboard,
       });
     } catch (error) {

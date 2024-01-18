@@ -80,7 +80,7 @@ function MyNav() {
               <Dropdown.Item onClick={deleteAccount}>
                 Delete account
               </Dropdown.Item>
-              <Dropdown.Divider />
+              <Dropdown.Divider className="d-md-none" />
               <Dropdown.Item href="/wip" className="d-md-none">
                 About us
               </Dropdown.Item>

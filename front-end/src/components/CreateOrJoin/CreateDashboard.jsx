@@ -72,7 +72,7 @@ function CreateDashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (userData.dashboards.length === 0) {
+      if (userData && userData.dashboards.length === 0) {
         const response = await fetch(
           `${process.env.REACT_APP_ENDPOINT_URL}/profile/create-dashboard`,
           {
@@ -88,9 +88,11 @@ function CreateDashboard() {
         if (response.ok) {
           const data = await response.json();
           console.log("Dashboard creata con successo:", data);
+
           const dashboardId = data.newDashboard._id;
           console.log("dashboardId:", dashboardId);
           localStorage.setItem("dashboardId", dashboardId);
+
           const mode = data.newDashboard.theme;
           localStorage.setItem("themeMode", mode);
           navigate("/wip");

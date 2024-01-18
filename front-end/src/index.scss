@@ -3,7 +3,6 @@
 body {
   font-family: "Open Sans", sans-serif;
   display: flex;
-  flex-direction: column;
   min-height: 100vh;
 }
 
@@ -13,16 +12,12 @@ body {
   flex: 1;
 }
 
-.main {
+.main-wrapper {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   flex: 1;
   margin-bottom: 80px;
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .footer {

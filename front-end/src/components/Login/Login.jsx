@@ -40,17 +40,13 @@ function Login() {
   };
 
   return (
-    <Container className="text-center">
-      <Row>
-        <Col
-          xl={8}
-          className="d-none d-xl-inline m-0 p-0"
-          style={{ minWidth: "600px" }}
-        >
+    <Container>
+      <Row className="d-flex justify-content-center">
+        <Col xl={6} className="d-none d-xl-inline">
           <ImgLogin />
         </Col>
 
-        <Col xs={10} xl={3} className="p-0 m-0">
+        <Col xs={10} xl={6}>
           <Modal.Dialog>
             <Modal.Header className="d-flex flex-column">
               <strong>Welcome on PlanMe</strong>
@@ -103,7 +99,7 @@ function Login() {
               </Modal.Body>
             </Form>
 
-            <Modal.Body className="d-flex flex-column gap-3">
+            <Modal.Body className="d-flex flex-column text-center gap-3">
               {/*              <Modal.Title className="fs-6 fw-bold">
                 Or choose between one of this options:
               </Modal.Title>
