@@ -1,0 +1,13 @@
+[{
+    "email": "utente1@example.com",
+    "name": "Mario",
+    "surname": "Rossi",
+    "phoneNumber": 3331234567,
+    "image": "mario.jpg",
+    "dashboards": [],
+    "password": "passwordhash1"
+  }
+
+
+  
+]

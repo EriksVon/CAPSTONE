@@ -1,0 +1,46 @@
+[{
+  "_id": {
+    "$oid": "65a7ae4cc9d09c85c228c2a2"
+  },
+  "partecipants": [
+    {
+      "$oid": "65a7ae39c9d09c85c228c29d"
+    },
+    {
+      "$oid": "65a7ae77c9d09c85c228c2a6"
+    }
+  ],
+  "dashboardToken": "lo0ucl1to",
+  "emails": [
+    "prova@prova"
+  ],
+  "title": "prova",
+  "theme": "yellow",
+  "activities": [
+    "Money"
+  ],
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "65a8113b275f4ffbc2791e31"
+  },
+  "partecipants": [
+    {
+      "$oid": "65a81015275f4ffbc2791e14"
+    },
+    {
+      "$oid": "65a81176275f4ffbc2791e37"
+    }
+  ],
+  "dashboardToken": "rq5kuvz61",
+  "emails": [
+    "asdf@asdgfg"
+  ],
+  "title": "ui",
+  "theme": "yellow",
+  "activities": [
+    "Money"
+  ],
+  "__v": 1
+}]

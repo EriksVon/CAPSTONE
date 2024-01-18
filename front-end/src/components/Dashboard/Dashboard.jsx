@@ -1,25 +1,27 @@
 import { Container } from "react-bootstrap";
 import useJwt from "../../hooks/useJwt";
 import useUserData from "../../hooks/useUserData";
-
+import Loading from "../Loading";
 function Dashboard() {
+  /*   const smallScreenMaxWidth = 767;
+  const screenWidth = window.innerWidth; */
+
   const { userId, token } = useJwt();
   const { userData } = useUserData(userId, token);
 
   console.log(userData);
 
   if (!userData) {
-    return <div>Error loading user data</div>;
+    return <Loading />;
   }
 
   const dashboardData = userData.dashboards[0];
   const dashboardId = dashboardData._id;
   window.localStorage.setItem("dashboardId", dashboardId);
-
   console.log(dashboardData);
 
   if (!dashboardData) {
-    return <div>Error loading dashboard data</div>;
+    return <Loading />;
   }
 
   return (
@@ -29,7 +31,11 @@ function Dashboard() {
       {dashboardData ? (
         <>
           <h2>{dashboardData.title}</h2>
-          <h3>
+
+          {/*           {screenWidth <= smallScreenMaxWidth && <ComponentForSmallScreens />}
+          {screenWidth > smallScreenMaxWidth && <ComponentForLargeScreens />} */}
+
+          {/*           <h3>
             {dashboardData.activities.map((activity, i) => (
               <li key={i}>{activity}</li>
             ))}
@@ -44,7 +50,7 @@ function Dashboard() {
             {dashboardData.partecipants.map((partec, i) => (
               <li key={i}>{partec}</li>
             ))}
-          </h3>
+          </h3> */}
         </>
       ) : (
         <div>Loading...</div>

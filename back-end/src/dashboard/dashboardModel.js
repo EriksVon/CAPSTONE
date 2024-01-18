@@ -25,6 +25,12 @@ const DashboardSchema = new Schema({
   activities: [
     {
       type: String,
+      tool: {
+        type: String,
+      },
+      description: {
+        type: String,
+      },
     },
   ],
   avatar: {

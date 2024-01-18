@@ -1,0 +1,14 @@
+[
+  {
+    "partecipants": [],
+    "dashboardToken": "tokenDashboard1",
+    "emails": ["utente1@example.com"],
+    "title": "Dashboard Personale di Mario",
+    "theme": "green",
+    "activities": [
+      {"type": "Money", "tool": "Gestione Finanze", "description": "Monitora le tue spese e entrate"}
+    ]
+  }
+]
+
+    
