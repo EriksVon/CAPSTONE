@@ -27,7 +27,6 @@ dashboardRouter
       next(error);
     }
   })
-
   /* WORKING */
   .post("/create-dashboard", authControl, async (req, res, next) => {
     try {
@@ -48,8 +47,10 @@ dashboardRouter
       const updatedUser = await User.findByIdAndUpdate(req.user._id, {
         $push: { dashboards: newDashboard },
       });
-      res.send(updatedUser);
-      res.status(201).json(newDashboard);
+      res.status(201).json({
+        updatedUser,
+        newDashboard,
+      });
     } catch (error) {
       next(error);
     }
@@ -90,6 +91,19 @@ dashboardRouter
       });
     } catch (error) {
       res.status(500).send(error);
+      next(error);
+    }
+  })
+
+  .put("/:id/:dashId", async (req, res, next) => {
+    try {
+      let dashboard = await Dashboard.findOneAndUpdate(
+        { _id: req.params.dashId },
+        req.body,
+        { new: true }
+      );
+      res.send(dashboard);
+    } catch (error) {
       next(error);
     }
   });

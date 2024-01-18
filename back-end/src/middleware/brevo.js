@@ -1,32 +1,36 @@
-/* const brevo = require("@getbrevo/brevo");
-let defaultClient = brevo.ApiClient.instance;
-
-let apiKey = defaultClient.authentications["api-key"];
-apiKey.apiKey = "process.env.PLAN-ME-KEY";
+/* import express from "express";
+import brevo from "@getbrevo/brevo";
 
 let apiInstance = new brevo.TransactionalEmailsApi();
-let sendSmtpEmail = new brevo.SendSmtpEmail();
 
-sendSmtpEmail.subject = "My {{params.subject}}";
-sendSmtpEmail.htmlContent =
-  "<html><body><h1>Common: This is my first transactional email {{params.parameter}}</h1></body></html>";
-sendSmtpEmail.sender = { name: "John", email: "example@example.com" };
-sendSmtpEmail.to = [{ email: "example@brevo.com", name: "sample-name" }];
-sendSmtpEmail.replyTo = { email: "example@brevo.com", name: "sample-name" };
-sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
-sendSmtpEmail.params = {
-  parameter: "My param value",
-  subject: "common subject",
-};
+let apiKey = apiInstance.authentications["apiKey"];
+apiKey.apiKey = process.env.BREVO_API_KEY;
 
-apiInstance.sendTransacEmail(sendSmtpEmail).then(
-  function (data) {
-    console.log(
-      "API called successfully. Returned data: " + JSON.stringify(data)
-    );
-  },
-  function (error) {
-    console.error(error);
-  }
-);
+const brevoRouter = express.Router();
+
+brevoRouter.post("/test-brevo", async (req, res) => {
+  let sendSmtpEmail = new brevo.SendSmtpEmail();
+
+  sendSmtpEmail.subject = "My {{params.subject}}";
+  sendSmtpEmail.htmlContent =
+    "<html><body><h1>Common: This is my first transactional email {{params.parameter}}</h1></body></html>";
+  sendSmtpEmail.sender = { name: "PlanMe", email: "planMe@plan.me" };
+  sendSmtpEmail.to = [{ email: "eriks.von.eriksson@gmail.com", name: "Eriks" }];
+  sendSmtpEmail.replyTo = { name: "John", email: "erica.ropelato@gmail.com" };
+  sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
+  sendSmtpEmail.params = {
+    parameter: "PlanMe",
+    subject: "Join PlanMe!",
+  };
+
+  const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+  console.log(
+    "API called successfully. Returned data: " + JSON.stringify(data)
+  );
+
+  res.send(data);
+});
+
+export default brevoRouter;
  */

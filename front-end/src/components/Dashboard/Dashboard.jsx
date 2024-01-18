@@ -1,61 +1,63 @@
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import useJwt from "../../hooks/useJwt";
 import useUserData from "../../hooks/useUserData";
 import Loading from "../Loading";
-function Dashboard() {
-  /*   const smallScreenMaxWidth = 767;
-  const screenWidth = window.innerWidth; */
+import Settings from "./Tools/Settings";
+import Calendar from "./Tools/Calendar";
+import Notes from "./Tools/Notes";
+import Money from "./Tools/Money";
+import { useStateContext } from "./Tools/context/ContextProvider";
+import { GearFill } from "react-bootstrap-icons";
 
+function Dashboard() {
+  /* DON'T TUCH MY BRAIL --->*/
   const { userId, token } = useJwt();
   const { userData } = useUserData(userId, token);
 
-  console.log(userData);
-
+  const { currentTheme, showSettings, handleShow, colorStrong } =
+    useStateContext();
+  console.log("currentTheme:", currentTheme);
   if (!userData) {
     return <Loading />;
   }
-
   const dashboardData = userData.dashboards[0];
   const dashboardId = dashboardData._id;
   window.localStorage.setItem("dashboardId", dashboardId);
-  console.log(dashboardData);
-
   if (!dashboardData) {
     return <Loading />;
   }
+  /* <--- DON'T TUCH MY BRAIL */
 
   return (
-    <Container className="mx-auto text-center">
-      {userData ? <h1>WELCOME {userData.name}</h1> : <div>Loading...</div>}
+    <div
+      style={{
+        backgroundColor: currentTheme,
+        border: "solid 20px",
+        borderColor: colorStrong,
+        height: "80vh",
+        width: "90vw",
+      }}
+    >
+      {showSettings && <Settings />}
+      <Container className="mx-auto text-center">
+        {dashboardData ? (
+          <>
+            <h2>{dashboardData.title}</h2>
+          </>
+        ) : (
+          <div>Loading...</div>
+        )}
 
-      {dashboardData ? (
-        <>
-          <h2>{dashboardData.title}</h2>
-
-          {/*           {screenWidth <= smallScreenMaxWidth && <ComponentForSmallScreens />}
-          {screenWidth > smallScreenMaxWidth && <ComponentForLargeScreens />} */}
-
-          {/*           <h3>
-            {dashboardData.activities.map((activity, i) => (
-              <li key={i}>{activity}</li>
-            ))}
-          </h3>
-          <h3>
-            {dashboardData.emails.map((email, i) => (
-              <li key={i}>{email}</li>
-            ))}
-          </h3>
-          <h3>{dashboardData.theme}</h3>
-          <h3>
-            {dashboardData.partecipants.map((partec, i) => (
-              <li key={i}>{partec}</li>
-            ))}
-          </h3> */}
-        </>
-      ) : (
-        <div>Loading...</div>
-      )}
-    </Container>
+        <Calendar />
+        <Notes />
+        <Money />
+        <div content="settings">
+          <Button onClick={handleShow} style={{ backgroundColor: colorStrong }}>
+            <GearFill />
+          </Button>
+        </div>
+      </Container>
+    </div>
   );
 }
 

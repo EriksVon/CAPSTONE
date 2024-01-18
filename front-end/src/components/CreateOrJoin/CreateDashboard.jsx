@@ -1,21 +1,19 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { ReactComponent as Yellow } from "../../styles/images/yellow.svg";
-import { ReactComponent as Red } from "../../styles/images/red.svg";
-import { ReactComponent as Blue } from "../../styles/images/blue.svg";
-import { ReactComponent as Green } from "../../styles/images/green.svg";
-import { ReactComponent as Orange } from "../../styles/images/orange.svg";
+import combinedThemes from "../../data/data";
 import { useState } from "react";
 import useJwt from "../../hooks/useJwt";
 import { useNavigate } from "react-router-dom";
 import useUserData from "../../hooks/useUserData";
+import { useStateContext } from "../Dashboard/Tools/context/ContextProvider";
 
 function CreateDashboard() {
   const { userId, token } = useJwt();
   const { userData } = useUserData(userId, token);
+  const { getThemeFromLocalStorage } = useStateContext();
 
   const navigate = useNavigate();
 
-  const [radioValue, setRadioValue] = useState("");
+  const [themeValue, setThemeValue] = useState("");
 
   const [emailList, setEmailList] = useState([""]);
   const [selectedActivities, setSelectedActivities] = useState([]);
@@ -33,18 +31,10 @@ function CreateDashboard() {
     "Music",
   ];
 
-  const themeOptions = [
-    { id: "yellow", label: <Yellow /> },
-    { id: "red", label: <Red /> },
-    { id: "blue", label: <Blue /> },
-    { id: "green", label: <Green /> },
-    { id: "orange", label: <Orange /> },
-  ];
-
   const dashboard = {
     emails: emailList,
     title: dashboardTitle,
-    theme: radioValue,
+    theme: themeValue,
     activities: selectedActivities,
     avatar: avatar,
     partecipants: [userId],
@@ -98,10 +88,13 @@ function CreateDashboard() {
         if (response.ok) {
           const data = await response.json();
           console.log("Dashboard creata con successo:", data);
-          const dashboardId = data._id;
+          const dashboardId = data.newDashboard._id;
           console.log("dashboardId:", dashboardId);
-          window.localStorage.setItem("dashboardId", dashboardId);
+          localStorage.setItem("dashboardId", dashboardId);
+          const mode = data.newDashboard.theme;
+          localStorage.setItem("themeMode", mode);
           navigate("/wip");
+          getThemeFromLocalStorage();
         } else {
           console.error(
             "Errore durante la creazione della dashboard:",
@@ -176,21 +169,22 @@ function CreateDashboard() {
             Choose a theme
           </Form.Label>
           <Col xs={9} className="d-flex">
-            {themeOptions.map((option) => (
-              <Col key={option.id} xs={2}>
+            {combinedThemes.map((option) => (
+              <Col key={option.color} xs={2}>
                 <Button
                   style={{
+                    padding: "1px",
                     backgroundColor: "transparent",
                     border:
-                      radioValue === option.id ? "2px solid black" : "none",
+                      themeValue === option.color ? "2px solid black" : "none",
                   }}
-                  id={`radio-${option.id}`}
+                  id={`radio-${option.color}`}
                   type="button"
                   onClick={() => {
-                    setRadioValue(option.id);
+                    setThemeValue(option.color);
                   }}
                 >
-                  {option.label}
+                  {option.image}
                 </Button>
               </Col>
             ))}
