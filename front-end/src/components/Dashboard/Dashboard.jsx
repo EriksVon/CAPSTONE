@@ -8,25 +8,42 @@ import Notes from "./Tools/Notes";
 import Money from "./Tools/Money";
 import { useStateContext } from "./Tools/context/ContextProvider";
 import { GearFill } from "react-bootstrap-icons";
+import tinycolor from "tinycolor2";
 
 function Dashboard() {
   /* DON'T TUCH MY BRAIL --->*/
   const { userId, token } = useJwt();
   const { userData } = useUserData(userId, token);
 
-  const { currentTheme, showSettings, handleShow, colorStrong } =
-    useStateContext();
-  console.log("currentTheme:", currentTheme);
+  const {
+    currentTheme,
+    setCurrentTheme,
+    showSettings,
+    handleShow,
+    colorStrong,
+  } = useStateContext();
+
   if (!userData) {
     return <Loading />;
   }
   const dashboardData = userData.dashboards[0];
   const dashboardId = dashboardData._id;
-  window.localStorage.setItem("dashboardId", dashboardId);
+  localStorage.setItem("dashboardId", dashboardId);
   if (!dashboardData) {
     return <Loading />;
   }
+
+  if (!currentTheme || currentTheme === null) {
+    let theme = dashboardData.theme;
+    localStorage.setItem("themeMode", theme);
+    const colorStrong = tinycolor(theme).darken(10).toString();
+    localStorage.setItem("colorStrong", colorStrong);
+    setCurrentTheme(theme);
+  }
   /* <--- DON'T TUCH MY BRAIL */
+
+  const dashboardToken = dashboardData.dashboardToken;
+  console.log(dashboardToken);
 
   return (
     <div
@@ -38,7 +55,7 @@ function Dashboard() {
         width: "90vw",
       }}
     >
-      {showSettings && <Settings />}
+      {showSettings && <Settings dashboardToken={dashboardToken} />}
       <Container className="mx-auto text-center">
         {dashboardData ? (
           <>

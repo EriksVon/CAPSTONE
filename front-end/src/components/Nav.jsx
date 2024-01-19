@@ -11,7 +11,6 @@ function MyNav() {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
   const { userData } = useUserData(userId, token);
-  console.log("userData:", userData);
 
   const isUserLoggedIn = token && userId;
 
@@ -37,25 +36,39 @@ function MyNav() {
     }
   };
 
-  const deleteAccount = () => {
+  const deleteAccount = async () => {
+    if (!window.confirm("Are you sure?")) {
+      return;
+    }
     try {
-      fetch(`${process.env.REACT_APP_ENDPOINT_URL}/profile/${userId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}}`,
-        },
-      }).then(() => {
+      const response = await fetch(
+        `${process.env.REACT_APP_ENDPOINT_URL}/profile/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.ok) {
+        console.log("Account deleted");
         localStorage.clear();
-        window.location.reload();
-      });
+        navigate("/login");
+      } else {
+        console.error(
+          "Errore nella richiesta DELETE:",
+          response.status,
+          response.statusText
+        );
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Errore nella richiesta DELETE:", error);
     }
   };
 
   return (
     <Navbar expand="lg" sticky="top" className="bg-white">
-      <Container className="d-flex gap-2">
+      <Container className="d-flex gap-3">
         <Link to={isUserLoggedIn ? "/" : "/login"}>
           <Navbar.Brand>
             <PlanMeLogo width="120px" />

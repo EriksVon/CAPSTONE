@@ -128,7 +128,7 @@ userRouter
     }
   })
 
-  /* WORKING */
+  /* OK */
   .put("/:id", async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -139,7 +139,7 @@ userRouter
     }
   })
 
-  /* WORKING */
+  /* OK */
   .delete("/session", async (req, res, next) => {
     try {
       req.logout((err) => {
@@ -153,14 +153,11 @@ userRouter
     }
   })
 
-  /* FUNZIONA SOLO SE LO SPOSTO SOPRA A DELETE/SESSION */
-  .delete("/:id", authControl, async (req, res, next) => {
+  /* OK */
+  .delete("/:userId", authControl, async (req, res, next) => {
     try {
-      const deletedUser = await User.findByIdAndDelete(req.params.id);
+      await User.findByIdAndDelete(req.params.userId);
       res.status(204).send({ message: "User deleted" });
-      if (!deletedUser) {
-        return res.status(404).send();
-      }
     } catch (error) {
       next(error);
     }

@@ -11,18 +11,18 @@ export const ContextProvider = ({ children }) => {
   const handleShow = () => setShowSettings(true);
   const handleClose = () => setShowSettings(false);
 
-  const getThemeFromLocalStorage = () => {
-    const theme = localStorage.getItem("themeMode");
-    const colorStrong = tinycolor(theme).darken(10).toString();
-    localStorage.setItem("colorStrong", colorStrong);
-    console.log("theme:", theme);
-    console.log("colorStrong:", colorStrong);
-    setColorStrong(colorStrong);
-    setCurrentTheme(theme);
-  };
   useEffect(() => {
+    const getThemeFromLocalStorage = () => {
+      const theme = localStorage.getItem("themeMode");
+      const colorStrong = tinycolor(theme).darken(10).toString();
+      if (theme) {
+        localStorage.setItem("colorStrong", colorStrong);
+        setColorStrong(colorStrong);
+        setCurrentTheme(theme);
+      }
+    };
     getThemeFromLocalStorage();
-  }, []);
+  }, [currentTheme]);
 
   return (
     <StateContext.Provider
@@ -32,7 +32,7 @@ export const ContextProvider = ({ children }) => {
         handleClose,
         handleShow,
         currentTheme,
-        getThemeFromLocalStorage,
+        setCurrentTheme,
         colorStrong,
       }}
     >

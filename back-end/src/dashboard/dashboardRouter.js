@@ -53,33 +53,50 @@ dashboardRouter
         $push: { dashboards: newDashboard },
       });
 
-      let sendSmtpEmail = new brevo.SendSmtpEmail();
+      const emailRecipients = emails.map((email) => email);
+      console.log(emailRecipients);
+      // BREVO EMAIL
+      if (emailRecipients.length > 0) {
+        let sendSmtpEmail = new brevo.SendSmtpEmail();
 
-      sendSmtpEmail.subject = "Join {{params.subject}}!";
-      sendSmtpEmail.htmlContent =
-        "<html><body><h1>Welcome in planMe!</h1> <h3>This is the token you need to access you dashboard: {{params.token}}</h3></body></html>";
-      sendSmtpEmail.sender = { name: "PlanMe", email: "planMe@plan.me" };
+        sendSmtpEmail.subject = "Join {{params.subject}}!";
+        sendSmtpEmail.templateId = 2;
+        sendSmtpEmail.sender = { name: "PlanMe", email: "planMe@plan.me" };
 
-      const emailRecipients = emails.map((email) => ({ email }));
-      sendSmtpEmail.to = emailRecipients;
+        sendSmtpEmail.to = emailRecipients.map((email) => ({ email }));
 
-      sendSmtpEmail.replyTo = {
-        name: "John",
-        email: "erica.ropelato@gmail.com",
-      };
-      sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
-      sendSmtpEmail.params = {
-        parameter: "PlanMe",
-        subject: "PlanMe",
-        token: dashboardToken,
-      };
+        sendSmtpEmail.replyTo = {
+          name: "John",
+          email: "erica.ropelato@gmail.com",
+        };
+        sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
+        sendSmtpEmail.params = {
+          parameter: "PlanMe",
+          subject: "PlanMe",
+          token: dashboardToken,
+        };
 
-      const emailData = await apiInstance.sendTransacEmail(sendSmtpEmail);
-      res.status(201).json({
-        updatedUser,
-        emailData,
-        newDashboard,
-      });
+        try {
+          const emailData = await apiInstance.sendTransacEmail(sendSmtpEmail);
+          console.log(
+            "API called successfully. Returned data: " +
+              JSON.stringify(emailData)
+          );
+          res.status(201).json({
+            emailData,
+            updatedUser,
+            newDashboard,
+          });
+        } catch (error) {
+          console.error("Error sending email:", error);
+          res.status(500).json({ error: "Error sending email" });
+        }
+      } else {
+        res.status(201).json({
+          updatedUser,
+          newDashboard,
+        });
+      }
     } catch (error) {
       next(error);
     }
@@ -124,14 +141,66 @@ dashboardRouter
     }
   })
 
-  .put("/:id/:dashId", async (req, res, next) => {
+  .put("/me/:dashId", async (req, res, next) => {
     try {
       let dashboard = await Dashboard.findOneAndUpdate(
         { _id: req.params.dashId },
         req.body,
         { new: true }
       );
-      res.send(dashboard);
+      const dashboardToken = req.body.dashboardToken;
+      const newEmail = req.body.emails;
+
+      console.log(newEmail);
+      console.log(dashboardToken);
+      if (newEmail) {
+        let sendSmtpEmail = new brevo.SendSmtpEmail();
+
+        sendSmtpEmail.subject = "Join {{params.subject}}!";
+        sendSmtpEmail.templateId = 2;
+        sendSmtpEmail.sender = { name: "PlanMe", email: "planMe@plan.me" };
+
+        sendSmtpEmail.to = [{ email: newEmail }];
+
+        sendSmtpEmail.replyTo = {
+          name: "John",
+          email: "erica.ropelato@gmail.com",
+        };
+        sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
+        sendSmtpEmail.params = {
+          parameter: "PlanMe",
+          subject: "PlanMe",
+          token: dashboardToken,
+        };
+
+        try {
+          const emailData = await apiInstance.sendTransacEmail(sendSmtpEmail);
+          console.log(
+            "API called successfully. Returned data: " +
+              JSON.stringify(emailData)
+          );
+          res.status(201).json({
+            emailData,
+            dashboard,
+          });
+        } catch (error) {
+          console.error("Error sending email:", error);
+          res.status(500).json({ error: "Error sending email" });
+        }
+      } else {
+        res.status(200).json(dashboard);
+      }
+    } catch (error) {
+      next(error);
+    }
+  })
+  /* OK */
+  .delete("/me/:dashId", async (req, res, next) => {
+    try {
+      await Dashboard.findByIdAndDelete({
+        _id: req.params.dashId,
+      });
+      res.status(204).send({ message: "Dashboard deleted" });
     } catch (error) {
       next(error);
     }

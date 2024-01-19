@@ -1,19 +1,34 @@
-import { Button, Col, Container, Form, Offcanvas, Row } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Col,
+  Container,
+  Form,
+  Offcanvas,
+  Row,
+} from "react-bootstrap";
 import combinedThemes from "../../../data/data";
 import { useState } from "react";
-import useUserData from "../../../hooks/useUserData";
 import { CheckLg } from "react-bootstrap-icons";
 import { useStateContext } from "./context/ContextProvider";
+import { useNavigate } from "react-router-dom";
 
-const Settings = () => {
-  const { userId, token } = useUserData();
-  const dashboardId = window.localStorage.getItem("dashboardId");
+const Settings = ({ dashboardToken }) => {
+  const token = localStorage.getItem("token");
+  const [showPassword, setShowPassword] = useState(false);
+  const [show, setShow] = useState(false);
+
+  const handleButtonClick = () => {
+    setShowPassword(!showPassword);
+  };
+  const navigate = useNavigate();
+  const dashboardId = localStorage.getItem("dashboardId");
 
   const { showSettings, handleClose } = useStateContext();
 
   const [title, setTitle] = useState("");
   const [activity, setActivity] = useState([]);
-  const [avatar, setAvatar] = useState("");
+  /* const [avatar, setAvatar] = useState(""); */
   const [themeValue, setThemeValue] = useState("");
   const [email, setEmail] = useState("");
 
@@ -22,7 +37,8 @@ const Settings = () => {
     title: title,
     theme: themeValue,
     activities: activity,
-    avatar: avatar,
+    dashboardToken,
+    /*  avatar: avatar, */
   };
 
   const handleSubmit = async (e) => {
@@ -30,16 +46,17 @@ const Settings = () => {
     console.log(dashboard);
     if (dashboard.emails === "") {
       delete dashboard.emails;
+      delete dashboard.dashboardToken;
     }
     if (dashboard.title === "") {
       delete dashboard.title;
     }
-    if (dashboard.activities.length === 0) {
+    if (dashboard.activities === "") {
       delete dashboard.activities;
     }
-    if (dashboard.avatar === "") {
+    /*     if (dashboard.avatar === "") {
       delete dashboard.avatar;
-    }
+    } */
     if (dashboard.theme === "") {
       delete dashboard.theme;
     }
@@ -47,7 +64,7 @@ const Settings = () => {
     console.log(dashboard);
 
     const response = await fetch(
-      `${process.env.REACT_APP_ENDPOINT_URL}/profile/${userId}/${dashboardId}`,
+      `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}`,
       {
         method: "PUT",
         headers: {
@@ -66,83 +83,110 @@ const Settings = () => {
     } else {
       await response.json();
       const theme = dashboard.theme;
-      localStorage.setItem("themeMode", theme);
+      if (theme) localStorage.setItem("themeMode", theme);
       handleClose();
       window.location.reload();
     }
   };
 
+  const deleteDashboard = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.ok) {
+        console.log("Dashboard eliminata con successo");
+        navigate("/create-or-join");
+      } else {
+        console.error(
+          "Errore nella richiesta DELETE:",
+          response.status,
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Errore nella richiesta DELETE:", error);
+    }
+  };
+
   return (
-    <Offcanvas placement="end" show={showSettings} onHide={handleClose}>
-      <Offcanvas.Header closeButton>
-        <Offcanvas.Title>Dashboard Settings:</Offcanvas.Title>
-      </Offcanvas.Header>
-      <Offcanvas.Body>
-        <Form className="d-flex flex-column gap-4">
-          <Form.Group controlId="formHorizontalDashboardName">
-            <Form.Label>Change the title</Form.Label>
+    <>
+      <Offcanvas placement="end" show={showSettings} onHide={handleClose}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Dashboard Settings:</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Form className="d-flex flex-column gap-4">
+            <Form.Group controlId="formHorizontalDashboardName">
+              <Form.Label>Change the title</Form.Label>
 
-            <Form.Control
-              type="text"
-              placeholder="Cip & Ciop"
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </Form.Group>
+              <Form.Control
+                type="text"
+                placeholder="Cip & Ciop"
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </Form.Group>
 
-          <Form.Group controlId="formHorizontalEmail">
-            <Form.Label>Add someone</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Email@email.de"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Form.Group>
+            <Form.Group controlId="formHorizontalEmail">
+              <Form.Label>Add someone</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Email@email.de"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Group>
 
-          <Form.Group>
-            <Form.Label>Change the theme</Form.Label>
-            <Col className="d-flex">
-              {combinedThemes.map((option) => (
-                <Col key={option.id} xs={2}>
-                  <Button
-                    style={{
-                      position: "relative",
-                      backgroundColor: "transparent",
-                      border: "none",
-                    }}
-                    id={`radio-${option.id}`}
-                    type="button"
-                    onClick={() => {
-                      console.log(option.color);
-                      setThemeValue(option.color);
-                    }}
-                  >
-                    {option.image}
-                    <CheckLg
+            <Form.Group>
+              <Form.Label>Change the theme</Form.Label>
+              <Col className="d-flex">
+                {combinedThemes.map((option) => (
+                  <Col key={option.color} xs={2}>
+                    <Button
                       style={{
-                        position: "absolute",
-                        top: "30%",
-                        left: "35%",
+                        position: "relative",
+                        backgroundColor: "transparent",
+                        border: "none",
                       }}
-                      className={`text-black ${
-                        option.id === themeValue ? "d-block" : "d-none"
-                      }`}
-                    />
-                  </Button>
-                </Col>
-              ))}
-            </Col>
-          </Form.Group>
+                      id={`radio-${option.id}`}
+                      type="button"
+                      onClick={() => {
+                        console.log(option.color);
+                        setThemeValue(option.color);
+                      }}
+                    >
+                      {option.image}
+                      <CheckLg
+                        style={{
+                          position: "absolute",
+                          top: "30%",
+                          left: "35%",
+                        }}
+                        className={`text-black ${
+                          option.color === themeValue ? "d-block" : "d-none"
+                        }`}
+                      />
+                    </Button>
+                  </Col>
+                ))}
+              </Col>
+            </Form.Group>
 
-          <Form.Group controlId="formThemes">
-            <Form.Label column>Add an activity to your dashboard:</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Calendar"
-              onChange={(e) => setActivity(e.target.value)}
-            />
-          </Form.Group>
+            <Form.Group controlId="formThemes">
+              <Form.Label column>Add an activity to your dashboard:</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Calendar"
+                onChange={(e) => setActivity(e.target.value)}
+              />
+            </Form.Group>
 
-          <Form.Group controlId="formImg">
+            {/*           <Form.Group controlId="formImg">
             <Container>
               <Row className="d-flex align-items-center">
                 <Form.Label>Choose an image</Form.Label>
@@ -156,14 +200,64 @@ const Settings = () => {
                 </Form.Group>
               </Row>
             </Container>
-          </Form.Group>
+          </Form.Group> */}
 
-          <button type="submit" className="pinkBgButton" onClick={handleSubmit}>
-            Submit
-          </button>
-        </Form>
-      </Offcanvas.Body>
-    </Offcanvas>
+            <button
+              type="submit"
+              className="pinkBgButton"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          </Form>
+          <h1 className="text-center my-4">WARNING!!!</h1>
+          <Container>
+            <Row>
+              <Button
+                variant="danger"
+                className="my-3"
+                onClick={() => setShow(true)}
+              >
+                Delete Dashboard
+              </Button>
+
+              <Col>
+                <button
+                  onClick={handleButtonClick}
+                  className="pinkBgButton m-2"
+                >
+                  {showPassword ? "Hide Token" : "Show Token"}
+                </button>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={dashboardToken}
+                  readOnly
+                  className="text-center mx-auto"
+                />
+              </Col>
+            </Row>
+          </Container>
+        </Offcanvas.Body>
+      </Offcanvas>
+      <Alert show={show} variant="danger" style={{ zIndex: "10000" }}>
+        <div className="d-flex justify-content-end">
+          <Button onClick={() => setShow(false)} variant="light">
+            Close
+          </Button>
+        </div>
+        <Alert.Heading>Delete Dashboard</Alert.Heading>
+        <p>
+          Are you sure you want to delete this dashboard? This action cannot be
+          undone. If you delete this dashboard, all the data will be lost.
+        </p>
+        <hr />
+        <div className="d-flex justify-content-end">
+          <Button onClick={deleteDashboard} variant="danger">
+            DELETE DASHBOARD PERMANENTLY
+          </Button>
+        </div>
+      </Alert>
+    </>
   );
 };
 

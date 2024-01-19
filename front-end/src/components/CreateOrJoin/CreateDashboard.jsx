@@ -4,12 +4,11 @@ import { useState } from "react";
 import useJwt from "../../hooks/useJwt";
 import { useNavigate } from "react-router-dom";
 import useUserData from "../../hooks/useUserData";
-import { useStateContext } from "../Dashboard/Tools/context/ContextProvider";
+import tinycolor from "tinycolor2";
 
 function CreateDashboard() {
   const { userId, token } = useJwt();
   const { userData } = useUserData(userId, token);
-  const { getThemeFromLocalStorage } = useStateContext();
 
   const navigate = useNavigate();
 
@@ -18,7 +17,7 @@ function CreateDashboard() {
   const [emailList, setEmailList] = useState([""]);
   const [selectedActivities, setSelectedActivities] = useState([]);
   const [dashboardTitle, setDashboardTitle] = useState("");
-  const [avatar, setAvatar] = useState("");
+  /*  const [avatar, setAvatar] = useState(""); */
 
   const activities = [
     "Money",
@@ -36,7 +35,7 @@ function CreateDashboard() {
     title: dashboardTitle,
     theme: themeValue,
     activities: selectedActivities,
-    avatar: avatar,
+    /*   avatar: avatar, */
     partecipants: [userId],
     dashboardToken: Math.random().toString(36).substr(2, 9),
   };
@@ -94,9 +93,15 @@ function CreateDashboard() {
           localStorage.setItem("dashboardId", dashboardId);
 
           const mode = data.newDashboard.theme;
-          localStorage.setItem("themeMode", mode);
+          const colorStrong = tinycolor(mode).darken(10).toString();
+          if (!mode) {
+            localStorage.setItem("themeMode", "#ffe0d3");
+            localStorage.setItem("colorStrong", colorStrong);
+          } else {
+            localStorage.setItem("themeMode", mode);
+            localStorage.setItem("colorStrong", colorStrong);
+          }
           navigate("/wip");
-          getThemeFromLocalStorage();
         } else {
           console.error(
             "Errore durante la creazione della dashboard:",
@@ -217,7 +222,7 @@ function CreateDashboard() {
           </Row>
         </Form.Group>
 
-        <Form.Group controlId="formImg">
+        {/*         <Form.Group controlId="formImg">
           <Container>
             <Row className="d-flex align-items-center">
               <Col xs={3} className="p-0">
@@ -234,7 +239,7 @@ function CreateDashboard() {
               </Col>
             </Row>
           </Container>
-        </Form.Group>
+        </Form.Group> */}
 
         <button type="submit" className="pinkBgButton" onClick={handleSubmit}>
           Submit

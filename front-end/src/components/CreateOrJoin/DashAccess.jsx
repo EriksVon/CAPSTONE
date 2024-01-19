@@ -7,31 +7,35 @@ const DashAccess = () => {
   useJwt();
   return (
     <Container>
-      <Row>
-        <Col
-          xs={10}
-          className="mx-auto my-5 d-flex flex-column align-items-center justify-items-center"
-        >
+      <Row className="text-center">
+        <Col xs={12}>
           <ImgJoin />
           <h1 className="fw-bolder my-4">Let's start!</h1>
-          <div className="d-flex align-items-center justify-items-center gap-2">
-            <button className="pinkBgButton p-4 fs-5 rounded-3">
-              <Link
-                style={{ textDecoration: "none", color: "#f75959" }}
-                to="/create"
-              >
-                Create a new dashboard
-              </Link>
-            </button>
-            <button className="pinkBgButton p-4 fs-5 rounded-3">
-              <Link
-                style={{ textDecoration: "none", color: "#f75959" }}
-                to="/join-dashboard"
-              >
-                Join an existing dashboard
-              </Link>
-            </button>
-          </div>
+        </Col>
+        <Col xs={12}>
+          <button className="pinkBgButton p-4 fs-5 rounded-3">
+            <Link
+              style={{ textDecoration: "none", color: "#f75959" }}
+              to="/create"
+            >
+              Create a new dashboard
+            </Link>
+          </button>
+          <button className="pinkBgButton p-4 fs-5 m-2 rounded-3">
+            <Link
+              style={{ textDecoration: "none", color: "#f75959" }}
+              to="/join-dashboard"
+            >
+              Join an existing dashboard
+            </Link>
+          </button>
+        </Col>
+        <Col xs={12}>
+          <button className="pinkBgButton p-4 fs-5 rounded-3">
+            <Link style={{ textDecoration: "none", color: "#f75959" }} to="/">
+              Do you already have a dashboard? Click here
+            </Link>
+          </button>
         </Col>
       </Row>
     </Container>

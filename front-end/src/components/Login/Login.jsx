@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import Container from "react-bootstrap/esm/Container";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as ImgLogin } from "../../styles/images/img-home.svg";
-/* import { ReactComponent as GoogleLogo } from "../../styles/images/google.svg"; */
+import { ReactComponent as GoogleLogo } from "../../styles/images/google.svg";
 
 function Login() {
   const navigate = useNavigate();
@@ -100,7 +100,7 @@ function Login() {
             </Form>
 
             <Modal.Body className="d-flex flex-column text-center gap-3">
-              {/*              <Modal.Title className="fs-6 fw-bold">
+              <Modal.Title className="fs-6 fw-bold">
                 Or choose between one of this options:
               </Modal.Title>
               <button
@@ -114,7 +114,7 @@ function Login() {
                 <GoogleLogo />
                 <span>Continue with Google</span>
                 <span></span>
-              </button> */}
+              </button>
 
               <strong>New on this platform?</strong>
               <Link
