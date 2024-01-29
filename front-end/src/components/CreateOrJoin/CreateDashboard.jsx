@@ -14,7 +14,7 @@ function CreateDashboard() {
 
   const [themeValue, setThemeValue] = useState("");
 
-  const [emailList, setEmailList] = useState([""]);
+  const [emailList, setEmailList] = useState([]);
   const [selectedActivities, setSelectedActivities] = useState([]);
   const [dashboardTitle, setDashboardTitle] = useState("");
   /*  const [avatar, setAvatar] = useState(""); */
@@ -34,7 +34,10 @@ function CreateDashboard() {
     emails: emailList,
     title: dashboardTitle,
     theme: themeValue,
-    activities: selectedActivities,
+    activities: selectedActivities.map((activity) => ({
+      title: activity,
+      description: "Write here",
+    })),
     /*   avatar: avatar, */
     partecipants: [userId],
     dashboardToken: Math.random().toString(36).substr(2, 9),

@@ -5,6 +5,7 @@ import { ReactComponent as PlanMeLogo } from "../styles/images/planMe2.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import useUserData from "../hooks/useUserData";
+import { PersonCircle } from "react-bootstrap-icons";
 
 function MyNav() {
   const navigate = useNavigate();
@@ -83,10 +84,11 @@ function MyNav() {
         {isUserLoggedIn ? (
           <Dropdown>
             <Dropdown.Toggle
-              id="dropdown dropdown-drop-end"
-              className="pinkBgButton text-decoration-none"
+              id="dropdown"
+              className="coralBgButton text-decoration-none px-3 text-black"
             >
-              Hi {userData ? userData.name : ""}
+              <PersonCircle className="me-3" />
+              {userData ? userData.name : ""}
             </Dropdown.Toggle>
             <Dropdown.Menu drop="end-start">
               <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>

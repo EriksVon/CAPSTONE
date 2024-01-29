@@ -21,7 +21,7 @@ dashboardRouter
       next(error);
     }
   })
-
+  /* WORKING */
   .get("/:id/:dashboardId", authControl, async (req, res, next) => {
     try {
       const dashboards = await Dashboard.find({
@@ -35,10 +35,9 @@ dashboardRouter
   /* WORKING */
   .post("/create-dashboard", authControl, async (req, res, next) => {
     try {
-      const { emails, title, theme, activities, partecipants, dashboardToken } =
-        req.body;
+      const { emails, title, theme, partecipants, dashboardToken } = req.body;
       const file = req.file;
-
+      const activities = req.body.activities || [];
       const newDashboard = await Dashboard.create({
         emails,
         title,
@@ -54,7 +53,7 @@ dashboardRouter
       });
 
       const emailRecipients = emails.map((email) => email);
-      console.log(emailRecipients);
+      console.log(emailRecipients.length);
       // BREVO EMAIL
       if (emailRecipients.length > 0) {
         let sendSmtpEmail = new brevo.SendSmtpEmail();
@@ -101,7 +100,7 @@ dashboardRouter
       next(error);
     }
   })
-
+  /* WORKING */
   .post("/join-dashboard", async (req, res, next) => {
     try {
       const { email, dashboardToken } = req.body;
@@ -140,14 +139,25 @@ dashboardRouter
       next(error);
     }
   })
-
+  /* WORKING */
   .put("/me/:dashId", async (req, res, next) => {
     try {
-      let dashboard = await Dashboard.findOneAndUpdate(
-        { _id: req.params.dashId },
-        req.body,
+      const dashboardId = req.params.dashId;
+      const updatedFields = { ...req.body };
+
+      if (updatedFields.activities && updatedFields.activities.length > 0) {
+        const existingDashboard = await Dashboard.findById(dashboardId);
+        updatedFields.activities = existingDashboard.activities.concat(
+          updatedFields.activities
+        );
+      }
+
+      const dashboard = await Dashboard.findByIdAndUpdate(
+        dashboardId,
+        { $set: updatedFields },
         { new: true }
       );
+
       const dashboardToken = req.body.dashboardToken;
       const newEmail = req.body.emails;
 
@@ -194,7 +204,7 @@ dashboardRouter
       next(error);
     }
   })
-  /* OK */
+  /* WORKING */
   .delete("/me/:dashId", async (req, res, next) => {
     try {
       await Dashboard.findByIdAndDelete({

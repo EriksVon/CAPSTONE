@@ -10,6 +10,7 @@ import { ReactComponent as GoogleLogo } from "../../styles/images/google.svg";
 function Login() {
   const navigate = useNavigate();
   const [showError, setShowError] = useState(false);
+  const userId = localStorage.getItem("userId");
 
   const [body, setBody] = useState({
     email: "",
@@ -39,9 +40,9 @@ function Login() {
     }
   };
 
-  return (
+  return !userId ? (
     <Container>
-      <Row className="d-flex justify-content-center">
+      <Row className="d-flex justify-content-center align-items-center">
         <Col xl={6} className="d-none d-xl-inline">
           <ImgLogin />
         </Col>
@@ -130,6 +131,8 @@ function Login() {
         </Col>
       </Row>
     </Container>
+  ) : (
+    navigate("/")
   );
 }
 

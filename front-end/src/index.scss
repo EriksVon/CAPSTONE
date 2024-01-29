@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Poor+Story&display=swap");
 body {
   font-family: "Open Sans", sans-serif;
   display: flex;
@@ -107,4 +107,14 @@ div[content="settings"] {
   div[content="settings"] {
     bottom: 25px;
   }
+}
+
+.box {
+  position: absolute;
+  color: black;
+  max-width: 215px;
+  border-radius: 5px;
+  padding: 1em;
+  margin: auto;
+  user-select: none;
 }

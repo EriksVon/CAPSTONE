@@ -1,5 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
+const ActivitySchema = new Schema({
+  title: {
+    type: String,
+  },
+  description: {
+    type: String,
+  },
+});
+
 const DashboardSchema = new Schema({
   partecipants: [
     {
@@ -22,7 +31,8 @@ const DashboardSchema = new Schema({
   theme: {
     type: String,
   },
-  activities: [
+  activities: [ActivitySchema],
+  /*   activities: [
     {
       type: String,
       tool: {
@@ -32,7 +42,7 @@ const DashboardSchema = new Schema({
         type: String,
       },
     },
-  ],
+  ], */
   avatar: {
     type: String,
   },

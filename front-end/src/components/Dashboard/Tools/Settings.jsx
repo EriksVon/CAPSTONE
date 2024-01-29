@@ -9,11 +9,11 @@ import {
 } from "react-bootstrap";
 import combinedThemes from "../../../data/data";
 import { useState } from "react";
-import { CheckLg } from "react-bootstrap-icons";
+import { CheckLg, Trash, TrashFill, X } from "react-bootstrap-icons";
 import { useStateContext } from "./context/ContextProvider";
 import { useNavigate } from "react-router-dom";
 
-const Settings = ({ dashboardToken }) => {
+const Settings = ({ dashboardToken, partecipants }) => {
   const token = localStorage.getItem("token");
   const [showPassword, setShowPassword] = useState(false);
   const [show, setShow] = useState(false);
@@ -36,13 +36,17 @@ const Settings = ({ dashboardToken }) => {
     emails: email,
     title: title,
     theme: themeValue,
-    activities: activity,
+    activities: [
+      {
+        title: activity,
+        description: "Write here",
+      },
+    ],
     dashboardToken,
     /*  avatar: avatar, */
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     console.log(dashboard);
     if (dashboard.emails === "") {
       delete dashboard.emails;
@@ -51,7 +55,7 @@ const Settings = ({ dashboardToken }) => {
     if (dashboard.title === "") {
       delete dashboard.title;
     }
-    if (dashboard.activities === "") {
+    if (dashboard.activities[0].title.length === 0) {
       delete dashboard.activities;
     }
     /*     if (dashboard.avatar === "") {
@@ -60,8 +64,6 @@ const Settings = ({ dashboardToken }) => {
     if (dashboard.theme === "") {
       delete dashboard.theme;
     }
-
-    console.log(dashboard);
 
     const response = await fetch(
       `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}`,
@@ -81,8 +83,10 @@ const Settings = ({ dashboardToken }) => {
         response.statusText
       );
     } else {
-      await response.json();
-      const theme = dashboard.theme;
+      const updatedDashboard = await response.json();
+      console.log(updatedDashboard);
+
+      const theme = updatedDashboard.theme;
       if (theme) localStorage.setItem("themeMode", theme);
       handleClose();
       window.location.reload();
@@ -109,6 +113,27 @@ const Settings = ({ dashboardToken }) => {
           response.status,
           response.statusText
         );
+      }
+    } catch (error) {
+      console.error("Errore nella richiesta DELETE:", error);
+    }
+  };
+
+  const deleteUser = (i) => {
+    try {
+      const userConfirmed = window.confirm(
+        "Are you sure you want to delete this user?"
+      );
+
+      if (userConfirmed) {
+        const newPartecipants = [...partecipants];
+        newPartecipants.splice(i, 1);
+
+        const newDashboard = {
+          ...dashboard,
+          emails: newPartecipants,
+        };
+        handleSubmit(newDashboard);
       }
     } catch (error) {
       console.error("Errore nella richiesta DELETE:", error);
@@ -210,17 +235,9 @@ const Settings = ({ dashboardToken }) => {
               Submit
             </button>
           </Form>
-          <h1 className="text-center my-4">WARNING!!!</h1>
+          <h1 className="mt-5">WARNING!!!</h1>
           <Container>
-            <Row>
-              <Button
-                variant="danger"
-                className="my-3"
-                onClick={() => setShow(true)}
-              >
-                Delete Dashboard
-              </Button>
-
+            <Row className="d-flex gap-2">
               <Col>
                 <button
                   onClick={handleButtonClick}
@@ -234,6 +251,33 @@ const Settings = ({ dashboardToken }) => {
                   readOnly
                   className="text-center mx-auto"
                 />
+              </Col>
+
+              <Col xs={12}>
+                <h5>Partecipants:</h5>
+                <div>
+                  {partecipants.map((part, i) => (
+                    <div className="my-1" key={i}>
+                      <button
+                        className="coralBgButton me-2 px-1 py-0"
+                        onClick={() => deleteUser(i)}
+                      >
+                        <Trash />
+                      </button>
+                      {part.email}
+                    </div>
+                  ))}
+                </div>
+              </Col>
+
+              <Col>
+                <Button
+                  variant="danger"
+                  className="my-3"
+                  onClick={() => setShow(true)}
+                >
+                  Delete Dashboard Permanently
+                </Button>
               </Col>
             </Row>
           </Container>

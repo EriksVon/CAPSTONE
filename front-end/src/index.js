@@ -8,11 +8,9 @@ import { ContextProvider } from "./components/Dashboard/Tools/context/ContextPro
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <ContextProvider>
-      <App />
-    </ContextProvider>
-  </React.StrictMode>
+  <ContextProvider>
+    <App />
+  </ContextProvider>
 );
 
 reportWebVitals();

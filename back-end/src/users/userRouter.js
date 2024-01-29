@@ -80,10 +80,12 @@ userRouter
   /* WORKING */
   .get("/me", authControl, async (req, res, next) => {
     try {
-      const user = await User.findOne({ email: req.user.email }).populate(
-        "dashboards"
-      );
-
+      const user = await User.findOne({ email: req.user.email }).populate({
+        path: "dashboards",
+        populate: {
+          path: "partecipants activities",
+        },
+      });
       res.status(200).json(user);
     } catch (err) {
       next(err);
