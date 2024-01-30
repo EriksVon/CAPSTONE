@@ -4,18 +4,19 @@ import {
   Col,
   Container,
   Form,
-  Offcanvas,
+  Modal,
   Row,
 } from "react-bootstrap";
 import combinedThemes from "../../../data/data";
 import { useState } from "react";
-import { CheckLg, Trash, TrashFill, X } from "react-bootstrap-icons";
+import { CheckLg, Trash } from "react-bootstrap-icons";
 import { useStateContext } from "./context/ContextProvider";
 import { useNavigate } from "react-router-dom";
 
 const Settings = ({ dashboardToken, partecipants }) => {
   const token = localStorage.getItem("token");
   const [showPassword, setShowPassword] = useState(false);
+
   const [show, setShow] = useState(false);
 
   const handleButtonClick = () => {
@@ -142,76 +143,79 @@ const Settings = ({ dashboardToken, partecipants }) => {
 
   return (
     <>
-      <Offcanvas placement="end" show={showSettings} onHide={handleClose}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Dashboard Settings:</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <Form className="d-flex flex-column gap-4">
-            <Form.Group controlId="formHorizontalDashboardName">
-              <Form.Label>Change the title</Form.Label>
+      <Modal fullscreen show={showSettings} onHide={handleClose}>
+        <Container>
+          <Modal.Header closeButton>
+            <Modal.Title>Dashboard Settings:</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form className="d-flex flex-column gap-4">
+              <Form.Group controlId="formHorizontalDashboardName">
+                <Form.Label>Change the title</Form.Label>
 
-              <Form.Control
-                type="text"
-                placeholder="Cip & Ciop"
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </Form.Group>
+                <Form.Control
+                  type="text"
+                  placeholder="Cip & Ciop"
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </Form.Group>
 
-            <Form.Group controlId="formHorizontalEmail">
-              <Form.Label>Add someone</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Email@email.de"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Form.Group>
+              <Form.Group controlId="formHorizontalEmail">
+                <Form.Label>Add someone</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Email@email.de"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Form.Group>
 
-            <Form.Group>
-              <Form.Label>Change the theme</Form.Label>
-              <Col className="d-flex">
-                {combinedThemes.map((option) => (
-                  <Col key={option.color} xs={2}>
-                    <Button
-                      style={{
-                        position: "relative",
-                        backgroundColor: "transparent",
-                        border: "none",
-                      }}
-                      id={`radio-${option.id}`}
-                      type="button"
-                      onClick={() => {
-                        console.log(option.color);
-                        setThemeValue(option.color);
-                      }}
-                    >
-                      {option.image}
-                      <CheckLg
+              <Form.Group>
+                <Form.Label>Change the theme</Form.Label>
+                <Col className="d-flex">
+                  {combinedThemes.map((option) => (
+                    <Col key={option.color} xs={2}>
+                      <Button
                         style={{
-                          position: "absolute",
-                          top: "30%",
-                          left: "35%",
+                          position: "relative",
+                          backgroundColor: "transparent",
+                          border: "none",
                         }}
-                        className={`text-black ${
-                          option.color === themeValue ? "d-block" : "d-none"
-                        }`}
-                      />
-                    </Button>
-                  </Col>
-                ))}
-              </Col>
-            </Form.Group>
+                        id={`radio-${option.id}`}
+                        type="button"
+                        onClick={() => {
+                          console.log(option.color);
+                          setThemeValue(option.color);
+                        }}
+                      >
+                        {option.image}
+                        <CheckLg
+                          style={{
+                            position: "absolute",
+                            top: "30%",
+                            left: "35%",
+                          }}
+                          className={`text-black ${
+                            option.color === themeValue ? "d-block" : "d-none"
+                          }`}
+                        />
+                      </Button>
+                    </Col>
+                  ))}
+                </Col>
+              </Form.Group>
 
-            <Form.Group controlId="formThemes">
-              <Form.Label column>Add an activity to your dashboard:</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Calendar"
-                onChange={(e) => setActivity(e.target.value)}
-              />
-            </Form.Group>
+              <Form.Group controlId="formThemes">
+                <Form.Label column>
+                  Add an activity to your dashboard:
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Calendar"
+                  onChange={(e) => setActivity(e.target.value)}
+                />
+              </Form.Group>
 
-            {/*           <Form.Group controlId="formImg">
+              {/*           <Form.Group controlId="formImg">
             <Container>
               <Row className="d-flex align-items-center">
                 <Form.Label>Choose an image</Form.Label>
@@ -227,62 +231,63 @@ const Settings = ({ dashboardToken, partecipants }) => {
             </Container>
           </Form.Group> */}
 
-            <button
-              type="submit"
-              className="pinkBgButton"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </Form>
-          <h1 className="mt-5">WARNING!!!</h1>
-          <Container>
-            <Row className="d-flex gap-2">
-              <Col>
-                <button
-                  onClick={handleButtonClick}
-                  className="pinkBgButton m-2"
-                >
-                  {showPassword ? "Hide Token" : "Show Token"}
-                </button>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={dashboardToken}
-                  readOnly
-                  className="text-center mx-auto"
-                />
-              </Col>
+              <button
+                type="submit"
+                className="pinkBgButton"
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+            </Form>
+            <h3 className="mt-5">DANGER ZONE</h3>
+            <Container className="border border-danger">
+              <Row className="d-flex gap-2">
+                <Col>
+                  <button
+                    onClick={handleButtonClick}
+                    className="pinkBgButton m-2"
+                  >
+                    {showPassword ? "Hide Token" : "Show Token"}
+                  </button>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={dashboardToken}
+                    readOnly
+                    className="text-center mx-auto"
+                  />
+                </Col>
 
-              <Col xs={12}>
-                <h5>Partecipants:</h5>
-                <div>
-                  {partecipants.map((part, i) => (
-                    <div className="my-1" key={i}>
-                      <button
-                        className="coralBgButton me-2 px-1 py-0"
-                        onClick={() => deleteUser(i)}
-                      >
-                        <Trash />
-                      </button>
-                      {part.email}
-                    </div>
-                  ))}
-                </div>
-              </Col>
+                <Col xs={12}>
+                  <h5>Partecipants:</h5>
+                  <div>
+                    {partecipants.map((part, i) => (
+                      <div className="my-1" key={i}>
+                        <button
+                          className="coralBgButton me-2 px-1 py-0"
+                          onClick={() => deleteUser(i)}
+                        >
+                          <Trash />
+                        </button>
+                        {part.email}
+                      </div>
+                    ))}
+                  </div>
+                </Col>
 
-              <Col>
-                <Button
-                  variant="danger"
-                  className="my-3"
-                  onClick={() => setShow(true)}
-                >
-                  Delete Dashboard Permanently
-                </Button>
-              </Col>
-            </Row>
-          </Container>
-        </Offcanvas.Body>
-      </Offcanvas>
+                <Col>
+                  <Button
+                    variant="danger"
+                    className="my-3"
+                    onClick={() => setShow(true)}
+                  >
+                    Delete Dashboard Permanently
+                  </Button>
+                </Col>
+              </Row>
+            </Container>
+          </Modal.Body>
+        </Container>
+      </Modal>
       <Alert show={show} variant="danger" style={{ zIndex: "10000" }}>
         <div className="d-flex justify-content-end">
           <Button onClick={() => setShow(false)} variant="light">

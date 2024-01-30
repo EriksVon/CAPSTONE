@@ -12,6 +12,7 @@ function MyNav() {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
   const { userData } = useUserData(userId, token);
+  const dashboardId = localStorage.getItem("dashboardId");
 
   const isUserLoggedIn = token && userId;
 
@@ -70,7 +71,7 @@ function MyNav() {
   return (
     <Navbar expand="lg" sticky="top" className="bg-white">
       <Container className="d-flex gap-3">
-        <Link to={isUserLoggedIn ? "/" : "/login"}>
+        <Link to={isUserLoggedIn && dashboardId ? "/" : logout}>
           <Navbar.Brand>
             <PlanMeLogo width="120px" />
           </Navbar.Brand>

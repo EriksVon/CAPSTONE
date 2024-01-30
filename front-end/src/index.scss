@@ -17,11 +17,11 @@ body {
   align-items: center;
   justify-content: center;
   flex: 1;
-  margin-bottom: 80px;
+  margin-bottom: 50px;
 }
 
 .footer {
-  height: 70px;
+  height: 7%;
 }
 
 .coralBgButton {
@@ -90,8 +90,8 @@ body {
 div[content="settings"] {
   z-index: 1000;
   position: absolute;
-  bottom: 80px;
-  right: 20px;
+  top: 10%;
+  right: 3%;
   Button {
     border: none;
     border-radius: 50%;
@@ -104,17 +104,33 @@ div[content="settings"] {
   .main {
     margin-bottom: 0;
   }
-  div[content="settings"] {
-    bottom: 25px;
+  .main-wrapper {
+    margin-bottom: 0;
   }
 }
 
-.box {
-  position: absolute;
-  color: black;
-  max-width: 215px;
-  border-radius: 5px;
-  padding: 1em;
-  margin: auto;
-  user-select: none;
+.dashboardContainer {
+  border-radius: 10px;
+  height: 70vh;
+  width: 90vw;
+  padding: 20px;
+  display: flex;
+  gap: 2%;
+}
+
+.toolsWrapper {
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 2%;
+  height: 100%;
+  h5 {
+    text-align: center;
+  }
+}
+
+.toolsContainer {
+  border: solid 10px;
+  border-radius: 10px;
+  height: 95%;
 }

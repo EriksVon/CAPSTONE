@@ -1,24 +1,41 @@
-import React, { useState } from "react";
-import { ArrowsMove } from "react-bootstrap-icons";
-import Draggable from "react-draggable";
+import Quill from "quill";
+import "quill/dist/quill.snow.css?sourceMap=false";
 
-const Notes = ({ title, description }) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const trackPos = (data) => {
-    setPosition({ x: data.x, y: data.y });
-  };
-  console.log(position);
+import React, { useEffect } from "react";
+
+const Notes = ({ title, description, colorStrong }) => {
+  useEffect(() => {
+    const quill = new Quill("#editor-container", {
+      modules: {
+        toolbar: [
+          ["bold", "underline", "strike"],
+          [{ list: "ordered" }, { list: "bullet" }],
+
+          /*   ["image"], */
+        ],
+      },
+      placeholder: "Write here",
+      theme: "snow",
+    });
+
+    if (title || description) {
+      quill.clipboard.dangerouslyPasteHTML(title || description);
+    }
+  }, [title, description]);
 
   return (
-    <Draggable handle="#handle" onDrag={(e, data) => trackPos(data)}>
-      <div className="box d-flex flex-column mt-3">
-        <div className="d-flex justify-content-center">
-          <h5> {title}</h5>
-          <ArrowsMove id="handle" className="ms-auto" />
-        </div>
-        <textarea name="ciao" placeholder="Write here"></textarea>
+    <div className="toolsWrapper">
+      <h5>{title}</h5>
+      <div className="toolsContainer" style={{ borderColor: colorStrong }}>
+        <div id="editor-container">{description}</div>
       </div>
-    </Draggable>
+      <button
+        className="coralBgButton"
+        style={{ backgroundColor: colorStrong }}
+      >
+        Whatever
+      </button>
+    </div>
   );
 };
 

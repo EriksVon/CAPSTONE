@@ -30,13 +30,13 @@ const DashAccess = () => {
             </Link>
           </button>
         </Col>
-        <Col xs={12}>
+        {/*         <Col xs={12}>
           <button className="pinkBgButton p-4 fs-5 rounded-3">
             <Link style={{ textDecoration: "none", color: "#f75959" }} to="/">
               Do you already have a dashboard? Click here
             </Link>
           </button>
-        </Col>
+        </Col> */}
       </Row>
     </Container>
   );
