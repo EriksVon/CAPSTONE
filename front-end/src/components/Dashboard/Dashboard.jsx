@@ -9,6 +9,7 @@ import tinycolor from "tinycolor2";
 import Notes from "./Tools/Notes";
 import List from "./Tools/List";
 import Money from "./Tools/Money";
+import Calendar from "./Tools/Calendar/Calendar";
 
 function Dashboard() {
   /* DON'T TUCH MY BRAIL --->*/
@@ -85,7 +86,8 @@ function Dashboard() {
           title={"lista della spesa"}
           description={"prova prova prova"}
         />
-        <Money />
+        <Money colorStrong={colorStrong} title={"conti"} />
+        <Calendar colorStrong={colorStrong} title={"calendario"} />
 
         <div content="settings">
           <Button
