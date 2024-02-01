@@ -7,39 +7,45 @@ import {
   Modal,
   Row,
 } from "react-bootstrap";
-import combinedThemes from "../../../data/data";
+import { combinedThemes } from "../../../data/data";
 import { useState } from "react";
 import { CheckLg, Trash } from "react-bootstrap-icons";
 import { useStateContext } from "./context/ContextProvider";
 import { useNavigate } from "react-router-dom";
+import { activities } from "../../../data/data";
 
 const Settings = ({ dashboardToken, partecipants }) => {
   const token = localStorage.getItem("token");
   const [showPassword, setShowPassword] = useState(false);
-
   const [show, setShow] = useState(false);
-
   const handleButtonClick = () => {
     setShowPassword(!showPassword);
   };
   const navigate = useNavigate();
   const dashboardId = localStorage.getItem("dashboardId");
-
   const { showSettings, handleClose } = useStateContext();
-
   const [title, setTitle] = useState("");
-  const [activity, setActivity] = useState([]);
+  const [selectedActivity, setSelectedActivity] = useState(null);
+  /* const [activity, setActivity] = useState([]); */
   /* const [avatar, setAvatar] = useState(""); */
   const [themeValue, setThemeValue] = useState("");
   const [email, setEmail] = useState("");
 
+  const handleActivities = (act) => {
+    console.log(act);
+    if (selectedActivity === act.type) {
+      setSelectedActivity(null);
+    } else {
+      setSelectedActivity(act.type);
+    }
+  };
   const dashboard = {
     emails: email,
     title: title,
     theme: themeValue,
     activities: [
       {
-        title: activity,
+        type: selectedActivity,
         description: "Write here",
       },
     ],
@@ -47,7 +53,8 @@ const Settings = ({ dashboardToken, partecipants }) => {
     /*  avatar: avatar, */
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     console.log(dashboard);
     if (dashboard.emails === "") {
       delete dashboard.emails;
@@ -56,7 +63,7 @@ const Settings = ({ dashboardToken, partecipants }) => {
     if (dashboard.title === "") {
       delete dashboard.title;
     }
-    if (dashboard.activities[0].title.length === 0) {
+    if (dashboard.activities[0].length === 0) {
       delete dashboard.activities;
     }
     /*     if (dashboard.avatar === "") {
@@ -171,9 +178,9 @@ const Settings = ({ dashboardToken, partecipants }) => {
 
               <Form.Group>
                 <Form.Label>Change the theme</Form.Label>
-                <Col className="d-flex">
+                <Col className="d-flex" xs={2}>
                   {combinedThemes.map((option) => (
-                    <Col key={option.color} xs={2}>
+                    <Col key={option.color}>
                       <Button
                         style={{
                           position: "relative",
@@ -183,7 +190,6 @@ const Settings = ({ dashboardToken, partecipants }) => {
                         id={`radio-${option.id}`}
                         type="button"
                         onClick={() => {
-                          console.log(option.color);
                           setThemeValue(option.color);
                         }}
                       >
@@ -208,11 +214,22 @@ const Settings = ({ dashboardToken, partecipants }) => {
                 <Form.Label column>
                   Add an activity to your dashboard:
                 </Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Calendar"
-                  onChange={(e) => setActivity(e.target.value)}
-                />
+                <Col className="d-flex gap-2" xs={2}>
+                  {activities.map((act, index) => (
+                    <Col key={index}>
+                      <Button
+                        className={`whiteBgButton d-flex flex-grow-1 ${
+                          selectedActivity === act.type ? "active" : ""
+                        }`}
+                        onClick={() => {
+                          handleActivities(act);
+                        }}
+                      >
+                        {act.type}
+                      </Button>
+                    </Col>
+                  ))}
+                </Col>
               </Form.Group>
 
               {/*           <Form.Group controlId="formImg">

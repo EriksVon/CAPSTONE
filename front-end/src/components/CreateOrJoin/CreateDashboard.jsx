@@ -1,10 +1,11 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import combinedThemes from "../../data/data";
+import { combinedThemes } from "../../data/data";
 import { useState } from "react";
 import useJwt from "../../hooks/useJwt";
 import { useNavigate } from "react-router-dom";
 import useUserData from "../../hooks/useUserData";
 import tinycolor from "tinycolor2";
+import { activities } from "../../data/data";
 
 function CreateDashboard() {
   const { userId, token } = useJwt();
@@ -16,27 +17,17 @@ function CreateDashboard() {
 
   const [emailList, setEmailList] = useState([]);
   const [selectedActivities, setSelectedActivities] = useState([]);
+  const [selectedActivity, setSelectedActivity] = useState(null);
   const [dashboardTitle, setDashboardTitle] = useState("");
   /*  const [avatar, setAvatar] = useState(""); */
-
-  const activities = [
-    "Money",
-    "Shopping",
-    "Calendar",
-    "Notes",
-    "Photos",
-    "Recipes",
-    "Contacts",
-    "Music",
-  ];
 
   const dashboard = {
     emails: emailList,
     title: dashboardTitle,
     theme: themeValue,
     activities: selectedActivities.map((activity) => ({
-      title: activity,
-      description: "Write here",
+      type: activity,
+      description: "",
     })),
     /*   avatar: avatar, */
     partecipants: [userId],
@@ -62,13 +53,16 @@ function CreateDashboard() {
   };
 
   const handleActivities = (activity) => {
-    if (selectedActivities.includes(activity)) {
+    if (selectedActivities.includes(activity.type)) {
+      setSelectedActivity(activity.tool);
       setSelectedActivities(
-        selectedActivities.filter((item) => item !== activity)
+        selectedActivities.filter((item) => item !== activity.type)
       );
     } else {
-      setSelectedActivities([...selectedActivities, activity]);
+      setSelectedActivities([...selectedActivities, activity.type]);
+      setSelectedActivity(activity);
     }
+    console.log(selectedActivities);
   };
 
   const handleSubmit = async (e) => {
@@ -201,28 +195,32 @@ function CreateDashboard() {
           </Col>
         </Form.Group>
 
-        <Form.Group controlId="formThemes">
-          <Row>
-            <Form.Label column xs={3}>
-              Choose some activities you would share with your PlanMe Team:
-            </Form.Label>
-            <Col xs={9}>
-              <Row className="d-flex justify-content-start gap-2 pt-3 ms-1">
-                {activities.map((activity, index) => (
-                  <Col
-                    key={index}
-                    as={Button}
-                    className={`whiteBgButton col-auto ${
-                      selectedActivities.includes(activity) ? "active" : ""
+        <Form.Group as={Row} controlId="formThemes">
+          <Form.Label column xs={3}>
+            Choose some activities you would share with your PlanMe Team:
+          </Form.Label>
+          <Col xs={9}>
+            <Row className="d-flex justify-content-between pt-3 ms-1">
+              {activities.map((activity, index) => (
+                <Col className="d-flex justify-content-between" key={index}>
+                  <Button
+                    key={activity.type}
+                    className={`whiteBgButton d-flex flex-grow-1 ${
+                      selectedActivities.includes(activity.type) ? "active" : ""
                     }`}
-                    onClick={() => handleActivities(activity)}
+                    onClick={() => {
+                      handleActivities(activity);
+                    }}
                   >
-                    {activity}
-                  </Col>
-                ))}
-              </Row>
-            </Col>
-          </Row>
+                    {activity.type}
+                  </Button>
+                </Col>
+              ))}
+            </Row>
+          </Col>
+          <div className="mt-3 text-center">
+            {selectedActivity && <div>{selectedActivity.tool}</div>}
+          </div>
         </Form.Group>
 
         {/*         <Form.Group controlId="formImg">

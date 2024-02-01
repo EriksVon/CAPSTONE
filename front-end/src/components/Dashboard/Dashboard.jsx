@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "react-bootstrap";
 import useJwt from "../../hooks/useJwt";
 import useUserData from "../../hooks/useUserData";
@@ -6,16 +7,15 @@ import Settings from "./Tools/Settings";
 import { useStateContext } from "./Tools/context/ContextProvider";
 import { GearFill, Trash3Fill } from "react-bootstrap-icons";
 import tinycolor from "tinycolor2";
-import Notes from "./Tools/Notes";
-import List from "./Tools/List";
-import Money from "./Tools/Money";
 import Calendar from "./Tools/Calendar/Calendar";
+import Money from "./Tools/Money";
+import List from "./Tools/List";
+import Notes from "./Tools/Notes";
 
 function Dashboard() {
   /* DON'T TUCH MY BRAIL --->*/
   const { userId, token } = useJwt();
   const { userData } = useUserData(userId, token);
-
   const {
     currentTheme,
     setCurrentTheme,
@@ -24,6 +24,20 @@ function Dashboard() {
     colorStrong,
   } = useStateContext();
 
+  const activityComponents = {
+    Calendar: <Calendar colorStrong={colorStrong} title={"My calendar"} />,
+    Money: <Money colorStrong={colorStrong} title={"Counts"} />,
+    List: (
+      <List colorStrong={colorStrong} title={"My list"} description={"prova"} />
+    ),
+    Notes: (
+      <Notes
+        colorStrong={colorStrong}
+        title={"My notes"}
+        description={"prova"}
+      />
+    ),
+  };
   if (!userData) {
     return <Loading />;
   }
@@ -44,7 +58,7 @@ function Dashboard() {
   /* <--- DON'T TUCH MY BRAIL */
 
   const dashboardToken = dashboardData.dashboardToken;
-  console.log(dashboardData.partecipants);
+  console.log(dashboardData.activities);
 
   return (
     <div
@@ -68,26 +82,12 @@ function Dashboard() {
           />
         )}
 
-        {/*           {dashboardData.activities.map((activity, i) => (
-            <Col xs={4} key={i}>
-              <div>
-                {activity.title}
-                {activity.description}
-              </div>
-            </Col>
-          ))} */}
-        <Notes
-          colorStrong={colorStrong}
-          title={"prova"}
-          description={"prova prova prova"}
-        />
-        <List
-          colorStrong={colorStrong}
-          title={"lista della spesa"}
-          description={"prova prova prova"}
-        />
-        <Money colorStrong={colorStrong} title={"conti"} />
-        <Calendar colorStrong={colorStrong} title={"calendario"} />
+        {dashboardData.activities.map((activity, i) => {
+          const component = activityComponents[activity.type];
+          return (
+            component && <React.Fragment key={i}>{component}</React.Fragment>
+          );
+        })}
 
         <div content="settings">
           <Button

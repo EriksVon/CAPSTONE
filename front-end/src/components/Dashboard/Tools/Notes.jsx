@@ -33,7 +33,7 @@ const Notes = ({ title, description, colorStrong }) => {
         className="coralBgButton"
         style={{ backgroundColor: colorStrong }}
       >
-        Whatever
+        Delete
       </button>
     </div>
   );

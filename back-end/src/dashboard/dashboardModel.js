@@ -1,10 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
 const ActivitySchema = new Schema({
-  title: {
+  type: {
     type: String,
   },
-  description: {
+  content: {
+    type: String,
+  },
+  title: {
     type: String,
   },
 });
@@ -32,17 +35,6 @@ const DashboardSchema = new Schema({
     type: String,
   },
   activities: [ActivitySchema],
-  /*   activities: [
-    {
-      type: String,
-      tool: {
-        type: String,
-      },
-      description: {
-        type: String,
-      },
-    },
-  ], */
   avatar: {
     type: String,
   },

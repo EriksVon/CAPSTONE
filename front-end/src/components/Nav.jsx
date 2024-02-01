@@ -88,8 +88,8 @@ function MyNav() {
               id="dropdown"
               className="coralBgButton text-decoration-none px-3 text-black"
             >
-              <PersonCircle className="me-3" />
-              {userData ? userData.name : ""}
+              <PersonCircle className="me-2" />
+              Hi, {userData ? userData.name : ""}
             </Dropdown.Toggle>
             <Dropdown.Menu drop="end-start">
               <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>

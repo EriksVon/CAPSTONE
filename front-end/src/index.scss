@@ -135,14 +135,21 @@ div[content="settings"] {
   flex: 0 0 auto;
   gap: 2%;
   height: 100%;
+  max-width: 300px;
   h5 {
     text-align: center;
   }
 }
 
-@media screen and (max-width: 768px) {
-  .toolsContainer.calendar {
-    max-width: 300px;
+.calendarWrapper {
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  gap: 2%;
+  height: 100%;
+  h5 {
+    text-align: center;
   }
 }
 

@@ -103,12 +103,9 @@ const Calendar = ({ title, colorStrong }) => {
   }, [events]);
 
   return (
-    <div className="toolsWrapper">
+    <div className="calendarWrapper">
       <h5>{title}</h5>
-      <div
-        className="toolsContainer calendar"
-        style={{ borderColor: colorStrong }}
-      >
+      <div className="toolsContainer " style={{ borderColor: colorStrong }}>
         <h5 className="d-flex align-items-center">
           <Container>
             <Row>
@@ -151,6 +148,7 @@ const Calendar = ({ title, colorStrong }) => {
                         fontSize: "small",
                         backgroundColor: colorStronger,
                         borderRadius: "10px",
+                        margin: "5px",
                       }}
                     >
                       {event.time} - {event.title}
@@ -166,7 +164,7 @@ const Calendar = ({ title, colorStrong }) => {
         className="coralBgButton"
         style={{ backgroundColor: colorStrong }}
       >
-        Whatever
+        Delete
       </button>
 
       {selectedDay && todayEvents && (

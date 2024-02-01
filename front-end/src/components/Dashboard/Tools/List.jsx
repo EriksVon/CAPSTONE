@@ -55,7 +55,7 @@ const List = ({ title, colorStrong }) => {
         className="coralBgButton"
         style={{ backgroundColor: colorStrong }}
       >
-        Whatever
+        Delete
       </button>
     </div>
   );
