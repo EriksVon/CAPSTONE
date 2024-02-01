@@ -105,7 +105,7 @@ const Calendar = ({ title, colorStrong }) => {
   return (
     <div className="calendarWrapper">
       <h5>{title}</h5>
-      <div className="toolsContainer " style={{ borderColor: colorStrong }}>
+      <div className="calendarContainer " style={{ borderColor: colorStrong }}>
         <h5 className="d-flex align-items-center">
           <Container>
             <Row>
@@ -129,6 +129,7 @@ const Calendar = ({ title, colorStrong }) => {
 
               return (
                 <Col
+                  xs={12}
                   md={3}
                   key={i}
                   className=" p-2 text-center"

@@ -26,7 +26,6 @@ const Settings = ({ dashboardToken, partecipants }) => {
   const { showSettings, handleClose } = useStateContext();
   const [title, setTitle] = useState("");
   const [selectedActivity, setSelectedActivity] = useState(null);
-  /* const [activity, setActivity] = useState([]); */
   /* const [avatar, setAvatar] = useState(""); */
   const [themeValue, setThemeValue] = useState("");
   const [email, setEmail] = useState("");

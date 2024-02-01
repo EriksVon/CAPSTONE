@@ -5,7 +5,7 @@ import useUserData from "../../hooks/useUserData";
 import Loading from "../Loading";
 import Settings from "./Tools/Settings";
 import { useStateContext } from "./Tools/context/ContextProvider";
-import { GearFill, Trash3Fill } from "react-bootstrap-icons";
+import { GearFill } from "react-bootstrap-icons";
 import tinycolor from "tinycolor2";
 import Calendar from "./Tools/Calendar/Calendar";
 import Money from "./Tools/Money";
@@ -65,54 +65,40 @@ function Dashboard() {
       className="d-flex flex-column"
       style={{
         backgroundColor: colorStrong,
-        padding: "10px",
+        padding: "5px",
         borderRadius: "10px",
       }}
     >
-      <h1 className="text-center">{dashboardData.title}</h1>
+      <div className="d-flex align-items-center justify-content-between dashTitle mb-2">
+        <h1 className="mx-auto mb-0">{dashboardData.title}</h1>
+        <Button
+          onClick={handleShow}
+          style={{
+            backgroundColor: "white",
+            border: "none",
+          }}
+        >
+          <GearFill fill={colorStrong} />
+        </Button>
+      </div>
 
       <div
         className="dashboardContainer"
         style={{ backgroundColor: currentTheme }}
       >
-        {showSettings && (
-          <Settings
-            dashboardToken={dashboardToken}
-            partecipants={dashboardData.partecipants}
-          />
-        )}
-
         {dashboardData.activities.map((activity, i) => {
           const component = activityComponents[activity.type];
           return (
             component && <React.Fragment key={i}>{component}</React.Fragment>
           );
         })}
-
-        <div content="settings">
-          <Button
-            style={{
-              backgroundColor: colorStrong,
-              marginRight: "10px",
-              paddingBottom: "8px",
-              color: "black",
-            }}
-          >
-            <Trash3Fill />
-          </Button>
-
-          <Button
-            onClick={handleShow}
-            style={{
-              backgroundColor: colorStrong,
-              paddingBottom: "8px",
-              color: "black",
-            }}
-          >
-            <GearFill />
-          </Button>
-        </div>
       </div>
+      {showSettings && (
+        <Settings
+          dashboardToken={dashboardToken}
+          partecipants={dashboardData.partecipants}
+        />
+      )}
     </div>
   );
 }

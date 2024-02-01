@@ -8,6 +8,7 @@ import { useState } from "react";
 function JoinDashboard() {
   const navigate = useNavigate();
   const [showError, setShowError] = useState(false);
+  const email = localStorage.getItem("email");
 
   const [body, setBody] = useState({
     email: "",
@@ -69,8 +70,8 @@ function JoinDashboard() {
                 <Form.Group controlId="formBasicEmail">
                   <Form.Control
                     type="email"
-                    placeholder="Enter email"
-                    value={body.email}
+                    placeholder={email}
+                    value={email}
                     required
                     onInput={(e) => setBody({ ...body, email: e.target.value })}
                   />

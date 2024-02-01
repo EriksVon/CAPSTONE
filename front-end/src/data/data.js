@@ -52,7 +52,11 @@ export const activities = [
     description: "",
     tool:
       typeof ListImg === "string" ? (
-        <img src={ListImg} alt="holder.js/100px250" />
+        <img
+          src={ListImg}
+          alt="holder.js/100px250"
+          style={{ height: "200px" }}
+        />
       ) : (
         ""
       ),
@@ -62,7 +66,11 @@ export const activities = [
     description: "",
     tool:
       typeof CalendarImg === "string" ? (
-        <img src={CalendarImg} alt="holder.js/100px250" />
+        <img
+          src={CalendarImg}
+          alt="holder.js/100px250"
+          style={{ height: "200px" }}
+        />
       ) : (
         ""
       ),
@@ -72,7 +80,11 @@ export const activities = [
     description: "",
     tool:
       typeof NoteImg === "string" ? (
-        <img src={NoteImg} alt="holder.js/100px250" />
+        <img
+          src={NoteImg}
+          alt="holder.js/100px250"
+          style={{ height: "200px" }}
+        />
       ) : (
         ""
       ),

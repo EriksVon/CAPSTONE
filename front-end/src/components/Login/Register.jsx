@@ -35,6 +35,7 @@ function Register() {
       console.log(data);
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data._id);
+      localStorage.setItem("email", data.email);
       setValidated(true);
       navigate("/create-or-join");
     } else {
@@ -164,7 +165,7 @@ function Register() {
                 <span>Continue with Google</span>
                 <span></span>
               </button>
-              <small>
+              <small className="mb-3">
                 Effettuando l'accesso o creando un account accetti i Termini, le
                 Condizioni e l'informativa sulla privacy
               </small>

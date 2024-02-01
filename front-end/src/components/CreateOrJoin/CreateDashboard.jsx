@@ -196,16 +196,16 @@ function CreateDashboard() {
         </Form.Group>
 
         <Form.Group as={Row} controlId="formThemes">
-          <Form.Label column xs={3}>
+          <Form.Label column sm={3}>
             Choose some activities you would share with your PlanMe Team:
           </Form.Label>
-          <Col xs={9}>
-            <Row className="d-flex justify-content-between pt-3 ms-1">
+          <Col sm={2}>
+            <Row>
               {activities.map((activity, index) => (
-                <Col className="d-flex justify-content-between" key={index}>
+                <Col key={index}>
                   <Button
                     key={activity.type}
-                    className={`whiteBgButton d-flex flex-grow-1 ${
+                    className={`whiteBgButton m-1 ${
                       selectedActivities.includes(activity.type) ? "active" : ""
                     }`}
                     onClick={() => {
@@ -218,9 +218,10 @@ function CreateDashboard() {
               ))}
             </Row>
           </Col>
-          <div className="mt-3 text-center">
+          <Col sm={7} className="mt-3 text-center" style={{ height: "250px" }}>
+            <p>Preview:</p>
             {selectedActivity && <div>{selectedActivity.tool}</div>}
-          </div>
+          </Col>
         </Form.Group>
 
         {/*         <Form.Group controlId="formImg">
