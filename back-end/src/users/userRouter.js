@@ -59,7 +59,7 @@ userRouter
       const payload = { id: req.user._id };
       const token = jwt.sign(payload, process.env.JWT_SECRET);
       res.redirect(
-        `${process.env.FE_DEV_URL}/create-or-join?token=${token}&userId=${payload.id}&email=${req.user.email}`
+        `${process.env.FE_PROD_URL}/create-or-join?token=${token}&userId=${payload.id}&email=${req.user.email}`
       );
       /* PROD - DEV */
     }
