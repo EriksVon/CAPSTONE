@@ -1,22 +1,21 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const useDashboardData = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const navigate = useNavigate();
 
-  const searchParams = new URLSearchParams(window.location.search);
-
-  if (searchParams.get("userId")) {
-    localStorage.setItem("userId", searchParams.get("userId"));
-    if (searchParams.get("token"))
-      localStorage.setItem("token", searchParams.get("token"));
-  }
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.error("Token not found");
+          navigate("/login");
+          return;
+        }
+
         const response = await fetch(
           `${process.env.REACT_APP_ENDPOINT_URL}/profile/me`,
           {
@@ -35,9 +34,6 @@ const useDashboardData = () => {
           const dashData = data.dashboards;
           setDashboardData(dashData);
           console.log("Dati dashboard:", dashData);
-          if (dashData.length === 0) {
-            navigate("/create-or-join");
-          }
         }
       } catch (error) {
         console.error("Errore durante la richiesta:", error);
@@ -47,7 +43,7 @@ const useDashboardData = () => {
     };
 
     fetchData();
-  }, [token, navigate]);
+  }, [navigate]);
 
   return { dashboardData };
 };

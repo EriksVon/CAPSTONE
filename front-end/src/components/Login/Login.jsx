@@ -33,7 +33,7 @@ function Login() {
       let data = await response.json();
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.userId);
-      navigate("/");
+      navigate("/create-or-join");
     } else {
       setShowError(true);
       setBody({ ...body, password: "" });

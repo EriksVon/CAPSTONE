@@ -38,49 +38,51 @@ dashboardRouter
       const { emails, title, theme, partecipants, dashboardToken } = req.body;
       const file = req.file;
       const activities = req.body.activities || [];
-      const newDashboard = await Dashboard.create({
-        emails,
-        title,
-        theme,
-        activities,
-        avatar: file,
-        partecipants,
-        dashboardToken,
-      });
-
-      const updatedUser = await User.findByIdAndUpdate(req.user._id, {
-        $push: { dashboards: newDashboard },
-      });
 
       const emailRecipients = emails.map((email) => email);
       console.log(emailRecipients.length);
-      // BREVO EMAIL
+
+      // <--------------- BREVO EMAIL
+      let sendSmtpEmail = new brevo.SendSmtpEmail();
+      sendSmtpEmail.subject = "Join {{params.subject}}!";
+      sendSmtpEmail.templateId = 2;
+      sendSmtpEmail.sender = { name: "PlanMe", email: "planMe@plan.me" };
+
+      sendSmtpEmail.to = emailRecipients.map((email) => ({ email }));
+
+      sendSmtpEmail.replyTo = {
+        name: "John",
+        email: "erica.ropelato@gmail.com",
+      };
+      sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
+      sendSmtpEmail.params = {
+        parameter: "PlanMe",
+        subject: "PlanMe",
+        token: dashboardToken,
+      };
+      // ---------------> BREVO EMAIL
+
       if (emailRecipients.length > 0) {
-        let sendSmtpEmail = new brevo.SendSmtpEmail();
-
-        sendSmtpEmail.subject = "Join {{params.subject}}!";
-        sendSmtpEmail.templateId = 2;
-        sendSmtpEmail.sender = { name: "PlanMe", email: "planMe@plan.me" };
-
-        sendSmtpEmail.to = emailRecipients.map((email) => ({ email }));
-
-        sendSmtpEmail.replyTo = {
-          name: "John",
-          email: "erica.ropelato@gmail.com",
-        };
-        sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
-        sendSmtpEmail.params = {
-          parameter: "PlanMe",
-          subject: "PlanMe",
-          token: dashboardToken,
-        };
-
         try {
           const emailData = await apiInstance.sendTransacEmail(sendSmtpEmail);
           console.log(
             "API called successfully. Returned data: " +
               JSON.stringify(emailData)
           );
+          const newDashboard = await Dashboard.create({
+            emails,
+            title,
+            theme,
+            activities,
+            avatar: file,
+            partecipants,
+            dashboardToken,
+          });
+
+          const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+            $push: { dashboards: newDashboard },
+          });
+
           res.status(201).json({
             emailData,
             updatedUser,
@@ -91,6 +93,18 @@ dashboardRouter
           res.status(500).json({ error: "Error sending email" });
         }
       } else {
+        const newDashboard = await Dashboard.create({
+          emails,
+          title,
+          theme,
+          activities,
+          avatar: file,
+          partecipants,
+          dashboardToken,
+        });
+        const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+          $push: { dashboards: newDashboard },
+        });
         res.status(201).json({
           updatedUser,
           newDashboard,
@@ -207,9 +221,12 @@ dashboardRouter
   /* WORKING */
   .delete("/me/:dashId", async (req, res, next) => {
     try {
-      await Dashboard.findByIdAndDelete({
-        _id: req.params.dashId,
-      });
+      const { dashId } = req.params;
+      await User.updateMany(
+        { dashboards: dashId },
+        { $pull: { dashboards: dashId } }
+      );
+      await Dashboard.findByIdAndDelete(dashId);
       res.status(204).send({ message: "Dashboard deleted" });
     } catch (error) {
       next(error);

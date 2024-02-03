@@ -105,7 +105,7 @@ const Calendar = ({ title, colorStrong }) => {
   return (
     <div className="calendarWrapper">
       <h5>{title}</h5>
-      <div className="calendarContainer " style={{ borderColor: colorStrong }}>
+      <div className="calendarContainer" style={{ borderColor: colorStrong }}>
         <h5 className="d-flex align-items-center">
           <Container>
             <Row>
@@ -152,7 +152,7 @@ const Calendar = ({ title, colorStrong }) => {
                         margin: "5px",
                       }}
                     >
-                      {event.time} - {event.title}
+                      {event.time ? event.time + " - " : ""} {event.title}
                     </div>
                   ))}
                 </Col>

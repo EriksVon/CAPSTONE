@@ -10,7 +10,6 @@ const Notes = ({ title, description, colorStrong }) => {
         toolbar: [
           ["bold", "underline", "strike"],
           [{ list: "ordered" }, { list: "bullet" }],
-
           /*   ["image"], */
         ],
       },
@@ -26,8 +25,10 @@ const Notes = ({ title, description, colorStrong }) => {
   return (
     <div className="toolsWrapper">
       <h5>{title}</h5>
-      <div className="toolsContainer" style={{ borderColor: colorStrong }}>
-        <div id="editor-container">{description}</div>
+      <div className="toolsContainer p-0" style={{ borderColor: colorStrong }}>
+        <div id="editor-container" className="border-0" style={{ height: 100 }}>
+          {description}
+        </div>
       </div>
       <button
         className="coralBgButton"

@@ -5,11 +5,11 @@ import jwt from "jsonwebtoken";
 import authControl from "../middleware/authControl.js";
 import passport from "passport";
 import dashboardRouter from "../dashboard/dashboardRouter.js";
+import { Dashboard } from "../dashboard/dashboardModel.js";
 
 const userRouter = express.Router();
 
 userRouter
-
   /* WORKING */
   .get("/", async (req, res, next) => {
     try {
@@ -20,7 +20,7 @@ userRouter
       next(error);
     }
   })
-
+  /* WORKING */
   .post("/session", async (req, res, next) => {
     try {
       const { email, password } = req.body;
@@ -40,7 +40,6 @@ userRouter
       next(error);
     }
   })
-
   /* WORKING */
   .get(
     "/oauth-google",
@@ -49,7 +48,6 @@ userRouter
       prompt: "select_account",
     })
   )
-
   /* WORKING */
   .get(
     "/oauth-callback",
@@ -61,22 +59,11 @@ userRouter
       const payload = { id: req.user._id };
       const token = jwt.sign(payload, process.env.JWT_SECRET);
       res.redirect(
-        `${process.env.FE_PROD_URL}/create-or-join?token=${token}&userId=${payload.id}`
+        `${process.env.FE_DEV_URL}/create-or-join?token=${token}&userId=${payload.id}&email=${req.user.email}`
       );
-      /*   
-      const redirectBaseUrl = isLocalhost
-      ? "http://localhost:3000"
-      : process.env.FE_PROD_URL;
-      res.redirect(`${redirectBaseUrl}?token=${token}&userId=${payload.id}`);
-||
-      const redirectUrl = process.env.NODE_ENV === 'production'
-        ? process.env.FE_PROD_URL
-        : process.env.FE_DEV_URL;
-        res.redirect(`${redirectUrl}?token=${token}&userId=${payload.id}`);
-      ); */
+      /* PROD - DEV */
     }
   )
-
   /* WORKING */
   .get("/me", authControl, async (req, res, next) => {
     try {
@@ -91,7 +78,6 @@ userRouter
       next(err);
     }
   })
-
   /* WORKING */
   .get("/:id", authControl, async (req, res, next) => {
     try {
@@ -102,7 +88,6 @@ userRouter
       next(error);
     }
   })
-
   /* WORKING */
   .post("/", async (req, res, next) => {
     try {
@@ -129,7 +114,6 @@ userRouter
       next(error);
     }
   })
-
   /* OK */
   .put("/:id", async (req, res, next) => {
     try {
@@ -140,7 +124,6 @@ userRouter
       next(error);
     }
   })
-
   /* OK */
   .delete("/session", async (req, res, next) => {
     try {
@@ -154,11 +137,15 @@ userRouter
       next(error);
     }
   })
-
   /* OK */
   .delete("/:userId", authControl, async (req, res, next) => {
     try {
-      await User.findByIdAndDelete(req.params.userId);
+      const userId = req.params.userId;
+      await Dashboard.updateMany(
+        { partecipants: userId },
+        { $pull: { partecipants: userId } }
+      );
+      await User.findByIdAndDelete(userId);
       res.status(204).send({ message: "User deleted" });
     } catch (error) {
       next(error);

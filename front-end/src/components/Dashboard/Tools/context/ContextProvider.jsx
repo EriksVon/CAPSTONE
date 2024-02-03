@@ -1,38 +1,30 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import tinycolor from "tinycolor2";
 
 const StateContext = createContext();
 
 export const ContextProvider = ({ children }) => {
-  const [currentTheme, setCurrentTheme] = useState(null);
+  const themeMode = localStorage.getItem("themeMode");
   const [showSettings, setShowSettings] = useState(false);
-  const [colorStrong, setColorStrong] = useState(null);
 
   const handleShow = () => setShowSettings(true);
   const handleClose = () => setShowSettings(false);
 
-  useEffect(() => {
-    const getThemeFromLocalStorage = () => {
-      const theme = localStorage.getItem("themeMode");
-      const colorStrong = tinycolor(theme).darken(10).toString();
-      if (theme) {
-        localStorage.setItem("colorStrong", colorStrong);
-        setColorStrong(colorStrong);
-        setCurrentTheme(theme);
-      }
-    };
-    getThemeFromLocalStorage();
-  }, [currentTheme]);
+  const dashboardId = localStorage.getItem("dashboardId");
+
+  const colorStrong = tinycolor(themeMode).darken(10).toString();
+
+  console.log("colorStrong", colorStrong, "themeMode", themeMode);
 
   return (
     <StateContext.Provider
       value={{
         showSettings,
         setShowSettings,
+        dashboardId,
         handleClose,
         handleShow,
-        currentTheme,
-        setCurrentTheme,
+        themeMode,
         colorStrong,
       }}
     >

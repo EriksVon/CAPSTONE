@@ -13,6 +13,7 @@ import { CheckLg, Trash } from "react-bootstrap-icons";
 import { useStateContext } from "./context/ContextProvider";
 import { useNavigate } from "react-router-dom";
 import { activities } from "../../../data/data";
+import tinycolor from "tinycolor2";
 
 const Settings = ({ dashboardToken, partecipants }) => {
   const token = localStorage.getItem("token");
@@ -94,7 +95,11 @@ const Settings = ({ dashboardToken, partecipants }) => {
       console.log(updatedDashboard);
 
       const theme = updatedDashboard.theme;
-      if (theme) localStorage.setItem("themeMode", theme);
+      if (theme) {
+        localStorage.setItem("themeMode", theme);
+        const colorStrong = tinycolor(theme).darken(10).toString();
+        localStorage.setItem("colorStrong", colorStrong);
+      }
       handleClose();
       window.location.reload();
     }
@@ -149,6 +154,28 @@ const Settings = ({ dashboardToken, partecipants }) => {
 
   return (
     <>
+      <Alert
+        show={show}
+        variant="danger"
+        style={{ zIndex: "10000", position: "absolute" }}
+      >
+        <div className="d-flex justify-content-end">
+          <Button onClick={() => setShow(false)} variant="light">
+            Close
+          </Button>
+        </div>
+        <Alert.Heading>Delete Dashboard</Alert.Heading>
+        <p>
+          Are you sure you want to delete this dashboard? This action cannot be
+          undone. If you delete this dashboard, all the data will be lost.
+        </p>
+        <hr />
+        <div className="d-flex justify-content-end">
+          <Button onClick={deleteDashboard} variant="danger">
+            DELETE DASHBOARD PERMANENTLY
+          </Button>
+        </div>
+      </Alert>
       <Modal fullscreen show={showSettings} onHide={handleClose}>
         <Container>
           <Modal.Header closeButton>
@@ -304,24 +331,6 @@ const Settings = ({ dashboardToken, partecipants }) => {
           </Modal.Body>
         </Container>
       </Modal>
-      <Alert show={show} variant="danger" style={{ zIndex: "10000" }}>
-        <div className="d-flex justify-content-end">
-          <Button onClick={() => setShow(false)} variant="light">
-            Close
-          </Button>
-        </div>
-        <Alert.Heading>Delete Dashboard</Alert.Heading>
-        <p>
-          Are you sure you want to delete this dashboard? This action cannot be
-          undone. If you delete this dashboard, all the data will be lost.
-        </p>
-        <hr />
-        <div className="d-flex justify-content-end">
-          <Button onClick={deleteDashboard} variant="danger">
-            DELETE DASHBOARD PERMANENTLY
-          </Button>
-        </div>
-      </Alert>
     </>
   );
 };

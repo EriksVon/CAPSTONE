@@ -11,7 +11,7 @@ function JoinDashboard() {
   const email = localStorage.getItem("email");
 
   const [body, setBody] = useState({
-    email: "",
+    email: email,
     dashboardToken: "",
   });
 
@@ -33,7 +33,7 @@ function JoinDashboard() {
       if (response.ok) {
         await response.json();
         setShowError(false);
-        navigate("/");
+        navigate("/create-or-join");
       } else {
         if (response.status === 404) {
           alert("Dashboard not found");

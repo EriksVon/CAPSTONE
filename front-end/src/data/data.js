@@ -11,39 +11,28 @@ export const combinedThemes = [
   {
     id: "orange",
     color: "#fce1d2",
-    //color: "#f79453",
     image: <Orange />,
   },
   {
     id: "blue",
     color: "#99dff4",
-    // color: '#2d95b4',
     image: <Blue />,
   },
   {
     id: "red",
     color: "#ffb7b7",
-    // color: '#d13e3e',
     image: <Red />,
   },
   {
     id: "yellow",
     color: "#ffdc7c",
-    // color: '#e29e07',
     image: <Yellow />,
   },
   {
     id: "green",
     color: "#6ed1a7",
-    // color: '#267653',
     image: <Green />,
   },
-  /*   {
-    id: "default-theme",
-    color: "#ffe0d3",
-    // color: '#f75959',
-    image: null, // Puoi specificare l'immagine di default o lasciare null se non è necessaria
-  }, */
 ];
 
 export const activities = [
@@ -90,10 +79,15 @@ export const activities = [
       ),
   },
   {
-    type: "Photos",
+    type: "Kanban",
     description: "",
     tool: <div>Work in porgress, please be patient</div>,
   },
+  /*   {
+    type: "Photos",
+    description: "",
+    tool: <div>Work in porgress, please be patient</div>,
+  }, */
   {
     type: "Money",
     description: "",
