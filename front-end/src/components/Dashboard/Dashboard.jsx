@@ -13,7 +13,7 @@ function Dashboard() {
   const { userId, token } = useJwt();
   const { userData } = useUserData(userId, token);
   const { handleShow, showSettings } = useStateContext();
-
+  console.log(userData);
   const themeMode = localStorage.getItem("themeMode");
   const colorStrong = tinycolor(themeMode).darken(10).toString();
 
@@ -22,13 +22,13 @@ function Dashboard() {
   }
 
   const dashboardData = userData.dashboards[0];
+  console.log(dashboardData);
 
   if (!dashboardData) {
     return <Loading />;
   }
 
   const dashboardToken = dashboardData.dashboardToken;
-
   return (
     <div
       className="d-flex flex-column"

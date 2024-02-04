@@ -8,29 +8,26 @@ import Photos from "./Tools/Photos";
 
 const ToolsList = ({ activities, colorStrong }) => {
   const activityComponents = {
-    Calendar: <Calendar colorStrong={colorStrong} title={"My calendar"} />,
-    Money: <Money colorStrong={colorStrong} title={"Counts"} />,
-    List: (
-      <List colorStrong={colorStrong} title={"My list"} description={"prova"} />
-    ),
-    Notes: (
-      <Notes
-        colorStrong={colorStrong}
-        title={"My notes"}
-        description={"prova"}
-      />
-    ),
-    Kanban: <Kanban colorStrong={colorStrong} title={"My kanban"} />,
-    Photos: <Photos colorStrong={colorStrong} title={"My photos"} />,
+    Calendar: Calendar,
+    Money: Money,
+    List: List,
+    Notes: Notes,
+    Kanban: Kanban,
+    Photos: Photos,
   };
+
+  console.log(activities);
 
   return (
     <div className="dashboardContainer">
-      {activities.map((activity, i) => {
-        const component = activityComponents[activity.type];
-        return (
-          component && <React.Fragment key={i}>{component}</React.Fragment>
-        );
+      {activities.map((activity) => {
+        const Tool = activityComponents[activity.type];
+        if (!Tool) {
+          return null;
+        }
+        const id = activity._id;
+        const propsWithId = { ...activity, id };
+        return <Tool key={id} {...propsWithId} colorStrong={colorStrong} />;
       })}
     </div>
   );

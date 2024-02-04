@@ -32,6 +32,22 @@ dashboardRouter
       next(error);
     }
   })
+  .get("/me/:dashId/:activityId", async (req, res, next) => {
+    try {
+      const { dashId, activityId } = req.params;
+      const dashboard = await Dashboard.findById(dashId);
+      const activity = dashboard.activities.find(
+        (activity) => activity._id.toString() === activityId
+      );
+      if (activity) {
+        res.status(200).json(activity);
+      } else {
+        res.status(404).json({ message: "Activity not found" });
+      }
+    } catch (error) {
+      next(error);
+    }
+  })
   /* WORKING */
   .post("/create-dashboard", authControl, async (req, res, next) => {
     try {
@@ -213,6 +229,27 @@ dashboardRouter
         }
       } else {
         res.status(200).json(dashboard);
+      }
+    } catch (error) {
+      next(error);
+    }
+  })
+  /* WORKING */
+  .post("/me/:dashId/:activityId", async (req, res, next) => {
+    try {
+      const { dashId, activityId } = req.params;
+      const dashboard = await Dashboard.findById(dashId);
+      const activity = dashboard.activities.find(
+        (activity) => activity._id.toString() === activityId
+      );
+      if (activity) {
+        const payload = req.body;
+        activity.content = payload.content;
+        activity.title = payload.title;
+        await dashboard.save();
+        res.status(201).json({ message: "Activity updated", dashboard });
+      } else {
+        res.status(404).json({ message: "Activity not found" });
       }
     } catch (error) {
       next(error);
