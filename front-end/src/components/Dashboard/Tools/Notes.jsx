@@ -58,7 +58,7 @@ const Notes = ({ colorStrong, id }) => {
   }, []);
 
   useEffect(() => {
-    const saveToBackend = async () => {
+    const saveNotesToBackend = async () => {
       const content = description;
       try {
         const response = await fetch(
@@ -86,7 +86,7 @@ const Notes = ({ colorStrong, id }) => {
       }
     };
 
-    saveToBackend();
+    saveNotesToBackend();
   }, [dashboardId, id, description]);
 
   return (

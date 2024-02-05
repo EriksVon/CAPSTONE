@@ -9,6 +9,7 @@ import ToolsDelete from "./ToolsDelete";
 import ToolsTitle from "./TooslTitle";
 
 const ToolsList = ({ activities, colorStrong }) => {
+  const dashboardId = localStorage.getItem("dashboardId");
   const activityComponents = {
     Calendar: Calendar,
     Money: Money,
@@ -36,9 +37,22 @@ const ToolsList = ({ activities, colorStrong }) => {
                 : "toolsWrapper"
             }`}
           >
-            <ToolsTitle id={activity._id} />
-            <Tool {...activity} id={activity._id} colorStrong={colorStrong} />
-            <ToolsDelete colorStrong={colorStrong} id={activity._id} />
+            <ToolsTitle
+              id={activity._id}
+              colorStrong={colorStrong}
+              dashboardId={dashboardId}
+            />
+            <Tool
+              id={activity._id}
+              colorStrong={colorStrong}
+              dashboardId={dashboardId}
+              {...activity}
+            />
+            <ToolsDelete
+              id={activity._id}
+              colorStrong={colorStrong}
+              dashboardId={dashboardId}
+            />
           </div>
         );
       })}

@@ -6,7 +6,7 @@ const ToolsTitle = ({ id }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState("");
   const dashboardId = localStorage.getItem("dashboardId");
-  console.log(id, dashboardId);
+
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
