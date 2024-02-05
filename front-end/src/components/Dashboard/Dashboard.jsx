@@ -5,9 +5,8 @@ import Loading from "../Loading";
 import Settings from "./Tools/Settings";
 import { useStateContext } from "./Tools/context/ContextProvider";
 import DashboardTitle from "./DashboardTitle";
-import ToolsList from "./ToolsList";
+import ToolsList from "./ToolsList/ToolsList";
 import tinycolor from "tinycolor2";
-// import { fetchDashboardData } from "";
 
 function Dashboard() {
   const { userId, token } = useJwt();

@@ -14,12 +14,11 @@ import { CaretLeftFill, CaretRightFill, XLg } from "react-bootstrap-icons";
 import tinycolor from "tinycolor2";
 import SingleDay from "./SingleDay";
 
-const Calendar = ({ title, colorStrong }) => {
+const Calendar = ({ colorStrong, id }) => {
   const [modalState, setModalState] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [todayEvents, setTodayEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
-
   const [events, setEvents] = useState([
     {
       title: "All Day Event very long title",
@@ -65,6 +64,7 @@ const Calendar = ({ title, colorStrong }) => {
       title: titleInput,
       time: timeInput,
       start: format(selectedDay, "yyyy-MM-dd"),
+      // end: format(selectedDay, "yyyy-MM-dd"),
     };
     const updatedEvents = [...events, newEvent];
     setEvents(updatedEvents);
@@ -103,70 +103,61 @@ const Calendar = ({ title, colorStrong }) => {
   }, [events]);
 
   return (
-    <div className="calendarWrapper">
-      <h5>{title}</h5>
-      <div className="calendarContainer" style={{ borderColor: colorStrong }}>
-        <h5 className="d-flex align-items-center">
-          <Container>
-            <Row>
-              <Col xs={2}>
-                <CaretLeftFill onClick={goToPreviousMonth} />{" "}
-              </Col>
-              <Col xs={8}> {format(currentDate, "MMMM yyyy")} </Col>
-              <Col xs={2}>
-                <CaretRightFill onClick={goToNextMonth} />
-              </Col>
-            </Row>
-          </Container>
-        </h5>
+    <div className="calendarContainer" style={{ borderColor: colorStrong }}>
+      <h5 className="d-flex align-items-center">
         <Container>
           <Row>
-            {daysInMonth.map((day, i) => {
-              const dateKey = format(day, "yyyy-MM-dd");
-              const todaysEvents = eventsByDate[dateKey] || [];
-              const sundays = isSunday(day);
-              const today = isToday(day);
-
-              return (
-                <Col
-                  xs={12}
-                  md={3}
-                  key={i}
-                  className=" p-2 text-center"
-                  style={{
-                    backgroundColor: sundays ? colorStrong : "transparent",
-                    border: today
-                      ? `3px solid ${colorStronger}`
-                      : "1px solid lightgrey",
-                  }}
-                  onClick={() => handleModal(day, todaysEvents)}
-                >
-                  {format(day, "d")}
-                  {todaysEvents.map((event, index) => (
-                    <div
-                      key={`event-${index}`}
-                      style={{
-                        fontSize: "small",
-                        backgroundColor: colorStronger,
-                        borderRadius: "10px",
-                        margin: "5px",
-                      }}
-                    >
-                      {event.time ? event.time + " - " : ""} {event.title}
-                    </div>
-                  ))}
-                </Col>
-              );
-            })}
+            <Col xs={2}>
+              <CaretLeftFill onClick={goToPreviousMonth} />{" "}
+            </Col>
+            <Col xs={8}> {format(currentDate, "MMMM yyyy")} </Col>
+            <Col xs={2}>
+              <CaretRightFill onClick={goToNextMonth} />
+            </Col>
           </Row>
         </Container>
-      </div>
-      <button
-        className="coralBgButton"
-        style={{ backgroundColor: colorStrong }}
-      >
-        Delete
-      </button>
+      </h5>
+      <Container>
+        <Row>
+          {daysInMonth.map((day, i) => {
+            const dateKey = format(day, "yyyy-MM-dd");
+            const todaysEvents = eventsByDate[dateKey] || [];
+            const sundays = isSunday(day);
+            const today = isToday(day);
+
+            return (
+              <Col
+                xs={12}
+                md={3}
+                key={i}
+                className=" p-2 text-center"
+                style={{
+                  backgroundColor: sundays ? colorStrong : "transparent",
+                  border: today
+                    ? `3px solid ${colorStronger}`
+                    : "1px solid lightgrey",
+                }}
+                onClick={() => handleModal(day, todaysEvents)}
+              >
+                {format(day, "d")}
+                {todaysEvents.map((event, index) => (
+                  <div
+                    key={`event-${index}`}
+                    style={{
+                      fontSize: "small",
+                      backgroundColor: colorStronger,
+                      borderRadius: "10px",
+                      margin: "5px",
+                    }}
+                  >
+                    {event.time ? event.time + " - " : ""} {event.title}
+                  </div>
+                ))}
+              </Col>
+            );
+          })}
+        </Row>
+      </Container>
 
       {selectedDay && todayEvents && (
         <Modal show={modalState} onHide={() => handleModal(selectedDay, [])}>

@@ -1,18 +1,15 @@
 import Quill from "quill";
 import "quill/dist/quill.snow.css?sourceMap=false";
 import React, { useEffect, useRef, useState } from "react";
-import { PencilFill } from "react-bootstrap-icons";
-import { Button } from "react-bootstrap";
 
 const Notes = ({ colorStrong, id }) => {
   const [description, setDescription] = useState("");
-  const [title, setTitle] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
+
   const dashboardId = localStorage.getItem("dashboardId");
   const quillRef = useRef(null);
 
   useEffect(() => {
-    const quill = new Quill("#editor-container", {
+    const quill = new Quill(`#editor-container-${id}`, {
       modules: {
         toolbar: [
           ["bold", "underline", "strike"],
@@ -34,11 +31,9 @@ const Notes = ({ colorStrong, id }) => {
 
         if (response.ok) {
           const responseData = await response.json();
-          const content = responseData.content || "";
-          const loadedTitle = responseData.title || "My Notes"; // Use a default title if not present
+          const content = responseData.content;
           quillRef.current.clipboard.dangerouslyPasteHTML(content);
           setDescription(content);
-          setTitle(loadedTitle);
         } else {
           console.error(
             "Error loading data:",
@@ -64,10 +59,7 @@ const Notes = ({ colorStrong, id }) => {
 
   useEffect(() => {
     const saveToBackend = async () => {
-      const content = {
-        title: title,
-        content: description,
-      };
+      const content = description;
       try {
         const response = await fetch(
           `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`,
@@ -76,7 +68,7 @@ const Notes = ({ colorStrong, id }) => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(content),
+            body: JSON.stringify({ content }),
           }
         );
 
@@ -95,54 +87,15 @@ const Notes = ({ colorStrong, id }) => {
     };
 
     saveToBackend();
-  }, [dashboardId, id, description, title]);
+  }, [dashboardId, id, description]);
 
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
-  };
-  const handleSaveClick = () => {
-    setIsEditing(false);
-  };
-
-  console.log(description, title);
   return (
-    <div className="toolsWrapper">
-      <div className="d-flex align-items-center justify-content-around">
-        {isEditing ? (
-          <>
-            <input
-              type="text"
-              value={title}
-              onChange={handleTitleChange}
-              style={{ borderRadius: "10px" }}
-            />
-            <Button variant="transparent" onClick={handleSaveClick}>
-              Save
-            </Button>
-          </>
-        ) : (
-          <>
-            <h5>{title}</h5>
-            <PencilFill onClick={handleEditClick} />
-          </>
-        )}
-      </div>
-      <div className="toolsContainer p-0" style={{ borderColor: colorStrong }}>
-        <div
-          id="editor-container"
-          className="border-0"
-          style={{ height: 100 }}
-        ></div>
-      </div>
-      <button
-        className="coralBgButton"
-        style={{ backgroundColor: colorStrong }}
-      >
-        Delete
-      </button>
+    <div className="toolsContainer p-0" style={{ borderColor: colorStrong }}>
+      <div
+        id={`editor-container-${id}`}
+        className="border-0"
+        style={{ height: 100 }}
+      ></div>
     </div>
   );
 };

@@ -238,14 +238,20 @@ dashboardRouter
   .post("/me/:dashId/:activityId", async (req, res, next) => {
     try {
       const { dashId, activityId } = req.params;
+      console.log("dashId:", dashId);
+      console.log("activityId:", activityId);
       const dashboard = await Dashboard.findById(dashId);
       const activity = dashboard.activities.find(
         (activity) => activity._id.toString() === activityId
       );
       if (activity) {
         const payload = req.body;
-        activity.content = payload.content;
-        activity.title = payload.title;
+        if (payload.title) {
+          activity.title = payload.title;
+        }
+        if (payload.content) {
+          activity.content = payload.content;
+        }
         await dashboard.save();
         res.status(201).json({ message: "Activity updated", dashboard });
       } else {
@@ -265,6 +271,27 @@ dashboardRouter
       );
       await Dashboard.findByIdAndDelete(dashId);
       res.status(204).send({ message: "Dashboard deleted" });
+    } catch (error) {
+      next(error);
+    }
+  })
+  /* WORKING */
+  .delete("/me/:dashId/:activityId", async (req, res, next) => {
+    try {
+      const { dashId, activityId } = req.params;
+      const dashboard = await Dashboard.findById(dashId);
+      const activity = dashboard.activities.find(
+        (activity) => activity._id.toString() === activityId
+      );
+      if (activity) {
+        dashboard.activities = dashboard.activities.filter(
+          (activity) => activity._id.toString() !== activityId
+        );
+        await dashboard.save();
+        res.status(204).json({ message: "Activity deleted" });
+      } else {
+        res.status(404).json({ message: "Activity not found" });
+      }
     } catch (error) {
       next(error);
     }
