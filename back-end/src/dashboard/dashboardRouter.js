@@ -238,16 +238,14 @@ dashboardRouter
   .post("/me/:dashId/:activityId", async (req, res, next) => {
     try {
       const { dashId, activityId } = req.params;
-      console.log("dashId:", dashId);
-      console.log("activityId:", activityId);
       const dashboard = await Dashboard.findById(dashId);
       const activity = dashboard.activities.find(
         (activity) => activity._id.toString() === activityId
       );
       if (activity) {
         const payload = req.body;
-        if (payload.title) {
-          activity.title = payload.title;
+        if (payload.toolTitle) {
+          activity.toolTitle = payload.toolTitle;
         }
         if (payload.content) {
           activity.content = payload.content;

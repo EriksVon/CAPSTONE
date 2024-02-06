@@ -1,15 +1,40 @@
-import React, { useState } from "react";
+import { Input } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { PencilFill } from "react-bootstrap-icons";
 
 const ToolsTitle = ({ id }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState("");
+  const [toolTitle, setToolTitle] = useState("");
   const dashboardId = localStorage.getItem("dashboardId");
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`
+        );
+        if (response.ok) {
+          const responseData = await response.json();
+          setToolTitle(responseData.toolTitle);
+        } else {
+          console.error(
+            "Error loading list data:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error loading list data:", error);
+      }
+    };
+    fetchData();
+  }, [id, dashboardId]);
+
   const handleTitleChange = (e) => {
-    setTitle(e.target.value);
+    setToolTitle(e.target.value);
   };
+
   const handleEdit = () => {
     setIsEditing(!isEditing);
     if (isEditing) {
@@ -20,7 +45,7 @@ const ToolsTitle = ({ id }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ title }),
+          body: JSON.stringify({ toolTitle }),
         }
       )
         .then((response) => {
@@ -44,19 +69,14 @@ const ToolsTitle = ({ id }) => {
     <div className="d-flex align-items-center justify-content-around">
       {isEditing ? (
         <>
-          <input
-            type="text"
-            value={title}
-            onChange={handleTitleChange}
-            style={{ borderRadius: "10px" }}
-          />
+          <Input value={toolTitle} onChange={handleTitleChange} />
           <Button variant="transparent" onClick={handleEdit}>
             Save
           </Button>
         </>
       ) : (
         <>
-          <h5>{title}</h5>
+          <h5>{toolTitle}</h5>
           <PencilFill onClick={handleEdit} />
         </>
       )}

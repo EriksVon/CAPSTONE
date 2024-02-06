@@ -7,7 +7,7 @@ const ActivitySchema = new Schema({
   content: {
     type: String,
   },
-  title: {
+  toolTitle: {
     type: String,
   },
 });
