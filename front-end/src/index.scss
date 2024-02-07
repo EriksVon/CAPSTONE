@@ -48,7 +48,7 @@ body {
 .pinkBgButton {
   background-color: #ffe0d3;
   color: black;
-  border: 0;
+  border: solid;
   border-radius: 50px;
   padding: 0.5rem 1rem;
   font-weight: 700;
@@ -111,7 +111,6 @@ body {
   height: 95%;
   padding: 10px;
   overflow-x: auto;
-  min-width: 800px;
   &::-webkit-scrollbar {
     width: 12px;
   }

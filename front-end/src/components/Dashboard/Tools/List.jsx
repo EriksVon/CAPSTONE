@@ -1,6 +1,7 @@
+import { Flex, Input, Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
-import { DashLg, PlusLg } from "react-bootstrap-icons";
+/* import {  } from "react-bootstrap";
+ */ import { DashLg, PlusLg } from "react-bootstrap-icons";
 
 const List = ({ dashboardId, colorStrong, id }) => {
   const [listItem, setListItem] = useState("");
@@ -58,20 +59,17 @@ const List = ({ dashboardId, colorStrong, id }) => {
 
   return (
     <div className="toolsContainer" style={{ borderColor: colorStrong }}>
-      <div className="d-flex mb-2">
-        <input
-          type="text"
+      <Flex>
+        <Input
           value={listItem}
           onChange={(e) => setListItem(e.target.value)}
-          style={{
-            borderRadius: "10px",
-            fontSize: "small",
-          }}
+          size="sm"
         />
         <Button variant="transparent" onClick={handleAddItem}>
           <PlusLg />
         </Button>
-      </div>
+      </Flex>
+
       <div>
         {list.map((item, index) => (
           <div

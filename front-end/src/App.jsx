@@ -8,6 +8,8 @@ import DashAccess from "./components/CreateOrJoin/DashAccess";
 import CreateDashboard from "./components/CreateOrJoin/CreateDashboard";
 import Dashboard from "./components/Dashboard/Dashboard";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import HowItWorks from "./components/HowItWorks";
+import AboutUs from "./components/AboutUs";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
             <Route path="/join-dashboard" element={<JoinDashboard />} />
             <Route path="/create" element={<CreateDashboard />} />
             <Route path="/" element={<Dashboard />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
+            <Route path="/about-us" element={<AboutUs />} />
           </Routes>
         </div>
         <Footer />

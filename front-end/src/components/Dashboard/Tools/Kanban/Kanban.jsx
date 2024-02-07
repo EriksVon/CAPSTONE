@@ -149,7 +149,7 @@ const Kanban = ({ colorStrong, dashboardId, id, onDelete }) => {
           <Flex flexDirection="column">
             <AddCard addCard={addNewCard} />
 
-            <Flex flex="3">
+            <Flex>
               {arrayLanes.map(({ title, items, color }, index) => (
                 <KanbanLane
                   key={index}

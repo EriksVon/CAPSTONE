@@ -12,6 +12,7 @@ const AddCard = ({ addCard }) => {
         onChange={(e) => setTitle(e.target.value)}
         bgColor={"white"}
         size="sm"
+        me="2"
       />
 
       <Button

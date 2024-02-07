@@ -76,10 +76,10 @@ function MyNav() {
             <PlanMeLogo width="120px" />
           </Navbar.Brand>
         </Link>
-        <Nav.Link href="/wip" className="ms-auto d-none d-sm-inline">
+        <Nav.Link href="/about-us" className="ms-auto d-none d-sm-inline">
           About Us
         </Nav.Link>
-        <Nav.Link href="/wip" className="d-none d-sm-inline">
+        <Nav.Link href="/how-it-works" className="d-none d-sm-inline">
           How it works
         </Nav.Link>
         {isUserLoggedIn ? (
@@ -88,7 +88,7 @@ function MyNav() {
               id="dropdown"
               className="coralBgButton text-decoration-none px-3 text-black"
             >
-              <PersonCircle className="me-2" />
+              <PersonCircle className="d-none d-md-inline me-2" />
               Hi, {userData ? userData.name : ""}
             </Dropdown.Toggle>
             <Dropdown.Menu drop="end-start">
@@ -97,10 +97,10 @@ function MyNav() {
                 Delete account
               </Dropdown.Item>
               <Dropdown.Divider className="d-md-none" />
-              <Dropdown.Item href="/wip" className="d-md-none">
+              <Dropdown.Item href="/about-us" className="d-md-none">
                 About us
               </Dropdown.Item>
-              <Dropdown.Item href="/wip" className="d-md-none">
+              <Dropdown.Item href="/how-it-works" className="d-md-none">
                 How it works
               </Dropdown.Item>
             </Dropdown.Menu>

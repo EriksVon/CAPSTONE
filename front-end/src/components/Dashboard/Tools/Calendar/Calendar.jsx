@@ -9,10 +9,10 @@ import {
   subMonths,
   addMonths,
 } from "date-fns";
-import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
-import { CaretLeftFill, CaretRightFill, XLg } from "react-bootstrap-icons";
+import { Col, Container, Row } from "react-bootstrap";
+import { CaretLeftFill, CaretRightFill } from "react-bootstrap-icons";
 import tinycolor from "tinycolor2";
-import SingleDay from "./SingleDay";
+import AddEvent from "./AddEvent";
 
 const Calendar = ({ colorStrong, id }) => {
   const [modalState, setModalState] = useState(false);
@@ -39,12 +39,6 @@ const Calendar = ({ colorStrong, id }) => {
     },
   ]);
 
-  const handleModal = (day, todaysEvents) => {
-    setSelectedDay(day);
-    setTodayEvents(todaysEvents);
-    setModalState(!modalState);
-  };
-
   const deleteEvent = (index) => {
     const eventToDelete = todayEvents[index];
     const updatedTodayEvents = todayEvents.filter(
@@ -68,6 +62,12 @@ const Calendar = ({ colorStrong, id }) => {
     };
     const updatedEvents = [...events, newEvent];
     setEvents(updatedEvents);
+    setModalState(!modalState);
+  };
+
+  const handleModal = (day, todaysEvents) => {
+    setSelectedDay(day);
+    setTodayEvents(todaysEvents);
     setModalState(!modalState);
   };
 
@@ -160,64 +160,18 @@ const Calendar = ({ colorStrong, id }) => {
       </Container>
 
       {selectedDay && todayEvents && (
-        <Modal show={modalState} onHide={() => handleModal(selectedDay, [])}>
-          <Modal.Header className="d-flex justify-content-between">
-            <Modal.Title>
-              {selectedDay && format(selectedDay, "EEEE, d MMMM")}
-            </Modal.Title>
-            <XLg onClick={() => setModalState(!modalState)} />
-          </Modal.Header>
-          <Modal.Body>
-            <Container>
-              <h6> Add event:</h6>
-              <Row>
-                <Col sm={4}>
-                  <Form.Control
-                    size="sm"
-                    type="time"
-                    placeholder="10:30"
-                    id="time"
-                  />
-                </Col>
-                <Col sm={6}>
-                  <Form.Control
-                    size="sm"
-                    placeholder="Description"
-                    required
-                    id="title"
-                  />
-                </Col>
-
-                <Col sm={2}>
-                  <Button
-                    onClick={addEvent}
-                    style={{
-                      backgroundColor: colorStronger,
-                      border: "none",
-                    }}
-                  >
-                    Add
-                  </Button>
-                </Col>
-
-                <Col xs={12}>
-                  {todayEvents.map((event, eventIndex) => (
-                    <>
-                      <h6 className="mt-3">Your events for today: </h6>
-                      <SingleDay
-                        key={`event-${eventIndex}`}
-                        event={event}
-                        eventIndex={eventIndex}
-                        colorStronger={colorStronger}
-                        deleteEvent={deleteEvent}
-                      />
-                    </>
-                  ))}
-                </Col>
-              </Row>
-            </Container>
-          </Modal.Body>
-        </Modal>
+        <AddEvent
+          selectedDay={selectedDay}
+          setModalState={setModalState}
+          colorStrong={colorStrong}
+          format={format}
+          modalState={modalState}
+          todayEvents={todayEvents}
+          handleModal={handleModal}
+          addEvent={addEvent}
+          deleteEvent={deleteEvent}
+          colorStronger={colorStronger}
+        />
       )}
     </div>
   );

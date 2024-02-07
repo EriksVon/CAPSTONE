@@ -28,6 +28,7 @@ const KanbanLane = ({ title, items, color, onDelete }) => {
       >
         {title}
       </Text>
+
       <Flex
         ref={setNodeRef}
         flex="1"
