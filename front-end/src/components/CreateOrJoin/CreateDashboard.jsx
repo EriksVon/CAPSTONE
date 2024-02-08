@@ -131,7 +131,7 @@ function CreateDashboard() {
         </Alert>
       )}
       <Container>
-        <Form className="d-flex flex-column gap-4">
+        <Form className="d-flex flex-column gap-4" onSubmit={handleSubmit}>
           <h1 className="text-center">Create your Dashboard</h1>
 
           <Form.Group as={Row} controlId="formHorizontalEmail">
@@ -156,7 +156,7 @@ function CreateDashboard() {
                     value={email}
                     onChange={(e) => handleEmailChange(index, e.target.value)}
                   />
-                  {index >= 0 && (
+                  {index > 0 && (
                     <Button
                       type="button"
                       onClick={() => removeEmailField(index)}
@@ -271,7 +271,7 @@ function CreateDashboard() {
           </Container>
         </Form.Group> */}
 
-          <button type="submit" className="pinkBgButton" onClick={handleSubmit}>
+          <button type="submit" className="pinkBgButton">
             Submit
           </button>
         </Form>
