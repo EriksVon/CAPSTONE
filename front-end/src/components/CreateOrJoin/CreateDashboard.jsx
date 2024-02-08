@@ -70,6 +70,7 @@ function CreateDashboard() {
           activities: selectedActivities.map((activity) => ({
             type: activity,
             description: "",
+            toolTitle: activity,
           })),
           /*   avatar: avatar, */
           partecipants: [userId],
@@ -100,7 +101,7 @@ function CreateDashboard() {
           localStorage.setItem("dashboardId", dashboardId);
 
           const mode = data.newDashboard.theme;
-          const colorStrong = tinycolor(mode).darken(10).toString();
+          const colorStrong = tinycolor(mode).darken(20).toString();
           localStorage.setItem("themeMode", mode);
           localStorage.setItem("colorStrong", colorStrong);
 
@@ -137,7 +138,16 @@ function CreateDashboard() {
             <Form.Label column xs={3}>
               Add someone
             </Form.Label>
-            <Col xs={7}>
+            <Col xs={8} sm={1}>
+              <Button
+                type="button"
+                onClick={addEmailField}
+                className="mt-1 pinkBgButton"
+              >
+                +
+              </Button>
+            </Col>
+            <Col sm={8}>
               {emailList.map((email, index) => (
                 <div key={index} className="d-flex mt-1">
                   <Form.Control
@@ -146,7 +156,7 @@ function CreateDashboard() {
                     value={email}
                     onChange={(e) => handleEmailChange(index, e.target.value)}
                   />
-                  {index > 0 && (
+                  {index >= 0 && (
                     <Button
                       type="button"
                       onClick={() => removeEmailField(index)}
@@ -157,15 +167,6 @@ function CreateDashboard() {
                   )}
                 </div>
               ))}
-            </Col>
-            <Col xs={2}>
-              <Button
-                type="button"
-                onClick={addEmailField}
-                className="mt-1 pinkBgButton"
-              >
-                +
-              </Button>
             </Col>
           </Form.Group>
 
@@ -237,14 +238,18 @@ function CreateDashboard() {
                 ))}
               </Row>
             </Col>
-            <Col
-              sm={7}
-              className="mt-3 text-center"
-              style={{ height: "250px" }}
-            >
-              <p>Preview:</p>
-              {selectedActivity && <div>{selectedActivity.tool}</div>}
-            </Col>
+            {selectedActivity && (
+              <>
+                <Col
+                  sm={7}
+                  className="mt-3 text-center"
+                  style={{ height: "250px" }}
+                >
+                  <p>Preview:</p>
+                  <div>{selectedActivity.tool}</div>
+                </Col>
+              </>
+            )}
           </Form.Group>
 
           {/*         <Form.Group controlId="formImg">

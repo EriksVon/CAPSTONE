@@ -11,9 +11,7 @@ export const ContextProvider = ({ children }) => {
   const handleClose = () => setShowSettings(false);
 
   const dashboardId = localStorage.getItem("dashboardId");
-
-  const colorStrong = tinycolor(themeMode).darken(10).toString();
-
+  const colorStrong = tinycolor(themeMode).darken(20).toString();
   console.log("colorStrong", colorStrong, "themeMode", themeMode);
 
   return (

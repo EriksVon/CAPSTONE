@@ -1,7 +1,7 @@
 import { DndContext, rectIntersection } from "@dnd-kit/core";
 import KanbanLane from "./KanbanLane";
 import AddCard from "./AddCard";
-import { ChakraProvider, theme, Flex } from "@chakra-ui/react";
+import { ChakraProvider, theme } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 const Kanban = ({ colorStrong, dashboardId, id, onDelete }) => {
@@ -109,7 +109,7 @@ const Kanban = ({ colorStrong, dashboardId, id, onDelete }) => {
   }, [id, todoItems, doneItems, inProgressItems, dashboardId]);
 
   return (
-    <div className="calendarContainer" style={{ borderColor: colorStrong }}>
+    <div style={{ borderColor: colorStrong }}>
       <ChakraProvider theme={theme}>
         <DndContext
           collisionDetection={rectIntersection}
@@ -146,21 +146,19 @@ const Kanban = ({ colorStrong, dashboardId, id, onDelete }) => {
             setList(list);
           }}
         >
-          <Flex flexDirection="column">
-            <AddCard addCard={addNewCard} />
+          <AddCard addCard={addNewCard} />
 
-            <Flex>
-              {arrayLanes.map(({ title, items, color }, index) => (
-                <KanbanLane
-                  key={index}
-                  title={title}
-                  items={items}
-                  color={color}
-                  onDelete={handleDeleteItem}
-                />
-              ))}
-            </Flex>
-          </Flex>
+          <div className="kanbanContainer">
+            {arrayLanes.map(({ title, items, color }, index) => (
+              <KanbanLane
+                key={index}
+                title={title}
+                items={items}
+                color={color}
+                onDelete={handleDeleteItem}
+              />
+            ))}
+          </div>
         </DndContext>
       </ChakraProvider>
     </div>

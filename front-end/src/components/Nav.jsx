@@ -71,7 +71,7 @@ function MyNav() {
   return (
     <Navbar expand="lg" sticky="top" className="bg-white">
       <Container className="d-flex gap-3">
-        <Link to={isUserLoggedIn && dashboardId ? "/" : logout}>
+        <Link to={isUserLoggedIn && dashboardId ? "/" : "/login"}>
           <Navbar.Brand>
             <PlanMeLogo width="120px" />
           </Navbar.Brand>
@@ -92,6 +92,7 @@ function MyNav() {
               Hi, {userData ? userData.name : ""}
             </Dropdown.Toggle>
             <Dropdown.Menu drop="end-start">
+              <Dropdown.Item href="/">Go to you dashboard</Dropdown.Item>
               <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
               <Dropdown.Item onClick={deleteAccount}>
                 Delete account

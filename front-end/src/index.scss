@@ -1,33 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Fjalla+One&family=Manrope&family=Pacifico&family=Roboto+Condensed:ital,wght@0,400;1,200&display=swap");
-
-.dashTitle {
-  font-family: "Fjalla One", sans-serif;
-  font-size: 50px;
-}
+@import url("https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap");
 
 body {
   font-family: "Open Sans", sans-serif;
-  display: flex;
-  min-height: 100vh;
 }
-
 #root {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  justify-content: space-between;
+  height: 100vh;
 }
 
-.main-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  margin-bottom: 50px;
-}
-
-.footer {
-  height: 7%;
+.dashTitle {
+  font-family: "Protest Riot", sans-serif;
+  font-size: 60px;
 }
 
 .coralBgButton {
@@ -48,7 +34,7 @@ body {
 .pinkBgButton {
   background-color: #ffe0d3;
   color: black;
-  border: solid;
+  border: 0;
   border-radius: 50px;
   padding: 0.5rem 1rem;
   font-weight: 700;
@@ -83,76 +69,9 @@ body {
   color: white;
 }
 
-.pinkBg {
-  background-color: #f75959;
-  color: white;
-}
-
 .form-control {
   border-radius: 50px;
   padding: 0.5rem 1rem;
-}
-
-.calendarWrapper {
-  max-width: 900px;
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 auto;
-  gap: 2%;
-  height: 100%;
-  h5 {
-    text-align: center;
-  }
-}
-
-.calendarContainer {
-  border: solid 5px;
-  border-radius: 10px;
-  height: 95%;
-  padding: 10px;
-  overflow-x: auto;
-  &::-webkit-scrollbar {
-    width: 12px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #b5b2b2;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  }
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-}
-
-@media (max-width: 575px) {
-  .main {
-    margin-bottom: 10px;
-  }
-  .main-wrapper {
-    margin-bottom: 10px;
-  }
-  .calendarWrapper {
-    max-width: 300px;
-  }
-}
-
-.dashboardContainer {
-  border-radius: 10px;
-  height: 70vh;
-  width: 90vw;
-  padding: 20px;
-  display: flex;
-  gap: 2%;
-  overflow-x: auto;
-  &::-webkit-scrollbar {
-    width: 12px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #b5b2b2;
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
 }
 
 .toolsWrapper {
@@ -160,27 +79,74 @@ body {
   flex-direction: column;
   flex: 0 0 auto;
   gap: 2%;
-  height: 100%;
-  max-width: 300px;
+  border-radius: 20px;
+  padding: 10px;
+  width: 90%;
+  min-height: 50vh;
   h5 {
     text-align: center;
   }
 }
 
-.toolsContainer {
-  border: solid 5px;
-  border-radius: 10px;
-  height: 95%;
+.bigToolsWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  gap: 2%;
+  border-radius: 20px;
   padding: 10px;
+  width: 90%;
+  h5 {
+    text-align: center;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .toolsWrapper {
+    width: 30%;
+  }
+  .bigToolsWrapper {
+    width: 90%;
+  }
+  .kanbanContainer {
+    display: flex;
+    flex-direction: row;
+  }
+  .calendarContainer {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .kanbanContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  .calendarContainer {
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+  }
+}
+
+.dashboardContainer {
+  height: 80vh;
+  /*  width: 90vw; */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2%;
   overflow-x: auto;
   &::-webkit-scrollbar {
     width: 12px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #888;
+    background-color: #b5b2b2;
     border-radius: 6px;
   }
   &::-webkit-scrollbar-track {
-    background-color: black;
+    background-color: transparent;
   }
 }

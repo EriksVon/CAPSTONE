@@ -31,9 +31,11 @@ const Notes = ({ colorStrong, id }) => {
 
         if (response.ok) {
           const responseData = await response.json();
-          const content = responseData.content;
-          quillRef.current.clipboard.dangerouslyPasteHTML(content);
-          setDescription(content);
+          if (responseData.content) {
+            const content = responseData.content;
+            quillRef.current.clipboard.dangerouslyPasteHTML(content);
+            setDescription(content);
+          }
         } else {
           console.error(
             "Error loading data:",

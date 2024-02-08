@@ -6,13 +6,13 @@ import { XLg } from "react-bootstrap-icons";
 const AddEvent = ({
   selectedDay,
   setModalState,
-  colorStronger,
   format,
   modalState,
   todayEvents,
   handleModal,
   addEvent,
   deleteEvent,
+  colorStrong,
 }) => {
   return (
     <Modal show={modalState} onHide={() => handleModal(selectedDay, [])}>
@@ -47,7 +47,7 @@ const AddEvent = ({
               <Button
                 onClick={addEvent}
                 style={{
-                  backgroundColor: colorStronger,
+                  backgroundColor: colorStrong,
                   border: "none",
                 }}
               >
@@ -63,7 +63,7 @@ const AddEvent = ({
                     key={`event-${eventIndex}`}
                     event={event}
                     eventIndex={eventIndex}
-                    colorStronger={colorStronger}
+                    colorStrong={colorStrong}
                     deleteEvent={deleteEvent}
                   />
                 </>

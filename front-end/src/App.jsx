@@ -13,25 +13,22 @@ import AboutUs from "./components/AboutUs";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <MyNav />
-        <div className="main-wrapper">
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/wip" element={<WorkInProgress />} />
-            <Route path="/create-or-join" element={<DashAccess />} />
-            <Route path="/join-dashboard" element={<JoinDashboard />} />
-            <Route path="/create" element={<CreateDashboard />} />
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/how-it-works" element={<HowItWorks />} />
-            <Route path="/about-us" element={<AboutUs />} />
-          </Routes>
-        </div>
-        <Footer />
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <MyNav />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/wip" element={<WorkInProgress />} />
+        <Route path="/create-or-join" element={<DashAccess />} />
+        <Route path="/join-dashboard" element={<JoinDashboard />} />
+        <Route path="/create" element={<CreateDashboard />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/about-us" element={<AboutUs />} />
+      </Routes>
+
+      <Footer />
+    </BrowserRouter>
   );
 }
 

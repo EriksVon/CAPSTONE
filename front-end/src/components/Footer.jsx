@@ -1,9 +1,8 @@
 import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
 import { ReactComponent as FbLogo } from "../styles/images/facebook-footer.svg";
 import { ReactComponent as IgLogo } from "../styles/images/insta-footer.svg";
 import { ReactComponent as LkLogo } from "../styles/images/linkedin-footer.svg";
+import { Link } from "react-router-dom";
 
 function Footer() {
   const getYear = () => {
@@ -11,26 +10,24 @@ function Footer() {
   };
 
   return (
-    <Navbar
-      expand="lg"
+    <div
       fixed="bottom"
-      className="pinkBg py-3 d-none d-sm-block footer"
+      className="text-white py-3"
+      style={{ backgroundColor: "#f75959" }}
     >
-      <Container>
-        <Nav.Item>
-          <small>&copy; Copyright {getYear()} , Example Corporation</small>
-        </Nav.Item>
-        <Nav.Link href="/wip" className="ms-auto">
+      <Container className="d-flex align-items-center">
+        <small>&copy; Copyright {getYear()} , Example Corporation</small>
+        <Link to={"/wip"} className="ms-auto">
           <FbLogo />
-        </Nav.Link>
-        <Nav.Link href="/wip" className="mx-3">
+        </Link>
+        <Link to={"/wip"} className="mx-3">
           <IgLogo />
-        </Nav.Link>
-        <Nav.Link href="/wip">
+        </Link>
+        <Link to={"/wip"}>
           <LkLogo />
-        </Nav.Link>
+        </Link>
       </Container>
-    </Navbar>
+    </div>
   );
 }
 

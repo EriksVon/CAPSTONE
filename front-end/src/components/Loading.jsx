@@ -1,8 +1,4 @@
 const Loading = () => {
-  return (
-    <div>
-      <h1>Loading...</h1>
-    </div>
-  );
+  return <h1 className="text-center">Loading...</h1>;
 };
 export default Loading;

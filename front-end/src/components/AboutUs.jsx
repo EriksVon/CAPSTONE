@@ -5,7 +5,9 @@ import { Container, Image } from "react-bootstrap";
 const AboutUs = () => {
   return (
     <Container className="my-5" style={{ textAlign: "justify" }}>
-      <Image fluid src={usImg} alt="Team" rounded />
+      <div className="text-center">
+        <Image fluid src={usImg} alt="Team" rounded />
+      </div>
       <p className="m-3">
         <strong>👋 Hi there!</strong>
         <br />

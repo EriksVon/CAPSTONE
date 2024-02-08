@@ -39,8 +39,9 @@ const KanbanCard = ({ title, index, parent, onDelete }) => {
         alignItems="center"
         justifyContent="center"
         cursor="grab"
+        width="90%"
       >
-        <Text style={{ maxWidth: "200px", overflow: "hidden" }}>{title}</Text>
+        <Text style={{ overflow: "hidden" }}>{title}</Text>
       </Flex>
       <Trash3Fill onClick={deleteItem} />
     </Flex>

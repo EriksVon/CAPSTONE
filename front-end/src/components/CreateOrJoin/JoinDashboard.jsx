@@ -79,7 +79,7 @@ function JoinDashboard() {
 
                 <Form.Group controlId="formBasicPassword">
                   <Form.Control
-                    type="password"
+                    type="text"
                     placeholder="Enter token"
                     value={body.dashboardToken}
                     required

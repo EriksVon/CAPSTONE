@@ -14,9 +14,9 @@ const KanbanLane = ({ title, items, color, onDelete }) => {
       flex="3"
       padding="2"
       flexDirection="column"
-      minH="20rem"
-      maxW="20rem"
+      minH="10rem"
       height={countItems > 0 ? "auto" : "10rem"}
+      minW={countItems > 0 ? "20rem" : "10rem"}
     >
       <Text
         fontSize="xl"

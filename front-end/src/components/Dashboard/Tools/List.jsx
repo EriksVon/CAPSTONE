@@ -1,7 +1,7 @@
-import { Flex, Input, Button } from "@chakra-ui/react";
+import { Flex, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-/* import {  } from "react-bootstrap";
- */ import { DashLg, PlusLg } from "react-bootstrap-icons";
+import { DashLg, PlusLg } from "react-bootstrap-icons";
+import { Button } from "react-bootstrap";
 
 const List = ({ dashboardId, colorStrong, id }) => {
   const [listItem, setListItem] = useState("");
@@ -20,7 +20,11 @@ const List = ({ dashboardId, colorStrong, id }) => {
         );
         if (response.ok) {
           const responseData = await response.json();
-          setList(responseData.content ? JSON.parse(responseData.content) : []);
+          if (responseData.content) {
+            setList(
+              responseData.content ? JSON.parse(responseData.content) : []
+            );
+          }
         } else {
           console.error(
             "Error loading list data:",
@@ -59,7 +63,7 @@ const List = ({ dashboardId, colorStrong, id }) => {
 
   return (
     <div className="toolsContainer" style={{ borderColor: colorStrong }}>
-      <Flex>
+      <Flex justifyContent="between">
         <Input
           value={listItem}
           onChange={(e) => setListItem(e.target.value)}

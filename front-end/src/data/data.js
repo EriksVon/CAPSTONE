@@ -6,6 +6,7 @@ import { ReactComponent as Orange } from "../styles/images/orange.svg";
 import ListImg from "../styles/images/toolsExamples/List.png";
 import NoteImg from "../styles/images/toolsExamples/Notes.png";
 import CalendarImg from "../styles/images/toolsExamples/Calendar.png";
+import { Image } from "react-bootstrap";
 
 export const combinedThemes = [
   {
@@ -25,7 +26,7 @@ export const combinedThemes = [
   },
   {
     id: "yellow",
-    color: "#ffdc7c",
+    color: "#fdefc3",
     image: <Yellow />,
   },
   {
@@ -38,10 +39,12 @@ export const combinedThemes = [
 export const activities = [
   {
     type: "List",
+    title: "List",
     description: "",
     tool:
       typeof ListImg === "string" ? (
-        <img
+        <Image
+          fluid
           src={ListImg}
           alt="holder.js/100px250"
           style={{ height: "200px" }}
@@ -53,9 +56,11 @@ export const activities = [
   {
     type: "Calendar",
     description: "",
+    title: "Calendar",
     tool:
       typeof CalendarImg === "string" ? (
-        <img
+        <Image
+          fluid
           src={CalendarImg}
           alt="holder.js/100px250"
           style={{ height: "200px" }}
@@ -67,9 +72,11 @@ export const activities = [
   {
     type: "Notes",
     description: "",
+    title: "Notes",
     tool:
       typeof NoteImg === "string" ? (
-        <img
+        <Image
+          fluid
           src={NoteImg}
           alt="holder.js/100px250"
           style={{ height: "200px" }}
@@ -81,6 +88,7 @@ export const activities = [
   {
     type: "Kanban",
     description: "",
+    title: "Kanban",
     tool: <div>Work in porgress, please be patient</div>,
   },
   /*   {
@@ -91,6 +99,7 @@ export const activities = [
   {
     type: "Money",
     description: "",
+    title: "Money",
     tool: <div>Work in porgress, please be patient</div>,
   },
 ];

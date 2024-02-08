@@ -4,11 +4,9 @@ import Money from "../Tools/Money";
 import List from "../Tools/List";
 import Notes from "../Tools/Notes";
 import Kanban from "../Tools/Kanban/Kanban";
-import Photos from "../Tools/Photos";
-import ToolsDelete from "./ToolsDelete";
 import ToolsTitle from "./TooslTitle";
 
-const ToolsList = ({ activities, colorStrong }) => {
+const ToolsList = ({ activities, colorStrong, themeMode }) => {
   const dashboardId = localStorage.getItem("dashboardId");
   const activityComponents = {
     Calendar: Calendar,
@@ -16,26 +14,27 @@ const ToolsList = ({ activities, colorStrong }) => {
     List: List,
     Notes: Notes,
     Kanban: Kanban,
-    Photos: Photos,
   };
 
-  console.log(activities);
-
   return (
-    <div className="dashboardContainer">
+    <div className="d-flex gap-2">
       {activities.map((activity) => {
         const Tool = activityComponents[activity.type];
+        console.log(activity.type);
         if (!Tool) {
           return null;
         }
         return (
           <div
             key={activity._id}
-            className={`${
-              activity.type === "Calendar" || "Kanban"
-                ? "calendarWrapper"
+            className={
+              activity.type === "Kanban" || activity.type === "Calendar"
+                ? "bigToolsWrapper"
                 : "toolsWrapper"
-            }`}
+            }
+            style={{
+              backgroundColor: colorStrong,
+            }}
           >
             <ToolsTitle
               id={activity._id}
@@ -46,12 +45,8 @@ const ToolsList = ({ activities, colorStrong }) => {
               id={activity._id}
               colorStrong={colorStrong}
               dashboardId={dashboardId}
+              themeMode={themeMode}
               {...activity}
-            />
-            <ToolsDelete
-              id={activity._id}
-              colorStrong={colorStrong}
-              dashboardId={dashboardId}
             />
           </div>
         );

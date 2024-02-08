@@ -1,43 +1,85 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   eachDayOfInterval,
   endOfMonth,
   format,
-  isSunday,
   isToday,
   startOfMonth,
   subMonths,
   addMonths,
+  getDay,
 } from "date-fns";
-import { Col, Container, Row } from "react-bootstrap";
 import { CaretLeftFill, CaretRightFill } from "react-bootstrap-icons";
-import tinycolor from "tinycolor2";
 import AddEvent from "./AddEvent";
+import { Flex } from "@chakra-ui/react";
 
-const Calendar = ({ colorStrong, id }) => {
+const Calendar = ({ colorStrong, themeMode, id, dashboardId }) => {
   const [modalState, setModalState] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [todayEvents, setTodayEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [events, setEvents] = useState([
-    {
-      title: "All Day Event very long title",
-      start: "2024-01-01",
-      end: "2024-01-03",
-      time: "10:00",
-    },
-    {
-      title: "Long Event",
-      start: "2024-01-07",
-      end: "2024-01-10",
-      time: "10:00",
-    },
-    {
-      title: "Meeting",
-      start: "2024-01-31",
-      time: "10:30",
-    },
-  ]);
+  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const [events, setEvents] = useState([]);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 767);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`
+        );
+        if (response.ok) {
+          const responseData = await response.json();
+
+          if (responseData.content) {
+            const content = JSON.parse(responseData.content);
+            setEvents(content);
+          }
+        } else {
+          console.error(
+            "Error loading list data:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error loading list data:", error);
+      }
+    };
+    fetchData();
+  }, [id, dashboardId]);
+
+  useEffect(() => {
+    const saveListToBackend = async () => {
+      const content = events;
+      try {
+        await fetch(
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ content: JSON.stringify(content) }),
+          }
+        );
+      } catch (error) {
+        console.error("Error saving list data:", error);
+      }
+    };
+    saveListToBackend();
+  }, [id, events, dashboardId]);
 
   const deleteEvent = (index) => {
     const eventToDelete = todayEvents[index];
@@ -50,6 +92,11 @@ const Calendar = ({ colorStrong, id }) => {
     setTodayEvents(updatedTodayEvents);
     setEvents(updatedEvents);
   };
+
+  const daysInMonth = eachDayOfInterval({
+    start: startOfMonth(currentDate),
+    end: endOfMonth(currentDate),
+  });
 
   const addEvent = (e) => {
     const timeInput = document.querySelector("#time").value;
@@ -79,15 +126,6 @@ const Calendar = ({ colorStrong, id }) => {
     setCurrentDate((prevDate) => addMonths(prevDate, 1));
   };
 
-  const firstDayOfMonth = startOfMonth(currentDate);
-  const lastDayOfMonth = endOfMonth(currentDate);
-  const daysInMonth = eachDayOfInterval({
-    start: firstDayOfMonth,
-    end: lastDayOfMonth,
-  });
-
-  const colorStronger = tinycolor(colorStrong).darken(10).toString();
-
   const eventsByDate = useMemo(() => {
     return events.reduce((acc, event) => {
       const startDate = new Date(event.start);
@@ -103,61 +141,85 @@ const Calendar = ({ colorStrong, id }) => {
   }, [events]);
 
   return (
-    <div className="calendarContainer" style={{ borderColor: colorStrong }}>
-      <h5 className="d-flex align-items-center">
-        <Container>
-          <Row>
-            <Col xs={2}>
-              <CaretLeftFill onClick={goToPreviousMonth} />{" "}
-            </Col>
-            <Col xs={8}> {format(currentDate, "MMMM yyyy")} </Col>
-            <Col xs={2}>
-              <CaretRightFill onClick={goToNextMonth} />
-            </Col>
-          </Row>
-        </Container>
-      </h5>
-      <Container>
-        <Row>
-          {daysInMonth.map((day, i) => {
-            const dateKey = format(day, "yyyy-MM-dd");
-            const todaysEvents = eventsByDate[dateKey] || [];
-            const sundays = isSunday(day);
-            const today = isToday(day);
+    <>
+      <Flex className="text-white fs-4 mb-5 justify-content-between">
+        <div>
+          <CaretLeftFill onClick={goToPreviousMonth} />
+        </div>
+        <div> {format(currentDate, "MMMM yyyy")} </div>
+        <div>
+          <CaretRightFill onClick={goToNextMonth} />
+        </div>
+      </Flex>
 
-            return (
-              <Col
-                xs={12}
-                md={3}
-                key={i}
-                className=" p-2 text-center"
-                style={{
-                  backgroundColor: sundays ? colorStrong : "transparent",
-                  border: today
-                    ? `3px solid ${colorStronger}`
-                    : "1px solid lightgrey",
-                }}
-                onClick={() => handleModal(day, todaysEvents)}
-              >
-                {format(day, "d")}
-                {todaysEvents.map((event, index) => (
-                  <div
-                    key={`event-${index}`}
-                    style={{
-                      fontSize: "small",
-                      backgroundColor: colorStronger,
-                      borderRadius: "10px",
-                      margin: "5px",
-                    }}
-                  >
-                    {event.time ? event.time + " - " : ""} {event.title}
-                  </div>
-                ))}
-              </Col>
-            );
-          })}
-        </Row>
-      </Container>
+      <div className="calendarContainer">
+        {weekDays.map((day, i) => (
+          <strong
+            key={day}
+            className="text-center d-none d-md-inline"
+            style={{
+              backgroundColor: themeMode,
+              color: colorStrong,
+              border: `2px solid ${colorStrong}`,
+            }}
+          >
+            {day}
+          </strong>
+        ))}
+        {Array.from({ length: getDay(startOfMonth(currentDate)) }).map(
+          (_, i) => (
+            <div
+              key={i}
+              style={{
+                border: `2px solid ${colorStrong}`,
+                backgroundColor: "white",
+              }}
+            ></div>
+          )
+        )}
+        {daysInMonth.map((day, dayIndex) => {
+          const dateKey = format(day, "yyyy-MM-dd");
+          const todaysEvents = eventsByDate[dateKey] || [];
+          const today = isToday(day);
+          return (
+            <div
+              key={dayIndex}
+              className="p-2 bg-white"
+              style={{
+                border: `2px solid ${colorStrong}`,
+                color: today ? "black" : `${colorStrong}`,
+              }}
+              onClick={() => handleModal(day, todaysEvents)}
+            >
+              {isSmallScreen && <div>{weekDays[getDay(day)]}</div>}
+
+              <strong>{format(day, "d")}</strong>
+              {todaysEvents.map((event, index) => (
+                <div
+                  key={`event-${index}`}
+                  style={{
+                    backgroundColor: "#f75959",
+                    color: "white",
+                    borderRadius: "10px",
+                    padding: "10px",
+                  }}
+                >
+                  {event.time ? event.time + " - " : ""} {event.title}
+                </div>
+              ))}
+            </div>
+          );
+        })}
+        {Array.from({ length: getDay(endOfMonth(currentDate)) }).map((_, i) => (
+          <div
+            key={i}
+            style={{
+              border: `2px solid ${colorStrong}`,
+              backgroundColor: "white",
+            }}
+          ></div>
+        ))}
+      </div>
 
       {selectedDay && todayEvents && (
         <AddEvent
@@ -170,10 +232,9 @@ const Calendar = ({ colorStrong, id }) => {
           handleModal={handleModal}
           addEvent={addEvent}
           deleteEvent={deleteEvent}
-          colorStronger={colorStronger}
         />
       )}
-    </div>
+    </>
   );
 };
 

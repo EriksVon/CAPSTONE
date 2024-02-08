@@ -125,17 +125,6 @@ function Register() {
                   />
                 </Form.Group>
 
-                <Form.Group className="mb-1" controlId="formBasicPhone">
-                  <Form.Label>Phone number</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Phone number"
-                    value={body.phoneNumber}
-                    onInput={(e) =>
-                      setBody({ ...body, phoneNumber: e.target.value })
-                    }
-                  />
-                </Form.Group>
                 <div className="text-center mt-3">
                   <button
                     type="submit"

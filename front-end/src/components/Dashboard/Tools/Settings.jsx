@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import { combinedThemes } from "../../../data/data";
 import { useState } from "react";
-import { CheckLg, Trash } from "react-bootstrap-icons";
+import { CheckLg } from "react-bootstrap-icons";
 import { useStateContext } from "./context/ContextProvider";
 import { useNavigate } from "react-router-dom";
 import { activities } from "../../../data/data";
@@ -47,6 +47,7 @@ const Settings = ({ dashboardToken, partecipants }) => {
       {
         type: selectedActivity,
         description: "Write here",
+        toolTitle: selectedActivity,
       },
     ],
     dashboardToken,
@@ -97,7 +98,7 @@ const Settings = ({ dashboardToken, partecipants }) => {
       const theme = updatedDashboard.theme;
       if (theme) {
         localStorage.setItem("themeMode", theme);
-        const colorStrong = tinycolor(theme).darken(10).toString();
+        const colorStrong = tinycolor(theme).darken(20).toString();
         localStorage.setItem("colorStrong", colorStrong);
       }
       handleClose();
@@ -154,29 +155,39 @@ const Settings = ({ dashboardToken, partecipants }) => {
 
   return (
     <>
-      <Alert
-        show={show}
-        variant="danger"
-        style={{ zIndex: "10000", position: "absolute" }}
+      {show && (
+        <Alert
+          variant="danger"
+          style={{
+            zIndex: "10000",
+            position: "absolute",
+            top: 0,
+            left: "5%",
+            right: "5%",
+          }}
+        >
+          <Alert.Heading>Delete Dashboard</Alert.Heading>
+          <p>
+            Are you sure you want to delete this dashboard? This action cannot
+            be undone. If you delete this dashboard, all the data will be lost.
+          </p>
+          <hr />
+          <div className="d-flex justify-content-between">
+            <Button onClick={() => setShow(false)} variant="light">
+              Back to Setings
+            </Button>
+            <Button onClick={deleteDashboard} variant="danger">
+              DELETE DASHBOARD PERMANENTLY
+            </Button>
+          </div>
+        </Alert>
+      )}
+      <Modal
+        fullscreen
+        show={showSettings}
+        onHide={handleClose}
+        className="bg-white"
       >
-        <div className="d-flex justify-content-end">
-          <Button onClick={() => setShow(false)} variant="light">
-            Close
-          </Button>
-        </div>
-        <Alert.Heading>Delete Dashboard</Alert.Heading>
-        <p>
-          Are you sure you want to delete this dashboard? This action cannot be
-          undone. If you delete this dashboard, all the data will be lost.
-        </p>
-        <hr />
-        <div className="d-flex justify-content-end">
-          <Button onClick={deleteDashboard} variant="danger">
-            DELETE DASHBOARD PERMANENTLY
-          </Button>
-        </div>
-      </Alert>
-      <Modal fullscreen show={showSettings} onHide={handleClose}>
         <Container>
           <Modal.Header closeButton>
             <Modal.Title>Dashboard Settings:</Modal.Title>
@@ -240,9 +251,9 @@ const Settings = ({ dashboardToken, partecipants }) => {
                 <Form.Label column>
                   Add an activity to your dashboard:
                 </Form.Label>
-                <Col className="d-flex gap-2" xs={2}>
+                <Col className="d-flex flex-wrap gap-2">
                   {activities.map((act, index) => (
-                    <Col key={index}>
+                    <div key={index}>
                       <Button
                         className={`whiteBgButton d-flex flex-grow-1 ${
                           selectedActivity === act.type ? "active" : ""
@@ -253,7 +264,7 @@ const Settings = ({ dashboardToken, partecipants }) => {
                       >
                         {act.type}
                       </Button>
-                    </Col>
+                    </div>
                   ))}
                 </Col>
               </Form.Group>
@@ -282,6 +293,7 @@ const Settings = ({ dashboardToken, partecipants }) => {
                 Submit
               </button>
             </Form>
+
             <h3 className="mt-5">DANGER ZONE</h3>
             <Container className="border border-danger">
               <Row className="d-flex gap-2">
@@ -296,11 +308,11 @@ const Settings = ({ dashboardToken, partecipants }) => {
                     type={showPassword ? "text" : "password"}
                     value={dashboardToken}
                     readOnly
-                    className="text-center mx-auto"
+                    className="text-center mx-auto border"
                   />
                 </Col>
 
-                <Col xs={12}>
+                <Col xs={12} className="mt-2">
                   <h5>Partecipants:</h5>
                   <div>
                     {partecipants.map((part, i) => (
@@ -309,7 +321,7 @@ const Settings = ({ dashboardToken, partecipants }) => {
                           className="coralBgButton me-2 px-1 py-0"
                           onClick={() => deleteUser(i)}
                         >
-                          <Trash />
+                          Delete User:
                         </button>
                         {part.email}
                       </div>
