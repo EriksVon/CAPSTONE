@@ -13,6 +13,8 @@ const AddCard = ({ addCard }) => {
         bgColor={"white"}
         size="sm"
         me="2"
+        mx="2"
+        borderRadius="md"
       />
 
       <Button
@@ -22,7 +24,7 @@ const AddCard = ({ addCard }) => {
           setTitle("");
         }}
       >
-        Add Activity
+        Add
       </Button>
     </Flex>
   );

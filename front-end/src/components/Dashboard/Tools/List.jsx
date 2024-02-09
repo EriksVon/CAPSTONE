@@ -73,6 +73,8 @@ const List = ({ dashboardId, colorStrong, id, updateComponentChanges }) => {
           onChange={(e) => setListItem(e.target.value)}
           size="sm"
           className="flex-grow-1"
+          mx="2"
+          borderRadius="md"
         />
         <Button variant="transparent" onClick={handleAddItem}>
           <PlusLg />

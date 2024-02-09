@@ -22,16 +22,18 @@ dashboardRouter
     }
   })
   /* WORKING */
-  .get("/:id/:dashboardId", authControl, async (req, res, next) => {
+  .get("/me/:dashboardId", async (req, res, next) => {
     try {
-      const dashboards = await Dashboard.find({
-        user: req.user._id,
+      const dashboard = await Dashboard.findOne({
+        _id: req.params.dashboardId,
       });
-      res.json(dashboards);
+      res.json(dashboard);
     } catch (error) {
+      res.status(500).send(error);
       next(error);
     }
   })
+  /* WORKING */
   .get("/me/:dashId/:activityId", async (req, res, next) => {
     try {
       const { dashId, activityId } = req.params;
@@ -184,7 +186,7 @@ dashboardRouter
           activity.toolTitle = payload.toolTitle;
         }
         if (content) {
-          activity.content = activity.content = JSON.stringify(payload.content);
+          activity.content = payload.content;
         }
         await dashboard.save();
         res.status(201).json({ message: "Activity updated", dashboard });
@@ -205,6 +207,13 @@ dashboardRouter
         const existingDashboard = await Dashboard.findById(dashboardId);
         updatedFields.activities = existingDashboard.activities.concat(
           updatedFields.activities
+        );
+      }
+
+      if (updatedFields.emails && updatedFields.emails.length > 0) {
+        const existingDashboard = await Dashboard.findById(dashboardId);
+        updatedFields.email = existingDashboard.emails.concat(
+          updatedFields.email
         );
       }
 

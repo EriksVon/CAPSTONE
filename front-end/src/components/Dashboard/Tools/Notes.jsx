@@ -55,42 +55,11 @@ const Notes = ({ colorStrong, id, dashboardId, updateComponentChanges }) => {
         const content = quillRef.current.root.innerHTML;
         setContent(content);
         updateComponentChanges(content, id);
+        console.log("content", content);
+        console.log("id", id);
       });
     }
   }, [id, updateComponentChanges]);
-
-  // Save notes to backend
-  /*   useEffect(() => {
-    const saveNotesToBackend = async () => {
-      const content = content;
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ content }),
-          }
-        );
-
-        if (response.ok) {
-          await response.json();
-        } else {
-          console.error(
-            "Error saving data:",
-            response.status,
-            response.statusText
-          );
-        }
-      } catch (error) {
-        console.error("Error saving data:", error);
-      }
-    };
-
-    saveNotesToBackend();
-  }, [dashboardId, id, content]); */
 
   return (
     <div className="toolsContainer p-0" style={{ borderColor: colorStrong }}>

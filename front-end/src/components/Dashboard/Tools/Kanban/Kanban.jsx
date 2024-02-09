@@ -56,9 +56,11 @@ const Kanban = ({ colorStrong, dashboardId, id, updateComponentChanges }) => {
     ) {
       updateComponentChanges(
         {
-          todo: todoItems,
-          done: doneItems,
-          inProgress: inProgressItems,
+          content: JSON.stringify({
+            todo: [...todoItems],
+            done: [...doneItems],
+            inProgress: [...inProgressItems],
+          }),
         },
         id
       );

@@ -21,9 +21,52 @@ function Dashboard() {
   const dashboardId = localStorage.getItem("dashboardId");
 
   const updateComponentChanges = (content, id) => {
-    setComponentChanges(content);
+    console.log("content", content);
+    console.log("id", id);
+
+    if (Array.isArray(content)) {
+      setComponentChanges(JSON.stringify(content));
+    } else {
+      setComponentChanges(content);
+    }
     setComponentId(id);
   };
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      const dashboardId = localStorage.getItem("dashboardId");
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem("themeMode", data.theme);
+          /*   console.log("Dati dashboard:", data); */
+        } else {
+          console.error(
+            "Error loading dashboard data:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error loading dashboard data:", error);
+      }
+    };
+    const intervalId = setInterval(() => {
+      fetchDashboardData();
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [dashboardId, token, componentChanges, componentId]);
 
   useEffect(() => {
     const content = componentChanges;
@@ -41,7 +84,6 @@ function Dashboard() {
           }
         );
         if (response.ok) {
-          console.log("Changes successfully sent to the backend");
         } else {
           console.error(
             "Error loading dashboard data:",
@@ -53,13 +95,10 @@ function Dashboard() {
         console.error("Error loading dashboard data:", error);
       }
     };
-    const intervalId = setInterval(() => {
-      sendDataToBackend();
-    }, 5000);
 
-    return () => {
-      clearInterval(intervalId);
-    };
+    if (componentChanges) {
+      sendDataToBackend();
+    }
   }, [dashboardId, token, componentChanges, componentId]);
 
   if (!dashboardId) {

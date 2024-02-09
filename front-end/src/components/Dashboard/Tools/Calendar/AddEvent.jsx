@@ -14,7 +14,6 @@ const AddEvent = ({
   deleteEvent,
   colorStrong,
 }) => {
-  console.log("todayEvents: ", todayEvents);
   return (
     <Modal show={modalState} onHide={() => handleModal(selectedDay, [])}>
       <Modal.Header className="d-flex justify-content-between">

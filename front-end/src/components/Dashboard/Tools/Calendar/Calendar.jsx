@@ -39,58 +39,6 @@ const Calendar = ({
     };
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`
-        );
-        if (response.ok) {
-          const responseData = await response.json();
-
-          if (responseData.content) {
-            const content = JSON.parse(responseData.content);
-            setEvents(content);
-          }
-        } else {
-          console.error(
-            "Error loading list data:",
-            response.status,
-            response.statusText
-          );
-        }
-      } catch (error) {
-        console.error("Error loading list data:", error);
-      }
-    };
-    fetchData();
-  }, [id, dashboardId]);
-
-  useEffect(() => {
-    updateComponentChanges(events, id);
-  }, [id, events, updateComponentChanges]);
-
-  /*   useEffect(() => {
-    const saveListToBackend = async () => {
-      const content = events;
-      try {
-        await fetch(
-          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ content: JSON.stringify(content) }),
-          }
-        );
-      } catch (error) {
-        console.error("Error saving list data:", error);
-      }
-    };
-    saveListToBackend();
-  }, [id, events, dashboardId]); */
-
   const deleteEvent = (index) => {
     const eventToDelete = todayEvents[index];
     const updatedTodayEvents = todayEvents.filter(

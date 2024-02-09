@@ -1,7 +1,6 @@
 import React from "react";
 
 const SingleEvent = ({ event }) => {
-  console.log("event: ", event);
   return (
     <div
       style={{
