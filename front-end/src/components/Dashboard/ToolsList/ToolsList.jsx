@@ -6,7 +6,14 @@ import Notes from "../Tools/Notes";
 import Kanban from "../Tools/Kanban/Kanban";
 import ToolsTitle from "./TooslTitle";
 
-const ToolsList = ({ activities, colorStrong, themeMode }) => {
+const ToolsList = ({
+  activities,
+  colorStrong,
+  themeMode,
+  setComponentChanges,
+  componentChanges,
+  updateComponentChanges,
+}) => {
   const dashboardId = localStorage.getItem("dashboardId");
   const activityComponents = {
     Calendar: Calendar,
@@ -20,7 +27,7 @@ const ToolsList = ({ activities, colorStrong, themeMode }) => {
     <div className="d-flex gap-2">
       {activities.map((activity) => {
         const Tool = activityComponents[activity.type];
-        console.log(activity.type);
+
         if (!Tool) {
           return null;
         }
@@ -40,6 +47,8 @@ const ToolsList = ({ activities, colorStrong, themeMode }) => {
               id={activity._id}
               colorStrong={colorStrong}
               dashboardId={dashboardId}
+              componentChanges={componentChanges}
+              setComponentChanges={setComponentChanges}
             />
             <Tool
               id={activity._id}
@@ -47,6 +56,9 @@ const ToolsList = ({ activities, colorStrong, themeMode }) => {
               dashboardId={dashboardId}
               themeMode={themeMode}
               {...activity}
+              componentChanges={componentChanges}
+              setComponentChanges={setComponentChanges}
+              updateComponentChanges={updateComponentChanges}
             />
           </div>
         );

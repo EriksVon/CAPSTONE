@@ -1,9 +1,9 @@
-import { Flex, Input } from "@chakra-ui/react";
+import { Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { DashLg, PlusLg } from "react-bootstrap-icons";
 import { Button } from "react-bootstrap";
 
-const List = ({ dashboardId, colorStrong, id }) => {
+const List = ({ dashboardId, colorStrong, id, updateComponentChanges }) => {
   const [listItem, setListItem] = useState("");
   const [list, setList] = useState([]);
 
@@ -40,6 +40,10 @@ const List = ({ dashboardId, colorStrong, id }) => {
   }, [id, dashboardId]);
 
   useEffect(() => {
+    updateComponentChanges(list, id);
+  }, [id, list, updateComponentChanges]);
+
+  /*   useEffect(() => {
     const saveListToBackend = async () => {
       const content = list;
       try {
@@ -59,20 +63,21 @@ const List = ({ dashboardId, colorStrong, id }) => {
     };
 
     saveListToBackend();
-  }, [id, list, dashboardId]);
+  }, [id, list, dashboardId]); */
 
   return (
     <div className="toolsContainer" style={{ borderColor: colorStrong }}>
-      <Flex justifyContent="between">
+      <div className="d-flex justify-content-between mb-2">
         <Input
           value={listItem}
           onChange={(e) => setListItem(e.target.value)}
           size="sm"
+          className="flex-grow-1"
         />
         <Button variant="transparent" onClick={handleAddItem}>
           <PlusLg />
         </Button>
-      </Flex>
+      </div>
 
       <div>
         {list.map((item, index) => (

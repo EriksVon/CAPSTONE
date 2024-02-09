@@ -11,12 +11,11 @@ const KanbanLane = ({ title, items, color, onDelete }) => {
 
   return (
     <Flex
-      flex="3"
       padding="2"
       flexDirection="column"
       minH="10rem"
       height={countItems > 0 ? "auto" : "10rem"}
-      minW={countItems > 0 ? "20rem" : "10rem"}
+      maxWidth={countItems > 0 ? "20rem" : "15rem"}
     >
       <Text
         fontSize="xl"
@@ -31,7 +30,6 @@ const KanbanLane = ({ title, items, color, onDelete }) => {
 
       <Flex
         ref={setNodeRef}
-        flex="1"
         bg={`${color}.100`}
         borderRadius="md"
         boxShadow="md"

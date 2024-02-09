@@ -9,7 +9,7 @@ const NavigationControls = ({
   currentDate,
 }) => {
   return (
-    <Flex className="text-white fs-4 mb-5 justify-content-between">
+    <Flex className="text-white fs-4 mb-3 justify-content-between">
       <div>
         <CaretLeftFill onClick={goToPreviousMonth} />
       </div>

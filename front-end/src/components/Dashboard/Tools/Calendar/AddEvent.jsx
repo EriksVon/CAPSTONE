@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
-import { Pencil, XLg } from "react-bootstrap-icons";
+import { XLg } from "react-bootstrap-icons";
 import SingleEvent from "./SingleEvent";
 
 const AddEvent = ({
@@ -54,7 +54,7 @@ const AddEvent = ({
                   className="d-flex justify-content-between align-items-center gap-2"
                 >
                   <SingleEvent event={event} colorStrong={colorStrong} />
-                  <Pencil />
+                  {/* <Pencil /> */}
                   <XLg
                     style={{ marginLeft: "5px", cursor: "pointer" }}
                     onClick={() => deleteEvent(eventIndex)}

@@ -14,7 +14,6 @@ const SingleDay = ({
 }) => {
   const dateKey = format(day, "yyyy-MM-dd");
   const todaysEvents = eventsByDate[dateKey] || [];
-  console.log("todaysEvents: ", todaysEvents);
 
   return (
     <div

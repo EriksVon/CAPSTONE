@@ -2,11 +2,10 @@ import Quill from "quill";
 import "quill/dist/quill.snow.css?sourceMap=false";
 import React, { useEffect, useRef, useState } from "react";
 
-const Notes = ({ colorStrong, id }) => {
-  const [description, setDescription] = useState("");
-
-  const dashboardId = localStorage.getItem("dashboardId");
+const Notes = ({ colorStrong, id, dashboardId, updateComponentChanges }) => {
+  const [content, setContent] = useState("");
   const quillRef = useRef(null);
+  console.log("content", content);
 
   useEffect(() => {
     const quill = new Quill(`#editor-container-${id}`, {
@@ -34,7 +33,7 @@ const Notes = ({ colorStrong, id }) => {
           if (responseData.content) {
             const content = responseData.content;
             quillRef.current.clipboard.dangerouslyPasteHTML(content);
-            setDescription(content);
+            setContent(content);
           }
         } else {
           console.error(
@@ -54,14 +53,16 @@ const Notes = ({ colorStrong, id }) => {
     if (quillRef.current) {
       quillRef.current.on("text-change", () => {
         const content = quillRef.current.root.innerHTML;
-        setDescription(content);
+        setContent(content);
+        updateComponentChanges(content, id);
       });
     }
-  }, []);
+  }, [id, updateComponentChanges]);
 
-  useEffect(() => {
+  // Save notes to backend
+  /*   useEffect(() => {
     const saveNotesToBackend = async () => {
-      const content = description;
+      const content = content;
       try {
         const response = await fetch(
           `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`,
@@ -89,7 +90,7 @@ const Notes = ({ colorStrong, id }) => {
     };
 
     saveNotesToBackend();
-  }, [dashboardId, id, description]);
+  }, [dashboardId, id, content]); */
 
   return (
     <div className="toolsContainer p-0" style={{ borderColor: colorStrong }}>

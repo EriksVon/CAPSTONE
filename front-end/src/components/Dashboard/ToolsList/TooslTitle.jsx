@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { PencilFill } from "react-bootstrap-icons";
-import { Button } from "react-bootstrap";
+import { Pencil } from "react-bootstrap-icons";
+import { Button, Form, InputGroup } from "react-bootstrap";
 
-const ToolsTitle = ({ id, dashboardId, colorStrong }) => {
+const ToolsTitle = ({ id, dashboardId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [toolTitle, setToolTitle] = useState("");
   const token = localStorage.getItem("token");
+  const themeMode = localStorage.getItem("themeMode");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,26 +95,30 @@ const ToolsTitle = ({ id, dashboardId, colorStrong }) => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-between mt-3 mx-1 text-white">
-      <div></div>
+    <div className="d-flex justify-content-between text-white mb-3">
+      <div className="ms-4"></div>
       {isEditing ? (
-        <div className="justify-content-center">
-          <input
+        <InputGroup className="mt-3" onClick={handleEdit}>
+          <Form.Control
+            type="text"
             value={toolTitle}
             className="rounded"
             onChange={handleTitleChange}
           />
-          <Button onClick={handleEdit} variant="transparent">
-            <PencilFill />
+          <Button variant="transparent" onClick={handleEdit}>
+            Save
           </Button>
-        </div>
+        </InputGroup>
       ) : (
-        <h3 onClick={handleEdit}>{toolTitle}</h3>
+        <div className="mt-3 d-flex align-items-center" onClick={handleEdit}>
+          <h3>{toolTitle}</h3>
+          <Pencil className="ms-3" fill={themeMode} onClick={handleEdit} />
+        </div>
       )}
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="30"
-        height="30"
+        width="20"
+        height="20"
         fill="white"
         className="bi bi-x-circle"
         viewBox="0 0 16 16"

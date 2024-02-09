@@ -169,6 +169,32 @@ dashboardRouter
       next(error);
     }
   })
+  /* TESTING */
+  .post("/me/:dashId/update-all", async (req, res, next) => {
+    try {
+      const { dashId } = req.params;
+      const dashboard = await Dashboard.findById(dashId);
+      const { activityId, content } = req.body;
+      const activity = dashboard.activities.find(
+        (activity) => activity._id.toString() === activityId
+      );
+      if (activity) {
+        const payload = req.body;
+        if (payload.toolTitle) {
+          activity.toolTitle = payload.toolTitle;
+        }
+        if (content) {
+          activity.content = activity.content = JSON.stringify(payload.content);
+        }
+        await dashboard.save();
+        res.status(201).json({ message: "Activity updated", dashboard });
+      } else {
+        res.status(404).json({ message: "Activity not found" });
+      }
+    } catch (error) {
+      next(error);
+    }
+  })
   /* WORKING */
   .put("/me/:dashId", async (req, res, next) => {
     try {
@@ -234,7 +260,7 @@ dashboardRouter
       next(error);
     }
   })
-  /* WORKING */
+  /* TO BE DELETED??? */
   .post("/me/:dashId/:activityId", async (req, res, next) => {
     try {
       const { dashId, activityId } = req.params;

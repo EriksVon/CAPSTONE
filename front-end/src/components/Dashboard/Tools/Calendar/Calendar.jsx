@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   eachDayOfInterval,
   endOfMonth,
@@ -13,7 +13,13 @@ import AddEvent from "./AddEvent";
 import NavigationControls from "./NavigationControls";
 import SingleDay from "./SingleDay";
 
-const Calendar = ({ colorStrong, themeMode, id, dashboardId }) => {
+const Calendar = ({
+  colorStrong,
+  themeMode,
+  id,
+  dashboardId,
+  updateComponentChanges,
+}) => {
   const [modalState, setModalState] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [todayEvents, setTodayEvents] = useState([]);
@@ -61,6 +67,10 @@ const Calendar = ({ colorStrong, themeMode, id, dashboardId }) => {
   }, [id, dashboardId]);
 
   useEffect(() => {
+    updateComponentChanges(events, id);
+  }, [id, events, updateComponentChanges]);
+
+  /*   useEffect(() => {
     const saveListToBackend = async () => {
       const content = events;
       try {
@@ -79,7 +89,7 @@ const Calendar = ({ colorStrong, themeMode, id, dashboardId }) => {
       }
     };
     saveListToBackend();
-  }, [id, events, dashboardId]);
+  }, [id, events, dashboardId]); */
 
   const deleteEvent = (index) => {
     const eventToDelete = todayEvents[index];
@@ -127,19 +137,17 @@ const Calendar = ({ colorStrong, themeMode, id, dashboardId }) => {
     setCurrentDate((prevDate) => addMonths(prevDate, 1));
   };
 
-  const eventsByDate = useMemo(() => {
-    return events.reduce((acc, event) => {
-      const startDate = new Date(event.start);
-      if (!isNaN(startDate.getTime())) {
-        const dateKey = format(startDate, "yyyy-MM-dd");
-        if (!acc[dateKey]) {
-          acc[dateKey] = [];
-        }
-        acc[dateKey].push(event);
+  const eventsByDate = events.reduce((acc, event) => {
+    const startDate = new Date(event.start);
+    if (!isNaN(startDate.getTime())) {
+      const dateKey = format(startDate, "yyyy-MM-dd");
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
       }
-      return acc;
-    }, {});
-  }, [events]);
+      acc[dateKey].push(event);
+    }
+    return acc;
+  }, {});
 
   return (
     <>
