@@ -9,9 +9,9 @@ import {
   addMonths,
   getDay,
 } from "date-fns";
-import { CaretLeftFill, CaretRightFill } from "react-bootstrap-icons";
 import AddEvent from "./AddEvent";
-import { Flex } from "@chakra-ui/react";
+import NavigationControls from "./NavigationControls";
+import SingleDay from "./SingleDay";
 
 const Calendar = ({ colorStrong, themeMode, id, dashboardId }) => {
   const [modalState, setModalState] = useState(false);
@@ -84,10 +84,10 @@ const Calendar = ({ colorStrong, themeMode, id, dashboardId }) => {
   const deleteEvent = (index) => {
     const eventToDelete = todayEvents[index];
     const updatedTodayEvents = todayEvents.filter(
-      (event) => event.start !== eventToDelete.start
+      (event) => event.id !== eventToDelete.id
     );
     const updatedEvents = events.filter(
-      (event) => event.start !== eventToDelete.start
+      (event) => event.id !== eventToDelete.id
     );
     setTodayEvents(updatedTodayEvents);
     setEvents(updatedEvents);
@@ -105,6 +105,7 @@ const Calendar = ({ colorStrong, themeMode, id, dashboardId }) => {
       title: titleInput,
       time: timeInput,
       start: format(selectedDay, "yyyy-MM-dd"),
+      id: Math.random().toString(36).substr(2, 9),
       // end: format(selectedDay, "yyyy-MM-dd"),
     };
     const updatedEvents = [...events, newEvent];
@@ -142,15 +143,11 @@ const Calendar = ({ colorStrong, themeMode, id, dashboardId }) => {
 
   return (
     <>
-      <Flex className="text-white fs-4 mb-5 justify-content-between">
-        <div>
-          <CaretLeftFill onClick={goToPreviousMonth} />
-        </div>
-        <div> {format(currentDate, "MMMM yyyy")} </div>
-        <div>
-          <CaretRightFill onClick={goToNextMonth} />
-        </div>
-      </Flex>
+      <NavigationControls
+        goToPreviousMonth={goToPreviousMonth}
+        goToNextMonth={goToNextMonth}
+        currentDate={currentDate}
+      />
 
       <div className="calendarContainer">
         {weekDays.map((day, i) => (
@@ -177,39 +174,18 @@ const Calendar = ({ colorStrong, themeMode, id, dashboardId }) => {
             ></div>
           )
         )}
-        {daysInMonth.map((day, dayIndex) => {
-          const dateKey = format(day, "yyyy-MM-dd");
-          const todaysEvents = eventsByDate[dateKey] || [];
-          const today = isToday(day);
-          return (
-            <div
-              key={dayIndex}
-              className="p-2 bg-white"
-              style={{
-                border: `2px solid ${colorStrong}`,
-                color: today ? "black" : `${colorStrong}`,
-              }}
-              onClick={() => handleModal(day, todaysEvents)}
-            >
-              {isSmallScreen && <div>{weekDays[getDay(day)]}</div>}
-
-              <strong>{format(day, "d")}</strong>
-              {todaysEvents.map((event, index) => (
-                <div
-                  key={`event-${index}`}
-                  style={{
-                    backgroundColor: "#f75959",
-                    color: "white",
-                    borderRadius: "10px",
-                    padding: "10px",
-                  }}
-                >
-                  {event.time ? event.time + " - " : ""} {event.title}
-                </div>
-              ))}
-            </div>
-          );
-        })}
+        {daysInMonth.map((day, dayIndex) => (
+          <SingleDay
+            key={dayIndex}
+            day={day}
+            colorStrong={colorStrong}
+            today={isToday(day)}
+            handleModal={handleModal}
+            eventsByDate={eventsByDate}
+            isSmallScreen={isSmallScreen}
+            weekDays={weekDays}
+          />
+        ))}
         {Array.from({ length: getDay(endOfMonth(currentDate)) }).map((_, i) => (
           <div
             key={i}

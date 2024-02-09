@@ -125,9 +125,9 @@ function CreateDashboard() {
       {alertMessage && (
         <Alert
           variant="warning"
-          style={{ zIndex: "10000", position: "absolute", top: "10%" }}
+          style={{ zIndex: "10000", textAlign: "center" }}
         >
-          {alertMessage}
+          {alertMessage} hello world
         </Alert>
       )}
       <Container>

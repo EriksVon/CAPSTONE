@@ -1,7 +1,7 @@
 import React from "react";
-import SingleDay from "./SingleDay";
 import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
-import { XLg } from "react-bootstrap-icons";
+import { Pencil, XLg } from "react-bootstrap-icons";
+import SingleEvent from "./SingleEvent";
 
 const AddEvent = ({
   selectedDay,
@@ -14,6 +14,7 @@ const AddEvent = ({
   deleteEvent,
   colorStrong,
 }) => {
+  console.log("todayEvents: ", todayEvents);
   return (
     <Modal show={modalState} onHide={() => handleModal(selectedDay, [])}>
       <Modal.Header className="d-flex justify-content-between">
@@ -25,25 +26,15 @@ const AddEvent = ({
       <Modal.Body>
         <Container>
           <h6> Add event:</h6>
-          <Row>
+          <Row className="d-flex gap-2">
             <Col sm={4}>
-              <Form.Control
-                size="sm"
-                type="time"
-                placeholder="10:30"
-                id="time"
-              />
+              <Form.Control size="sm" type="time" id="time" />
             </Col>
             <Col sm={6}>
-              <Form.Control
-                size="sm"
-                placeholder="Description"
-                required
-                id="title"
-              />
+              <Form.Control size="sm" placeholder="Description" id="title" />
             </Col>
 
-            <Col sm={2}>
+            <Col sm={1}>
               <Button
                 onClick={addEvent}
                 style={{
@@ -56,17 +47,19 @@ const AddEvent = ({
             </Col>
 
             <Col xs={12}>
+              <h6 className="mt-3">Today's events:</h6>
               {todayEvents.map((event, eventIndex) => (
-                <>
-                  <h6 className="mt-3">Your events for today: </h6>
-                  <SingleDay
-                    key={`event-${eventIndex}`}
-                    event={event}
-                    eventIndex={eventIndex}
-                    colorStrong={colorStrong}
-                    deleteEvent={deleteEvent}
+                <div
+                  key={`event-${eventIndex}`}
+                  className="d-flex justify-content-between align-items-center gap-2"
+                >
+                  <SingleEvent event={event} colorStrong={colorStrong} />
+                  <Pencil />
+                  <XLg
+                    style={{ marginLeft: "5px", cursor: "pointer" }}
+                    onClick={() => deleteEvent(eventIndex)}
                   />
-                </>
+                </div>
               ))}
             </Col>
           </Row>

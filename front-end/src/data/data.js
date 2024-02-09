@@ -6,6 +6,7 @@ import { ReactComponent as Orange } from "../styles/images/orange.svg";
 import ListImg from "../styles/images/toolsExamples/List.png";
 import NoteImg from "../styles/images/toolsExamples/Notes.png";
 import CalendarImg from "../styles/images/toolsExamples/Calendar.png";
+import KanbanImg from "../styles/images/toolsExamples/Kanban.png";
 import { Image } from "react-bootstrap";
 
 export const combinedThemes = [
@@ -89,17 +90,27 @@ export const activities = [
     type: "Kanban",
     description: "",
     title: "Kanban",
-    tool: <div>Work in porgress, please be patient</div>,
+    tool:
+      typeof NoteImg === "string" ? (
+        <Image
+          fluid
+          src={KanbanImg}
+          alt="holder.js/100px250"
+          style={{ height: "200px" }}
+        />
+      ) : (
+        ""
+      ),
   },
   /*   {
     type: "Photos",
     description: "",
     tool: <div>Work in porgress, please be patient</div>,
   }, */
-  {
+  /*   {
     type: "Money",
     description: "",
     title: "Money",
     tool: <div>Work in porgress, please be patient</div>,
-  },
+  }, */
 ];

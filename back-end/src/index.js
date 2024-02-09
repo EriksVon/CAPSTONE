@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import cors from "cors";
 import list from "express-list-endpoints";
 import userRouter from "./users/userRouter.js";
-import dashboardRouter from "./dashboard/dashboardRouter.js";
 import session from "express-session";
 import passport from "passport";
 import "./middleware/google.js";
@@ -20,7 +19,6 @@ server.use(
     saveUninitialized: false,
   })
 );
-
 const whiteList = [process.env.FE_DEV_URL, process.env.FE_PROD_URL];
 
 const corsOptions = {

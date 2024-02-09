@@ -1,41 +1,46 @@
 import React from "react";
-import { Button } from "react-bootstrap";
-import { Pencil, Trash } from "react-bootstrap-icons";
+import { getDay, format } from "date-fns";
+import SingleEvent from "./SingleEvent";
 
-const SingleDay = ({ event, eventIndex, deleteEvent }) => {
-  const updateEvent = (time, title, index) => {
-    console.log(time, title, index);
-  };
+const SingleDay = ({
+  day,
+  colorStrong,
+  today,
+  handleModal,
+  eventsByDate,
+  isSmallScreen,
+  weekDays,
+  deleteEvent,
+}) => {
+  const dateKey = format(day, "yyyy-MM-dd");
+  const todaysEvents = eventsByDate[dateKey] || [];
+  console.log("todaysEvents: ", todaysEvents);
 
   return (
-    <div className="d-flex justify-content-between">
-      {
-        <>
-          {event.time} - {event.title}
-          <div>
-            <Button
-              style={{
-                border: "none",
-                backgroundColor: "transparent",
-              }}
-              onClick={() => {
-                updateEvent(event.time, event.title, eventIndex);
-              }}
-            >
-              <Pencil color="black" />
-            </Button>
-            <Button
-              style={{
-                border: "none",
-                backgroundColor: "transparent",
-              }}
-              onClick={() => deleteEvent(eventIndex)}
-            >
-              <Trash color="black" />
-            </Button>
-          </div>
-        </>
-      }
+    <div
+      className="p-2 bg-white"
+      style={{
+        border: `2px solid ${colorStrong}`,
+        color: today ? "black" : `${colorStrong}`,
+      }}
+      onClick={() => handleModal(day, todaysEvents)}
+    >
+      {isSmallScreen && <div>{weekDays[getDay(day)]}</div>}
+      <strong>{format(day, "d")}</strong>
+      {todaysEvents.map((event, index) => (
+        <SingleEvent
+          key={`event-${index}`}
+          event={event}
+          deleteEvent={(index) => deleteEvent(index)}
+          style={{
+            backgroundColor: "#f75959",
+            color: "white",
+            borderRadius: "10px",
+            padding: "10px",
+            marginBottom: "5px",
+          }}
+        />
+      ))}
     </div>
   );
 };

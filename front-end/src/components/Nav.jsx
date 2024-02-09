@@ -3,9 +3,8 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { ReactComponent as PlanMeLogo } from "../styles/images/planMe2.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { Dropdown } from "react-bootstrap";
+import { ButtonGroup, Dropdown } from "react-bootstrap";
 import useUserData from "../hooks/useUserData";
-import { PersonCircle } from "react-bootstrap-icons";
 
 function MyNav() {
   const navigate = useNavigate();
@@ -83,16 +82,23 @@ function MyNav() {
           How it works
         </Nav.Link>
         {isUserLoggedIn ? (
-          <Dropdown>
+          <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle
               id="dropdown"
+              drop="start"
               className="coralBgButton text-decoration-none px-3 text-black"
             >
-              <PersonCircle className="d-none d-md-inline me-2" />
               Hi, {userData ? userData.name : ""}
             </Dropdown.Toggle>
-            <Dropdown.Menu drop="end-start">
-              <Dropdown.Item href="/">Go to you dashboard</Dropdown.Item>
+            <Dropdown.Menu
+              style={{
+                left: "auto",
+                right: 0,
+                minWidth: "auto",
+                textAlign: "left",
+              }}
+            >
+              <Dropdown.Item href="/">Go to your Dashboard</Dropdown.Item>
               <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
               <Dropdown.Item onClick={deleteAccount}>
                 Delete account
