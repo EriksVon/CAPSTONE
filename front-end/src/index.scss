@@ -111,6 +111,7 @@ body {
   .kanbanContainer {
     display: flex;
     flex-direction: row;
+    max-width: 100%;
   }
   .calendarContainer {
     display: grid;

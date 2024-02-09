@@ -55,7 +55,7 @@ function Dashboard() {
     };
     const intervalId = setInterval(() => {
       sendDataToBackend();
-    }, 10000);
+    }, 5000);
 
     return () => {
       clearInterval(intervalId);

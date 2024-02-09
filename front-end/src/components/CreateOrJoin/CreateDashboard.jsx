@@ -217,6 +217,7 @@ function CreateDashboard() {
             <Form.Label column sm={3}>
               Choose some activities you would share with your PlanMe Team:
             </Form.Label>
+
             <Col sm={2}>
               <Row>
                 {activities.map((activity, index) => (
@@ -271,7 +272,7 @@ function CreateDashboard() {
           </Container>
         </Form.Group> */}
 
-          <button type="submit" className="pinkBgButton">
+          <button type="submit" className="pinkBgButton mb-3">
             Submit
           </button>
         </Form>

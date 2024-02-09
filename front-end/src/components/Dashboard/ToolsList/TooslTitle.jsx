@@ -98,7 +98,7 @@ const ToolsTitle = ({ id, dashboardId }) => {
     <div className="d-flex justify-content-between text-white mb-3">
       <div className="ms-4"></div>
       {isEditing ? (
-        <InputGroup className="mt-3" onClick={handleEdit}>
+        <InputGroup className="mt-3">
           <Form.Control
             type="text"
             value={toolTitle}
