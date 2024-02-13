@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import useJwt from "../../hooks/useJwt";
 import { useNavigate } from "react-router-dom";
 import useUserData from "../../hooks/useUserData";
-import tinycolor from "tinycolor2";
 import { activities } from "../../data/data";
 
 function CreateDashboard() {
   const { userId, token } = useJwt();
+  console.log("userId", userId);
   const { userData } = useUserData(userId, token);
   const navigate = useNavigate();
   const [themeValue, setThemeValue] = useState("");
@@ -17,7 +17,6 @@ function CreateDashboard() {
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [dashboardTitle, setDashboardTitle] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-  /*  const [avatar, setAvatar] = useState(""); */
 
   useEffect(() => {
     if (alertMessage) {
@@ -56,30 +55,25 @@ function CreateDashboard() {
       setSelectedActivities([...selectedActivities, activity.type]);
       setSelectedActivity(activity);
     }
-    console.log(selectedActivities);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const dashboard = {
+      emails: emailList,
+      title: dashboardTitle,
+      theme: themeValue === "" ? "#ffe0d3" : themeValue,
+      activities: selectedActivities.map((activity) => ({
+        type: activity,
+        description: "",
+        toolTitle: activity,
+      })),
+      partecipants: [userId],
+      dashboardToken: Math.random().toString(36).substring(7),
+    };
     try {
       if (userData && userData.dashboards.length === 0) {
-        const dashboard = {
-          emails: emailList,
-          title: dashboardTitle,
-          theme: themeValue,
-          activities: selectedActivities.map((activity) => ({
-            type: activity,
-            description: "",
-            toolTitle: activity,
-          })),
-          /*   avatar: avatar, */
-          partecipants: [userId],
-          dashboardToken: Math.random().toString(36).substr(2, 9),
-        };
-        if (themeValue === "") {
-          dashboard.theme = "#ffe0d3";
-        }
-
         const response = await fetch(
           `${process.env.REACT_APP_ENDPOINT_URL}/profile/create-dashboard`,
           {
@@ -95,16 +89,8 @@ function CreateDashboard() {
         if (response.ok) {
           const data = await response.json();
           console.log("Dashboard creata con successo:", data);
-
           const dashboardId = data.newDashboard._id;
-          console.log("dashboardId:", dashboardId);
           localStorage.setItem("dashboardId", dashboardId);
-
-          const mode = data.newDashboard.theme;
-          const colorStrong = tinycolor(mode).darken(20).toString();
-          localStorage.setItem("themeMode", mode);
-          localStorage.setItem("colorStrong", colorStrong);
-
           navigate("/");
         } else if (response.status === 500) {
           setAlertMessage(
@@ -127,7 +113,7 @@ function CreateDashboard() {
           variant="warning"
           style={{ zIndex: "10000", textAlign: "center" }}
         >
-          {alertMessage} hello world
+          {alertMessage}
         </Alert>
       )}
       <Container>

@@ -1,6 +1,14 @@
-import React from "react";
-import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
-import { XLg } from "react-bootstrap-icons";
+import React, { useState } from "react";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Modal,
+  Row,
+} from "react-bootstrap";
+import { Pencil, XLg } from "react-bootstrap-icons";
 import SingleEvent from "./SingleEvent";
 
 const AddEvent = ({
@@ -13,7 +21,14 @@ const AddEvent = ({
   addEvent,
   deleteEvent,
   colorStrong,
+  isEditing,
+  modifyEvent,
+  startEditing,
+  editingIndex,
 }) => {
+  const [title, setTitle] = useState("");
+  const [time, setTime] = useState("");
+
   return (
     <Modal show={modalState} onHide={() => handleModal(selectedDay, [])}>
       <Modal.Header className="d-flex justify-content-between">
@@ -52,12 +67,38 @@ const AddEvent = ({
                   key={`event-${eventIndex}`}
                   className="d-flex justify-content-between align-items-center gap-2"
                 >
-                  <SingleEvent event={event} colorStrong={colorStrong} />
-                  {/* <Pencil /> */}
-                  <XLg
-                    style={{ marginLeft: "5px", cursor: "pointer" }}
-                    onClick={() => deleteEvent(eventIndex)}
-                  />
+                  {!isEditing || editingIndex !== eventIndex ? (
+                    <>
+                      <SingleEvent event={event} colorStrong={colorStrong} />
+                      <Pencil onClick={() => startEditing(eventIndex)} />
+                      <XLg
+                        style={{ marginLeft: "5px", cursor: "pointer" }}
+                        onClick={() => deleteEvent(eventIndex)}
+                      />
+                    </>
+                  ) : (
+                    <InputGroup>
+                      <Form.Control
+                        type="text"
+                        placeholder={event.title}
+                        value={title}
+                        className="rounded"
+                        onChange={(e) => setTitle(e.target.value)}
+                      />
+                      <input
+                        type="time"
+                        value={time}
+                        className="rounded"
+                        onChange={(e) => setTime(e.target.value)}
+                      />
+                      <Button
+                        variant="transparent"
+                        onClick={() => modifyEvent(eventIndex, title, time)}
+                      >
+                        Save
+                      </Button>
+                    </InputGroup>
+                  )}
                 </div>
               ))}
             </Col>

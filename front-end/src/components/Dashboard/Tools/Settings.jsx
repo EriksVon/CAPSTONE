@@ -10,12 +10,16 @@ import {
 import { combinedThemes } from "../../../data/data";
 import { useState } from "react";
 import { CheckLg } from "react-bootstrap-icons";
-import { useStateContext } from "./context/ContextProvider";
 import { useNavigate } from "react-router-dom";
 import { activities } from "../../../data/data";
-import tinycolor from "tinycolor2";
 
-const Settings = ({ dashboardToken, partecipants }) => {
+const Settings = ({
+  dashboardToken,
+  partecipants,
+  handleSettings,
+  showSettings,
+}) => {
+  console.log(partecipants);
   const token = localStorage.getItem("token");
   const [showPassword, setShowPassword] = useState(false);
   const [show, setShow] = useState(false);
@@ -23,22 +27,20 @@ const Settings = ({ dashboardToken, partecipants }) => {
     setShowPassword(!showPassword);
   };
   const navigate = useNavigate();
-  const dashboardId = localStorage.getItem("dashboardId");
-  const { showSettings, handleClose } = useStateContext();
+  const dashId = localStorage.getItem("dashboardId");
   const [title, setTitle] = useState("");
   const [selectedActivity, setSelectedActivity] = useState(null);
-  /* const [avatar, setAvatar] = useState(""); */
   const [themeValue, setThemeValue] = useState("");
   const [email, setEmail] = useState("");
 
   const handleActivities = (act) => {
-    console.log(act);
     if (selectedActivity === act.type) {
       setSelectedActivity(null);
     } else {
       setSelectedActivity(act.type);
     }
   };
+
   const dashboard = {
     emails: email,
     title: title,
@@ -51,12 +53,10 @@ const Settings = ({ dashboardToken, partecipants }) => {
       },
     ],
     dashboardToken,
-    /*  avatar: avatar, */
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(dashboard);
     if (dashboard.emails === "") {
       delete dashboard.emails;
       delete dashboard.dashboardToken;
@@ -64,18 +64,18 @@ const Settings = ({ dashboardToken, partecipants }) => {
     if (dashboard.title === "") {
       delete dashboard.title;
     }
-    if (dashboard.activities[0].length === 0) {
+    if (
+      dashboard.activities.length === 0 ||
+      dashboard.activities[0].type === null
+    ) {
       delete dashboard.activities;
     }
-    /*     if (dashboard.avatar === "") {
-      delete dashboard.avatar;
-    } */
     if (dashboard.theme === "") {
       delete dashboard.theme;
     }
 
     const response = await fetch(
-      `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}`,
+      `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}`,
       {
         method: "PUT",
         headers: {
@@ -92,16 +92,8 @@ const Settings = ({ dashboardToken, partecipants }) => {
         response.statusText
       );
     } else {
-      const updatedDashboard = await response.json();
-      console.log(updatedDashboard);
-
-      const theme = updatedDashboard.theme;
-      if (theme) {
-        localStorage.setItem("themeMode", theme);
-        const colorStrong = tinycolor(theme).darken(20).toString();
-        localStorage.setItem("colorStrong", colorStrong);
-      }
-      handleClose();
+      await response.json();
+      handleSettings();
       window.location.reload();
     }
   };
@@ -109,7 +101,7 @@ const Settings = ({ dashboardToken, partecipants }) => {
   const deleteDashboard = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}`,
+        `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}`,
         {
           method: "DELETE",
           headers: {
@@ -185,7 +177,7 @@ const Settings = ({ dashboardToken, partecipants }) => {
       <Modal
         fullscreen
         show={showSettings}
-        onHide={handleClose}
+        onHide={handleSettings}
         className="bg-white"
       >
         <Container>
@@ -268,22 +260,6 @@ const Settings = ({ dashboardToken, partecipants }) => {
                   ))}
                 </Col>
               </Form.Group>
-
-              {/*           <Form.Group controlId="formImg">
-            <Container>
-              <Row className="d-flex align-items-center">
-                <Form.Label>Choose an image</Form.Label>
-
-                <Form.Group as={Col} controlId="avatar">
-                  <Form.Control
-                    type="file"
-                    multiple={false}
-                    onChange={(e) => setAvatar(e.target.files[0])}
-                  />
-                </Form.Group>
-              </Row>
-            </Container>
-          </Form.Group> */}
 
               <button
                 type="submit"

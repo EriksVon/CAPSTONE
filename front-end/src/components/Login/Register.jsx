@@ -32,7 +32,6 @@ function Register() {
 
     if (response.ok) {
       let data = await response.json();
-      console.log(data);
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data._id);
       localStorage.setItem("email", data.email);

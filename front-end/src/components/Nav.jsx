@@ -68,11 +68,11 @@ function MyNav() {
   };
 
   return (
-    <Navbar expand="lg" sticky="top" className="bg-white">
+    <Navbar expand="lg" sticky="top" className="bg-white p-0 pt-1">
       <Container className="d-flex gap-3">
         <Link to={isUserLoggedIn && dashboardId ? "/" : "/login"}>
           <Navbar.Brand>
-            <PlanMeLogo width="120px" />
+            <PlanMeLogo width="100px" />
           </Navbar.Brand>
         </Link>
         <Nav.Link href="/about-us" className="ms-auto d-none d-sm-inline">

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { DashLg, PlusLg } from "react-bootstrap-icons";
 import { Button } from "react-bootstrap";
 
-const List = ({ dashboardId, colorStrong, id, updateComponentChanges }) => {
+const List = ({ dashId, id, token, colorStrong }) => {
   const [listItem, setListItem] = useState("");
   const [list, setList] = useState([]);
 
@@ -16,54 +16,62 @@ const List = ({ dashboardId, colorStrong, id, updateComponentChanges }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}/${id}`
         );
+
         if (response.ok) {
           const responseData = await response.json();
           if (responseData.content) {
-            setList(
-              responseData.content ? JSON.parse(responseData.content) : []
-            );
+            const content = JSON.parse(responseData.content);
+            setList(content);
           }
         } else {
           console.error(
-            "Error loading list data:",
+            "Error loading data:",
             response.status,
             response.statusText
           );
         }
       } catch (error) {
-        console.error("Error loading list data:", error);
+        console.error("Error loading data:", error);
       }
     };
     fetchData();
-  }, [id, dashboardId]);
+    const intervalId = setInterval(fetchData, 10000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [dashId, id]);
 
   useEffect(() => {
-    updateComponentChanges(list, id);
-  }, [id, list, updateComponentChanges]);
-
-  /*   useEffect(() => {
-    const saveListToBackend = async () => {
-      const content = list;
+    const updateComponent = async () => {
       try {
-        await fetch(
-          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`,
+        const response = await fetch(
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}/${id}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-            body: JSON.stringify({ content: JSON.stringify(content) }),
+            body: JSON.stringify({ content: JSON.stringify(list) }),
           }
         );
+        if (response.ok) {
+          console.log("List updated");
+        } else {
+          console.error(
+            "Error updating list:",
+            response.status,
+            response.statusText
+          );
+        }
       } catch (error) {
-        console.error("Error saving list data:", error);
+        console.error("Error updating list:", error);
       }
     };
-
-    saveListToBackend();
-  }, [id, list, dashboardId]); */
+    updateComponent();
+  }, [dashId, id, token, list]);
 
   return (
     <div className="toolsContainer" style={{ borderColor: colorStrong }}>

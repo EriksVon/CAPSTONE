@@ -33,7 +33,6 @@ const useDashboardData = () => {
           const data = await response.json();
           const dashData = data.dashboards;
           setDashboardData(dashData);
-          console.log("Dati dashboard:", dashData);
         }
       } catch (error) {
         console.error("Errore durante la richiesta:", error);

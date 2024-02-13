@@ -4,13 +4,8 @@ import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.scss";
 import reportWebVitals from "./reportWebVitals";
-import { ContextProvider } from "./components/Dashboard/Tools/context/ContextProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <ContextProvider>
-    <App />
-  </ContextProvider>
-);
+root.render(<App />);
 
 reportWebVitals();

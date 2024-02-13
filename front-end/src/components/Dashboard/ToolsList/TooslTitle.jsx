@@ -2,17 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Pencil } from "react-bootstrap-icons";
 import { Button, Form, InputGroup } from "react-bootstrap";
 
-const ToolsTitle = ({ id, dashboardId }) => {
+const ToolsTitle = ({ id, dashId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [toolTitle, setToolTitle] = useState("");
-  const token = localStorage.getItem("token");
   const themeMode = localStorage.getItem("themeMode");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}/${id}`
         );
         if (response.ok) {
           const responseData = await response.json();
@@ -29,7 +28,11 @@ const ToolsTitle = ({ id, dashboardId }) => {
       }
     };
     fetchData();
-  }, [id, dashboardId]);
+    const intervalId = setInterval(fetchData, 10000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [id, dashId]);
 
   const handleTitleChange = (e) => {
     setToolTitle(e.target.value);
@@ -39,14 +42,14 @@ const ToolsTitle = ({ id, dashboardId }) => {
     setIsEditing(!isEditing);
     if (isEditing) {
       fetch(
-        `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`,
+        `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}/${id}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({ toolTitle }),
-          Authorization: `Bearer ${token}`,
         }
       )
         .then((response) => {
@@ -70,11 +73,11 @@ const ToolsTitle = ({ id, dashboardId }) => {
     if (window.confirm("Are you sure you want to delete this tool?")) {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`,
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}/${id}`,
           {
             method: "DELETE",
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );

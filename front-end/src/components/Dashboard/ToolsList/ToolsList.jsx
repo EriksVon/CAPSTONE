@@ -6,15 +6,7 @@ import Notes from "../Tools/Notes";
 import Kanban from "../Tools/Kanban/Kanban";
 import ToolsTitle from "./TooslTitle";
 
-const ToolsList = ({
-  activities,
-  colorStrong,
-  themeMode,
-  setComponentChanges,
-  componentChanges,
-  updateComponentChanges,
-}) => {
-  const dashboardId = localStorage.getItem("dashboardId");
+const ToolsList = ({ activities, colorStrong, themeMode, dashId }) => {
   const activityComponents = {
     Calendar: Calendar,
     Money: Money,
@@ -46,19 +38,14 @@ const ToolsList = ({
             <ToolsTitle
               id={activity._id}
               colorStrong={colorStrong}
-              dashboardId={dashboardId}
-              componentChanges={componentChanges}
-              setComponentChanges={setComponentChanges}
+              dashId={dashId}
             />
             <Tool
               id={activity._id}
               colorStrong={colorStrong}
-              dashboardId={dashboardId}
+              dashId={dashId}
               themeMode={themeMode}
               {...activity}
-              componentChanges={componentChanges}
-              setComponentChanges={setComponentChanges}
-              updateComponentChanges={updateComponentChanges}
             />
           </div>
         );

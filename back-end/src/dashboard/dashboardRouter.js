@@ -22,11 +22,11 @@ dashboardRouter
     }
   })
   /* WORKING */
-  .get("/me/:dashboardId", async (req, res, next) => {
+  .get("/me/:dashId", authControl, async (req, res, next) => {
     try {
       const dashboard = await Dashboard.findOne({
-        _id: req.params.dashboardId,
-      });
+        _id: req.params.dashId,
+      }).populate("partecipants");
       res.json(dashboard);
     } catch (error) {
       res.status(500).send(error);
@@ -55,10 +55,15 @@ dashboardRouter
     try {
       const { emails, title, theme, partecipants, dashboardToken } = req.body;
       const file = req.file;
+      console.log(req.body);
       const activities = req.body.activities || [];
 
       const emailRecipients = emails.map((email) => email);
-      console.log(emailRecipients.length);
+      console.log(emailRecipients);
+      const isValidEmailList = emailRecipients.every((email) =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+      );
+      console.log(isValidEmailList);
 
       // <--------------- BREVO EMAIL
       let sendSmtpEmail = new brevo.SendSmtpEmail();
@@ -80,7 +85,7 @@ dashboardRouter
       };
       // ---------------> BREVO EMAIL
 
-      if (emailRecipients.length > 0) {
+      if (isValidEmailList) {
         try {
           const emailData = await apiInstance.sendTransacEmail(sendSmtpEmail);
           console.log(
@@ -107,7 +112,7 @@ dashboardRouter
             newDashboard,
           });
         } catch (error) {
-          console.error("Error sending email:", error);
+          /*  console.error("Error sending email:", error); */
           res.status(500).json({ error: "Error sending email" });
         }
       } else {
@@ -172,7 +177,7 @@ dashboardRouter
     }
   })
   /* TESTING */
-  .post("/me/:dashId/update-all", async (req, res, next) => {
+  .post("/me/:dashId/update-all", authControl, async (req, res, next) => {
     try {
       const { dashId } = req.params;
       const dashboard = await Dashboard.findById(dashId);
@@ -186,6 +191,31 @@ dashboardRouter
           activity.toolTitle = payload.toolTitle;
         }
         if (content) {
+          activity.content = payload.content;
+        }
+        await dashboard.save();
+        res.status(201).json({ message: "Activity updated", dashboard });
+      } else {
+        res.status(404).json({ message: "Activity not found" });
+      }
+    } catch (error) {
+      next(error);
+    }
+  })
+  /* TO BE DELETED??? */
+  .post("/me/:dashId/:activityId", authControl, async (req, res, next) => {
+    try {
+      const { dashId, activityId } = req.params;
+      const dashboard = await Dashboard.findById(dashId);
+      const activity = dashboard.activities.find(
+        (activity) => activity._id.toString() === activityId
+      );
+      if (activity) {
+        const payload = req.body;
+        if (payload.toolTitle) {
+          activity.toolTitle = payload.toolTitle;
+        }
+        if (payload.content) {
           activity.content = payload.content;
         }
         await dashboard.save();
@@ -269,31 +299,6 @@ dashboardRouter
       next(error);
     }
   })
-  /* TO BE DELETED??? */
-  .post("/me/:dashId/:activityId", async (req, res, next) => {
-    try {
-      const { dashId, activityId } = req.params;
-      const dashboard = await Dashboard.findById(dashId);
-      const activity = dashboard.activities.find(
-        (activity) => activity._id.toString() === activityId
-      );
-      if (activity) {
-        const payload = req.body;
-        if (payload.toolTitle) {
-          activity.toolTitle = payload.toolTitle;
-        }
-        if (payload.content) {
-          activity.content = payload.content;
-        }
-        await dashboard.save();
-        res.status(201).json({ message: "Activity updated", dashboard });
-      } else {
-        res.status(404).json({ message: "Activity not found" });
-      }
-    } catch (error) {
-      next(error);
-    }
-  })
   /* WORKING */
   .delete("/me/:dashId", async (req, res, next) => {
     try {
@@ -309,7 +314,7 @@ dashboardRouter
     }
   })
   /* WORKING */
-  .delete("/me/:dashId/:activityId", async (req, res, next) => {
+  .delete("/me/:dashId/:activityId", authControl, async (req, res, next) => {
     try {
       const { dashId, activityId } = req.params;
       const dashboard = await Dashboard.findById(dashId);

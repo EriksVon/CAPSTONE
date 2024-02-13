@@ -32,7 +32,6 @@ const DashAccess = () => {
       } else {
         const data = await response.json();
         const dashData = data.dashboards[0];
-        console.log(dashData);
         localStorage.setItem("themeMode", dashData.theme);
         localStorage.setItem("dashboardId", dashData._id);
         const colorStrong = tinycolor(dashData.theme).darken(20).toString();

@@ -2,10 +2,9 @@ import Quill from "quill";
 import "quill/dist/quill.snow.css?sourceMap=false";
 import React, { useEffect, useRef, useState } from "react";
 
-const Notes = ({ colorStrong, id, dashboardId, updateComponentChanges }) => {
+const Notes = ({ colorStrong, id, dashId }) => {
   const [content, setContent] = useState("");
   const quillRef = useRef(null);
-  console.log("content", content);
 
   useEffect(() => {
     const quill = new Quill(`#editor-container-${id}`, {
@@ -13,7 +12,6 @@ const Notes = ({ colorStrong, id, dashboardId, updateComponentChanges }) => {
         toolbar: [
           ["bold", "underline", "strike"],
           [{ list: "ordered" }, { list: "bullet" }],
-          /*   ["image"], */
         ],
       },
       placeholder: "Write here",
@@ -25,7 +23,7 @@ const Notes = ({ colorStrong, id, dashboardId, updateComponentChanges }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}/${id}`
         );
 
         if (response.ok) {
@@ -47,27 +45,53 @@ const Notes = ({ colorStrong, id, dashboardId, updateComponentChanges }) => {
       }
     };
     fetchData();
-  }, [dashboardId, id]);
+    const intervalId = setInterval(fetchData, 10000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [dashId, id]);
 
   useEffect(() => {
     if (quillRef.current) {
       quillRef.current.on("text-change", () => {
         const content = quillRef.current.root.innerHTML;
         setContent(content);
-        updateComponentChanges(content, id);
-        console.log("content", content);
-        console.log("id", id);
       });
     }
-  }, [id, updateComponentChanges]);
+
+    const saveNotesToBackend = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}/${id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ content }),
+          }
+        );
+
+        if (response.ok) {
+          await response.json();
+        } else {
+          console.error(
+            "Error saving data:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error saving data:", error);
+      }
+    };
+    saveNotesToBackend();
+  }, [dashId, id, content]);
 
   return (
     <div className="toolsContainer p-0" style={{ borderColor: colorStrong }}>
-      <div
-        id={`editor-container-${id}`}
-        className="border-0"
-        style={{ height: 100 }}
-      ></div>
+      <div id={`editor-container-${id}`} className="border-0"></div>
     </div>
   );
 };

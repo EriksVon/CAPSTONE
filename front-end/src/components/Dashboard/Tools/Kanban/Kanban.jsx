@@ -4,19 +4,16 @@ import AddCard from "./AddCard";
 import { ChakraProvider, theme } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 
-const Kanban = ({ colorStrong, dashboardId, id, updateComponentChanges }) => {
+const Kanban = ({ colorStrong, dashId, id }) => {
   const [todoItems, setTodoItems] = useState([]);
   const [doneItems, setDoneItems] = useState([]);
   const [inProgressItems, setInProgressItems] = useState([]);
-  /*   console.log("inProgressItems", inProgressItems);
-  console.log("doneItems", doneItems);
-  console.log("todoItems", todoItems); */
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashboardId}/${id}`
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}/${id}`
         );
         if (response.ok) {
           const responseData = await response.json();
@@ -39,7 +36,11 @@ const Kanban = ({ colorStrong, dashboardId, id, updateComponentChanges }) => {
       }
     };
     fetchData();
-  }, [id, dashboardId]);
+    const intervalId = setInterval(fetchData, 10000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [id, dashId]);
 
   const prevTodoItems = useRef(todoItems);
   const prevDoneItems = useRef(doneItems);
@@ -54,22 +55,48 @@ const Kanban = ({ colorStrong, dashboardId, id, updateComponentChanges }) => {
       !arraysAreEqual(doneItems, prevDoneItems.current) ||
       !arraysAreEqual(inProgressItems, prevInProgressItems.current)
     ) {
-      updateComponentChanges(
-        {
-          content: JSON.stringify({
-            todo: [...todoItems],
-            done: [...doneItems],
-            inProgress: [...inProgressItems],
-          }),
-        },
-        id
-      );
+      const updateComponent = async () => {
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}/${id}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: JSON.stringify(
+                {
+                  content: JSON.stringify({
+                    todo: [...todoItems],
+                    done: [...doneItems],
+                    inProgress: [...inProgressItems],
+                  }),
+                },
+                id
+              ),
+            }
+          );
+          if (response.ok) {
+            console.log("List updated");
+          } else {
+            console.error(
+              "Error updating list:",
+              response.status,
+              response.statusText
+            );
+          }
+        } catch (error) {
+          console.error("Error updating list:", error);
+        }
+      };
+      updateComponent();
 
       prevTodoItems.current = todoItems;
       prevDoneItems.current = doneItems;
       prevInProgressItems.current = inProgressItems;
     }
-  }, [id, todoItems, doneItems, inProgressItems, updateComponentChanges]);
+  }, [id, todoItems, doneItems, inProgressItems, dashId]);
 
   const handleDeleteItem = ({ index, parent }) => {
     if (parent === "ToDo") {
@@ -137,27 +164,24 @@ const Kanban = ({ colorStrong, dashboardId, id, updateComponentChanges }) => {
             }
           />
 
-          <div className="kanbanContainer">
+          <div className="kanbanContainer mt-2">
             <KanbanLane
               title="ToDo"
               items={todoItems}
               color="red"
               onDelete={handleDeleteItem}
-              style={{ flex: 1, flexShrink: 1, minWidth: 0 }}
             />
             <KanbanLane
               title="InProgress"
               items={inProgressItems}
               color="yellow"
               onDelete={handleDeleteItem}
-              style={{ flex: 1, flexShrink: 1, minWidth: 0 }}
             />
             <KanbanLane
               title="Done"
               items={doneItems}
               color="green"
               onDelete={handleDeleteItem}
-              style={{ flex: 1, flexShrink: 1, minWidth: 0 }}
             />
           </div>
         </DndContext>

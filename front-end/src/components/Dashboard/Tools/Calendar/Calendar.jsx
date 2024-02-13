@@ -13,20 +13,15 @@ import AddEvent from "./AddEvent";
 import NavigationControls from "./NavigationControls";
 import SingleDay from "./SingleDay";
 
-const Calendar = ({
-  colorStrong,
-  themeMode,
-  id,
-  dashboardId,
-  updateComponentChanges,
-}) => {
+const Calendar = ({ colorStrong, themeMode, dashId, id }) => {
   const [modalState, setModalState] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [todayEvents, setTodayEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const [events, setEvents] = useState([]);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,6 +33,67 @@ const Calendar = ({
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}/${id}`
+        );
+
+        if (response.ok) {
+          const responseData = await response.json();
+          if (responseData.content) {
+            const content = JSON.parse(responseData.content);
+            setEvents(content);
+          }
+        } else {
+          console.error(
+            "Error loading data:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
+    fetchData();
+    const intervalId = setInterval(fetchData, 10000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [dashId, id]);
+
+  useEffect(() => {
+    const updateComponent = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_ENDPOINT_URL}/profile/me/${dashId}/${id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ content: JSON.stringify(events) }),
+          }
+        );
+        if (response.ok) {
+          console.log("List updated");
+        } else {
+          console.error(
+            "Error updating list:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error updating list:", error);
+      }
+    };
+    updateComponent();
+  }, [dashId, id, events]);
 
   const deleteEvent = (index) => {
     const eventToDelete = todayEvents[index];
@@ -63,18 +119,38 @@ const Calendar = ({
       title: titleInput,
       time: timeInput,
       start: format(selectedDay, "yyyy-MM-dd"),
-      id: Math.random().toString(36).substr(2, 9),
-      // end: format(selectedDay, "yyyy-MM-dd"),
+      id: Math.random().toString(36).substring(7),
     };
     const updatedEvents = [...events, newEvent];
     setEvents(updatedEvents);
     setModalState(!modalState);
   };
 
+  const [editingIndex, setEditingIndex] = useState(null);
+
+  const startEditing = (index) => {
+    setEditingIndex(index);
+    setIsEditing(true);
+  };
+
+  const modifyEvent = (index, updatedTitle, updatedTime) => {
+    const updatedEvents = [...events];
+    updatedEvents[index] = {
+      ...updatedEvents[index],
+      title: updatedTitle,
+      time: updatedTime,
+    };
+    setEvents(updatedEvents);
+    setModalState(!modalState);
+    setIsEditing(false);
+    setEditingIndex(null);
+  };
+
   const handleModal = (day, todaysEvents) => {
     setSelectedDay(day);
     setTodayEvents(todaysEvents);
     setModalState(!modalState);
+    setIsEditing(false);
   };
 
   const goToPreviousMonth = () => {
@@ -164,6 +240,11 @@ const Calendar = ({
           handleModal={handleModal}
           addEvent={addEvent}
           deleteEvent={deleteEvent}
+          isEditing={isEditing}
+          setIsEditing={setIsEditing}
+          modifyEvent={modifyEvent}
+          editingIndex={editingIndex}
+          startEditing={startEditing}
         />
       )}
     </>

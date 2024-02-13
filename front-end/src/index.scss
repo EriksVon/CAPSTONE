@@ -103,15 +103,18 @@ body {
 
 @media screen and (min-width: 768px) {
   .toolsWrapper {
-    width: 30%;
+    width: 20%;
   }
   .bigToolsWrapper {
-    width: 95%;
+    width: 70%;
   }
   .kanbanContainer {
     display: flex;
     flex-direction: row;
-    max-width: 100%;
+    justify-content: space-between;
+  }
+  .kanbanLane {
+    width: 30%;
   }
   .calendarContainer {
     display: grid;
@@ -121,9 +124,8 @@ body {
 }
 
 @media screen and (max-width: 767px) {
-  .kanbanContainer {
-    display: flex;
-    flex-direction: column;
+  .kanbanLane {
+    width: 100%;
   }
   .calendarContainer {
     display: flex;
